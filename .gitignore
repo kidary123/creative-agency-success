@@ -32,3 +32,4 @@ deploy.ps1
 DEPLOY-ME.bat
 ENTREGA.txt
 deploy-log.txt
+.vercel

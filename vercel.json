@@ -1,0 +1,22 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "astro",
+  "installCommand": "npm install",
+  "buildCommand": "astro build",
+  "outputDirectory": "dist",
+  "cleanUrls": true,
+  "headers": [
+    {
+      "source": "/llms.txt",
+      "headers": [{ "key": "Content-Type", "value": "text/plain; charset=utf-8" }]
+    },
+    {
+      "source": "/catalog.txt",
+      "headers": [{ "key": "Content-Type", "value": "text/plain; charset=utf-8" }]
+    },
+    {
+      "source": "/ai/(.*).md",
+      "headers": [{ "key": "Content-Type", "value": "text/markdown; charset=utf-8" }]
+    }
+  ]
+}
