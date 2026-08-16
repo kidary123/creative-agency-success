@@ -14,6 +14,7 @@
  * offsets iguales lo mataría, así que van tal cual del archivo,
  * normalizados a porcentaje para que escalen con el contenedor.
  */
+import Picture from '@components/Picture.astro';
 import { journey } from '@/data/site';
 ---
 
@@ -31,7 +32,7 @@ import { journey } from '@/data/site';
     {
       journey.portraits.map((p) => (
         <li class="journey__slot" style={`--offset:${p.offset}`}>
-          <img src={p.src} alt={p.alt} width="180" height="348" loading="lazy" />
+          <Picture src={p.src} alt={p.alt} width={210} height={406} />
         </li>
       ))
     }
@@ -91,14 +92,20 @@ import { journey } from '@/data/site';
     overflow: hidden;
   }
 
-  .journey__slot img {
+  .journey__slot :global(picture) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .journey__slot :global(img) {
     inline-size: 100%;
     block-size: 100%;
     object-fit: cover;
     transition: transform var(--dur-slow) var(--ease-out-expo);
   }
 
-  .journey__slot:hover img {
+  .journey__slot:hover :global(img) {
     transform: scale(1.05);
   }
 

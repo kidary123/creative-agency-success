@@ -18,6 +18,7 @@
  * gris — es la única palabra que el diseño destaca, y coincide con
  * "Collective Confidence" de la banda de datos.
  */
+import Picture from '@components/Picture.astro';
 import { hero } from '@/data/site';
 
 /** Vértices del heptágono, en el orden en que aparecen en el Figma. */
@@ -55,18 +56,17 @@ const vertices = [
         <img class="hero__heptagon" src="/img/hero-heptagon.svg" alt="" width="580" height="438" aria-hidden="true" />
         <img class="hero__shapes" src="/img/hero-shapes.svg" alt="" width="580" height="438" aria-hidden="true" />
         {/* El export original pesaba 3.2 MB a 2000px. Reescalado a 2x
-            del tamaño de render y servido en WebP (149 KB) con PNG de
-            respaldo: es la imagen del LCP, no puede costar megas. */}
-        <picture class="hero__person">
-          <source srcset="/img/hero-person.webp" type="image/webp" />
-          <img
-            src="/img/hero-person.png"
-            alt="A creative agency owner standing with open arms at the centre of the seven values the programme builds"
-            width="1160"
-            height="1086"
-            fetchpriority="high"
-          />
-        </picture>
+            del tamaño de render y servido en WebP (149 KB): es la
+            imagen del LCP, no puede costar megas. */}
+        <Picture
+          class="hero__person"
+          src="/img/hero-person.png"
+          alt="A creative agency owner standing with open arms at the centre of the seven values the programme builds"
+          width={1160}
+          height={1086}
+          loading="eager"
+          fetchpriority="high"
+        />
 
         {
           vertices.map((v) => (
@@ -166,7 +166,7 @@ const vertices = [
     block-size: 83.33%;
   }
 
-  .hero__person img {
+  .hero__person :global(img) {
     inline-size: 100%;
     block-size: 100%;
     object-fit: contain;

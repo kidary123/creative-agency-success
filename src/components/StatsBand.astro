@@ -15,6 +15,7 @@
  * se apilan en vertical a la derecha, separadas 140px. No es una
  * fila de cuatro, que es como estaba antes.
  */
+import Picture from '@components/Picture.astro';
 import { stats } from '@/data/site';
 ---
 
@@ -32,7 +33,7 @@ import { stats } from '@/data/site';
 
     <div class="stats__body">
       <figure class="stats__media" data-animate="reveal">
-        <img src={stats.media.src} alt={stats.media.alt} width="922" height="492" loading="lazy" />
+        <Picture src={stats.media.src} alt={stats.media.alt} width={1844} height={984} />
         <button class="stats__play" type="button" data-play>
           <span class="visually-hidden">Play the Creative Agency Success community video</span>
           <svg viewBox="0 0 79 83" fill="none" aria-hidden="true">
@@ -108,7 +109,9 @@ import { stats } from '@/data/site';
     overflow: hidden;
   }
 
-  .stats__media img {
+  .stats__media :global(picture),
+  .stats__media :global(img) {
+    display: block;
     inline-size: 100%;
     block-size: 100%;
     object-fit: cover;

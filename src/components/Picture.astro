@@ -1,0 +1,47 @@
+---
+/**
+ * Picture — envoltorio para servir WebP con respaldo PNG.
+ *
+ * Los assets salen de Figma sin optimizar: los retratos de Journey
+ * venían entre 1 y 8 MB cada uno, y la foto de la banda de datos a
+ * 7 MB. Reescalados al doble del tamaño de render y convertidos a
+ * WebP, el conjunto pasa de 42,8 MB a 0,6 MB.
+ *
+ * Se pasa la ruta del PNG y el componente deriva el .webp. El PNG
+ * queda como respaldo: navegadores sin WebP siguen viendo la imagen.
+ */
+interface Props {
+  src: string;
+  alt: string;
+  width: number;
+  height: number;
+  class?: string;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'low' | 'auto';
+}
+
+const {
+  src,
+  alt,
+  width,
+  height,
+  class: className,
+  loading = 'lazy',
+  fetchpriority = 'auto',
+} = Astro.props;
+
+const webp = src.replace(/\.(png|jpe?g)$/i, '.webp');
+---
+
+<picture class={className}>
+  <source srcset={webp} type="image/webp" />
+  <img
+    src={src}
+    alt={alt}
+    width={width}
+    height={height}
+    loading={loading}
+    fetchpriority={fetchpriority}
+    decoding="async"
+  />
+</picture>
