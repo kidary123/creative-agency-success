@@ -38,3 +38,4 @@ deploy-log.txt
 .env*
 get-assets.ps1
 GET-ASSETS.bat
+DEV.bat
