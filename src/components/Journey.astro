@@ -24,7 +24,15 @@
 import Picture from '@components/Picture.astro';
 import { journey } from '@/data/site';
 
-const EXPANDIDO = (520 / 137.33).toFixed(3); // ≈ 3.787
+/**
+ * El archivo expande a 520px sobre 1440 (ratio 3.787 frente a los
+ * otros seis). A ancho completo de ventana eso se dispara: en 1920px
+ * el slot pasaría de 740 y la banda de 780 de alto se come la
+ * pantalla. Se baja el ratio y se topa el ancho, y al expandirse la
+ * foto gira a formato horizontal — así el bloque ocupa bastante
+ * menos alto sin perder la idea del diseño.
+ */
+const EXPANDIDO = 2.6;
 ---
 
 <section class="journey" id="success-stories" aria-labelledby="journey-heading">
@@ -135,14 +143,16 @@ const EXPANDIDO = (520 / 137.33).toFixed(3); // ≈ 3.787
     margin-inline-start: 50%;
     translate: -50% 0;
 
-    /* 488 colapsada, 780 expandida — las dos alturas del archivo */
+    /* Colapsada usa la altura del archivo. Expandida crece lo justo
+       para el panel, no los 780 del Figma: con la foto en horizontal
+       el bloque cabe en mucho menos. */
     min-block-size: clamp(320px, 34vw, 488px);
     transition: min-block-size var(--dur-slow) var(--ease-out-expo);
   }
 
   .journey__strip:hover,
   .journey__strip:focus-within {
-    min-block-size: clamp(560px, 54vw, 780px);
+    min-block-size: clamp(420px, 40vw, 580px);
   }
 
   /* ---------- SLOT ---------- */
@@ -161,11 +171,26 @@ const EXPANDIDO = (520 / 137.33).toFixed(3); // ≈ 3.787
   .slot:hover,
   .slot:focus-within {
     flex-grow: var(--expandido);
+    /* Tope duro: sin esto, en una pantalla de 2560 el slot expandido
+       se iría por encima de 900px y rompería la proporción. */
+    max-inline-size: 460px;
+    /* Sube a ras del resto: mantener el escalonado en el expandido
+       sumaba hasta 140px de alto que no aporta nada. */
+    margin-block-start: 0;
   }
 
+  /* Retrato en reposo, horizontal al expandirse. El giro de formato
+     es lo que recorta el alto del bloque: la foto pasa de 348 de
+     alto a poco más de la mitad. */
   .slot__media {
     aspect-ratio: 180 / 348;
     overflow: hidden;
+    transition: aspect-ratio var(--dur-slow) var(--ease-out-expo);
+  }
+
+  .slot:hover .slot__media,
+  .slot:focus-within .slot__media {
+    aspect-ratio: 16 / 10;
   }
 
   .slot__media :global(picture),
@@ -199,7 +224,7 @@ const EXPANDIDO = (520 / 137.33).toFixed(3); // ≈ 3.787
     inset-block-start: 100%;
     inset-inline: 0;
     z-index: 1;
-    padding: 23px 32px 30px;
+    padding: 20px 26px 24px;
     background-color: var(--brand-sand);
     opacity: 0;
     visibility: hidden;
@@ -234,31 +259,34 @@ const EXPANDIDO = (520 / 137.33).toFixed(3); // ≈ 3.787
     opacity: 1;
   }
 
+  /* Tipografía algo más compacta que los 32/16 del archivo: a 460px
+     de ancho, el tamaño original hacía un panel más alto que la
+     propia foto. */
   .slot__title {
     font-family: var(--font-display);
-    font-size: 2rem; /* 32px */
+    font-size: clamp(1.375rem, 1.9vw, 1.75rem);
     font-weight: 500;
     line-height: 1.2;
     color: #000;
-    margin-block-end: 35px;
+    margin-block-end: 0.875rem;
   }
 
   .slot__text {
-    font-size: 1rem; /* 16px */
-    line-height: 1.5;
+    font-size: 0.9375rem;
+    line-height: 1.55;
     color: #000;
   }
 
   .slot__text + .slot__text {
-    margin-block-start: 1.5rem;
+    margin-block-start: 0.85rem;
   }
 
   .slot__cta {
     display: inline-grid;
     place-items: center;
-    inline-size: 135px;
-    min-block-size: 51px;
-    margin-block-start: 35px;
+    inline-size: 128px;
+    min-block-size: 46px;
+    margin-block-start: 1.25rem;
     background-color: var(--brand-ink);
     font-family: var(--font-display);
     font-size: 1rem;
