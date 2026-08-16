@@ -1,0 +1,156 @@
+/* ============================================================
+   DESIGN TOKENS
+   Única fuente de verdad del sistema visual.
+   Regla: ningún componente escribe un valor crudo (#hex, 24px,
+   0.4s). Todo pasa por una variable de aquí.
+   ============================================================ */
+
+:root {
+  /* ---------- COLOR ----------
+     Escala neutra cálida — evita el gris azulado corporativo.
+     Los tokens semánticos (--surface, --ink...) son los que usas
+     en los componentes; la escala cruda casi nunca se toca. */
+  --n-0:   oklch(99% 0.004 85);
+  --n-50:  oklch(96.5% 0.006 85);
+  --n-100: oklch(93% 0.008 85);
+  --n-200: oklch(87% 0.009 85);
+  --n-300: oklch(76% 0.010 85);
+  --n-400: oklch(63% 0.011 85);
+  --n-500: oklch(51% 0.012 85);
+  --n-600: oklch(40% 0.013 80);
+  --n-700: oklch(30% 0.014 75);
+  --n-800: oklch(21% 0.014 70);
+  --n-900: oklch(14% 0.012 68);
+  --n-950: oklch(9% 0.010 65);
+
+  /* ---------- MARCA ----------
+     Creative Agency Success.
+     Estos cuatro valores son el único punto de ajuste si al
+     comparar contra el Figma hay que corregir la paleta. */
+  --brand-ink:    oklch(19% 0.032 265); /* azul tinta, fondo oscuro */
+  --brand-ink-2:  oklch(25% 0.036 265); /* elevación sobre el anterior */
+  --accent:       oklch(74% 0.155 78);  /* ámbar cálido, el color de acción */
+  --accent-hover: oklch(79% 0.150 78);
+
+  --accent-soft: oklch(from var(--accent) l c h / 0.14);
+  --accent-ink:  oklch(22% 0.04 78); /* texto sobre fondo ámbar */
+
+  /* Tokens semánticos — tema claro por defecto */
+  --surface:      var(--n-0);
+  --surface-alt:  var(--n-50);
+  --surface-sunk: var(--n-100);
+  --ink:          var(--n-900);
+  --ink-muted:    var(--n-600);
+  --ink-subtle:   var(--n-400);
+  --line:         oklch(from var(--ink) l c h / 0.10);
+  --line-strong:  oklch(from var(--ink) l c h / 0.22);
+
+  /* ---------- TIPOGRAFÍA ----------
+     Escala fluida: cada paso interpola entre 360px y 1440px de
+     viewport. Sin media queries para el tamaño de texto. */
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  --step--2: clamp(0.69rem, 0.66rem + 0.15vw, 0.79rem);
+  --step--1: clamp(0.83rem, 0.78rem + 0.24vw, 0.99rem);
+  --step-0:  clamp(1.00rem, 0.93rem + 0.36vw, 1.25rem);
+  --step-1:  clamp(1.20rem, 1.09rem + 0.54vw, 1.56rem);
+  --step-2:  clamp(1.44rem, 1.28rem + 0.79vw, 1.95rem);
+  --step-3:  clamp(1.73rem, 1.49rem + 1.14vw, 2.44rem);
+  --step-4:  clamp(2.07rem, 1.74rem + 1.63vw, 3.05rem);
+  --step-5:  clamp(2.49rem, 2.02rem + 2.30vw, 3.82rem);
+  --step-6:  clamp(2.99rem, 2.34rem + 3.21vw, 4.77rem);
+  --step-7:  clamp(3.58rem, 2.70rem + 4.44vw, 5.96rem);
+
+  --leading-tight: 1.05;
+  --leading-snug: 1.25;
+  --leading-normal: 1.6;
+  --leading-loose: 1.75;
+
+  /* El tracking negativo en display es lo que separa un titular
+     bien tipografiado de uno por defecto. */
+  --tracking-display: -0.035em;
+  --tracking-tight: -0.015em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.08em;
+  --tracking-caps: 0.14em;
+
+  --measure: 68ch;        /* ancho ideal de lectura */
+  --measure-narrow: 46ch;
+
+  /* ---------- ESPACIADO ----------
+     Escala fluida basada en el mismo ratio que la tipografía. */
+  --space-3xs: clamp(0.25rem, 0.23rem + 0.11vw, 0.31rem);
+  --space-2xs: clamp(0.50rem, 0.46rem + 0.18vw, 0.63rem);
+  --space-xs:  clamp(0.75rem, 0.69rem + 0.27vw, 0.94rem);
+  --space-s:   clamp(1.00rem, 0.93rem + 0.36vw, 1.25rem);
+  --space-m:   clamp(1.50rem, 1.39rem + 0.54vw, 1.88rem);
+  --space-l:   clamp(2.00rem, 1.86rem + 0.71vw, 2.50rem);
+  --space-xl:  clamp(3.00rem, 2.79rem + 1.07vw, 3.75rem);
+  --space-2xl: clamp(4.00rem, 3.71rem + 1.43vw, 5.00rem);
+  --space-3xl: clamp(6.00rem, 5.57rem + 2.14vw, 7.50rem);
+  --space-4xl: clamp(8.00rem, 7.43rem + 2.86vw, 10.00rem);
+
+  /* ---------- LAYOUT ---------- */
+  --width-full: 100%;
+  --width-wide: 84rem;
+  --width-content: 68rem;
+  --width-narrow: 44rem;
+  --gutter: var(--space-m);
+  --radius-xs: 0.25rem;
+  --radius-s: 0.5rem;
+  --radius-m: 0.875rem;
+  --radius-l: 1.5rem;
+  --radius-full: 999rem;
+
+  /* ---------- MOVIMIENTO ----------
+     Curvas nombradas por intención, no por valor.
+     `expo-out` es la que da esa sensación de "peso" premium. */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+  --ease-in-out-quart: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --dur-instant: 120ms;
+  --dur-fast: 240ms;
+  --dur-base: 420ms;
+  --dur-slow: 720ms;
+  --dur-glacial: 1200ms;
+
+  /* Sombras: capas suaves en vez de un blur grande y opaco */
+  --shadow-s:
+    0 1px 2px oklch(from var(--n-950) l c h / 0.04),
+    0 2px 6px oklch(from var(--n-950) l c h / 0.04);
+  --shadow-m:
+    0 2px 4px oklch(from var(--n-950) l c h / 0.04),
+    0 8px 24px oklch(from var(--n-950) l c h / 0.06);
+  --shadow-l:
+    0 4px 8px oklch(from var(--n-950) l c h / 0.05),
+    0 24px 64px oklch(from var(--n-950) l c h / 0.10);
+
+  --z-base: 0;
+  --z-raised: 10;
+  --z-sticky: 100;
+  --z-overlay: 500;
+  --z-modal: 1000;
+}
+
+/* ---------- TEMA OSCURO ----------
+   Solo se redefinen los tokens semánticos. Ningún componente cambia. */
+:root[data-theme='dark'] {
+  --surface:      var(--n-950);
+  --surface-alt:  var(--n-900);
+  --surface-sunk: var(--n-800);
+  --ink:          var(--n-50);
+  --ink-muted:    var(--n-300);
+  --ink-subtle:   var(--n-500);
+  --line:         oklch(from var(--ink) l c h / 0.12);
+  --line-strong:  oklch(from var(--ink) l c h / 0.26);
+  --accent:       oklch(70% 0.17 45);
+  --accent-ink:   oklch(15% 0.03 42);
+
+  --shadow-s: 0 1px 2px oklch(0% 0 0 / 0.30), 0 2px 6px oklch(0% 0 0 / 0.24);
+  --shadow-m: 0 2px 4px oklch(0% 0 0 / 0.32), 0 8px 24px oklch(0% 0 0 / 0.30);
+  --shadow-l: 0 4px 8px oklch(0% 0 0 / 0.34), 0 24px 64px oklch(0% 0 0 / 0.44);
+}

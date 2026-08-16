@@ -1,0 +1,79 @@
+---
+/**
+ * JSON-LD — Organization + los dos programas como Service/Offer.
+ *
+ * Se genera desde src/data/site.ts para que el schema y lo que se
+ * pinta en pantalla nunca se desincronicen. Usa las descripciones
+ * `aiDescription` con la ortografía correcta, no la del diseño.
+ */
+import { site, programs, scaleMethod, stats } from '@/data/site';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.name,
+  url: site.url,
+  description: 'Coaching and scaling systems for creative-agency owners.',
+  slogan: site.tagline,
+  areaServed: 'Worldwide',
+  knowsAbout: [
+    'creative agency growth',
+    'agency operations',
+    'client acquisition systems',
+    'agency profitability',
+    'recurring revenue models',
+    'agency valuation',
+  ],
+  audience: {
+    '@type': 'Audience',
+    audienceType: 'Creative agency owners and founders',
+    description:
+      'Owners of design studios, branding agencies, marketing and advertising shops, and video and content production companies past the freelance stage.',
+  },
+  makesOffer: programs.map((program) => ({
+    '@type': 'Offer',
+    category: program.badge,
+    itemOffered: {
+      '@type': 'Service',
+      name: program.name,
+      description: program.aiDescription,
+      provider: { '@type': 'Organization', name: site.name },
+      serviceType: 'Business coaching and scaling program',
+    },
+  })),
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'The Scale Method',
+    description:
+      'The six-pillar framework underneath both programs, refined over a decade to scale creative agencies — creating impact, providing freedom and maximizing profits.',
+    itemListElement: scaleMethod.map((pillar, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: pillar.correct,
+    })),
+  },
+};
+
+/** Resultados como un dataset aparte — más fácil de citar para una IA. */
+const resultsSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Creative Agency Success — client results',
+  itemListElement: stats.figures.map((figure, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: `${figure.value} — ${figure.label}`,
+  })),
+};
+---
+
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(schema)}
+/>
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(resultsSchema)}
+/>

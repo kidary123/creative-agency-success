@@ -1,0 +1,226 @@
+/* ============================================================
+   GLOBAL
+   Tipografía base, primitivas de layout y utilidades mínimas.
+   Todo lo específico de un componente vive en su propio .astro.
+   ============================================================ */
+
+@import './tokens.css';
+@import './reset.css';
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: var(--leading-normal);
+  letter-spacing: var(--tracking-normal);
+  color: var(--ink);
+  background-color: var(--surface);
+  transition:
+    background-color var(--dur-base) var(--ease-out-quart),
+    color var(--dur-base) var(--ease-out-quart);
+}
+
+/* ---------- PRIMITIVAS DE LAYOUT ----------
+   Tres utilidades cubren el 90% del layout de una landing. */
+
+/* Centra y limita el ancho, con gutters que respiran */
+.wrap {
+  inline-size: min(100% - (var(--gutter) * 2), var(--width-content));
+  margin-inline: auto;
+}
+
+.wrap--wide  { inline-size: min(100% - (var(--gutter) * 2), var(--width-wide)); }
+.wrap--narrow { inline-size: min(100% - (var(--gutter) * 2), var(--width-narrow)); }
+.wrap--full  { inline-size: 100%; }
+
+/* Ritmo vertical entre hijos, sin margins sueltos */
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--flow, var(--space-s));
+}
+
+.stack--s  { --flow: var(--space-2xs); }
+.stack--m  { --flow: var(--space-m); }
+.stack--l  { --flow: var(--space-l); }
+.stack--xl { --flow: var(--space-xl); }
+
+/* Sección de página con padding vertical consistente */
+.section {
+  padding-block: var(--space-3xl);
+  position: relative;
+}
+
+.section--tight { padding-block: var(--space-2xl); }
+.section--tall  { padding-block: var(--space-4xl); }
+
+/* ---------- TIPOGRAFÍA ---------- */
+
+.display {
+  font-family: var(--font-display);
+  font-size: var(--step-7);
+  line-height: var(--leading-tight);
+  letter-spacing: var(--tracking-display);
+  font-weight: 500;
+}
+
+.h1 { font-size: var(--step-5); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); font-weight: 500; }
+.h2 { font-size: var(--step-4); line-height: var(--leading-snug); letter-spacing: var(--tracking-tight); font-weight: 500; }
+.h3 { font-size: var(--step-2); line-height: var(--leading-snug); letter-spacing: var(--tracking-tight); font-weight: 500; }
+
+.lede {
+  font-size: var(--step-1);
+  line-height: var(--leading-snug);
+  color: var(--ink-muted);
+  max-inline-size: var(--measure-narrow);
+  text-wrap: pretty;
+}
+
+.prose {
+  max-inline-size: var(--measure);
+  color: var(--ink-muted);
+}
+
+/* Etiqueta pequeña en mayúsculas — el detalle editorial que
+   ordena la jerarquía sin agregar peso visual */
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-size: var(--step--1);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-caps);
+  color: var(--ink-subtle);
+}
+
+.eyebrow::before {
+  content: '';
+  inline-size: var(--space-m);
+  block-size: 1px;
+  background-color: currentColor;
+  opacity: 0.5;
+}
+
+/* ---------- BOTONES ----------
+   Una sola base, tres variantes. El lift al hover es lo único
+   que se mueve: suficiente para sentirse vivo, no distrae. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  padding: 0.85em 1.6em;
+  border-radius: var(--radius-full);
+  font-size: var(--step--1);
+  font-weight: 600;
+  letter-spacing: var(--tracking-tight);
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  transition:
+    transform var(--dur-base) var(--ease-out-expo),
+    background-color var(--dur-fast) var(--ease-out-quart),
+    border-color var(--dur-fast) var(--ease-out-quart),
+    box-shadow var(--dur-base) var(--ease-out-expo);
+}
+
+.btn svg {
+  inline-size: 1em;
+  block-size: 1em;
+  transition: translate var(--dur-base) var(--ease-out-expo);
+}
+
+.btn:hover svg {
+  translate: 0.25em 0;
+}
+
+.btn--accent {
+  background-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+.btn--accent:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px oklch(from var(--accent) l c h / 0.32);
+}
+
+.btn--ghost {
+  border: 1px solid oklch(from var(--n-0) l c h / 0.28);
+  color: var(--n-0);
+}
+
+.btn--ghost:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.btn--dark {
+  background-color: var(--brand-ink);
+  color: var(--n-0);
+}
+
+.btn--dark:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-m);
+}
+
+.btn--lg {
+  padding: 1.05em 2em;
+  font-size: var(--step-0);
+}
+
+/* ---------- UTILIDADES ---------- */
+
+/* Visible para lectores de pantalla, invisible en pantalla */
+.visually-hidden:not(:focus):not(:active) {
+  clip-path: inset(50%);
+  block-size: 1px;
+  inline-size: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+/* Enlace con subrayado que se dibuja al hover — micro-detalle,
+   costo cero, y se siente mucho más cuidado que un underline fijo */
+.link {
+  position: relative;
+  color: var(--ink);
+  transition: color var(--dur-fast) var(--ease-out-quart);
+}
+
+.link::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: -0.15em;
+  block-size: 1px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--dur-base) var(--ease-out-expo);
+}
+
+.link:hover::after,
+.link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ---------- ESTADO INICIAL DE ANIMACIÓN ----------
+   Los elementos con [data-animate] arrancan ocultos SOLO si JS
+   está activo. Si JS falla, `.no-js` los deja visibles: el
+   contenido nunca queda invisible por un error de script. */
+html:not(.no-js) [data-animate] {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html:not(.no-js) [data-animate] {
+    opacity: 1;
+    will-change: auto;
+  }
+}
