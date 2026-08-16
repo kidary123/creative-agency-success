@@ -33,3 +33,6 @@ DEPLOY-ME.bat
 ENTREGA.txt
 deploy-log.txt
 .vercel
+
+.vercel
+.env*
