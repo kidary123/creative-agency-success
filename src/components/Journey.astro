@@ -1,21 +1,30 @@
 ---
 /**
- * The Journey To Your Sucess — nodos 42:70, 42:71 y Component 9
- * (85:464) del Figma.
+ * The Journey To Your Sucess — acordeón de siete retratos.
+ * Component 9 del Figma (85:465) con sus ocho variantes:
+ * Frame 11 es el estado colapsado y Frame 13..19 los expandidos.
  *
- * Del archivo:
- *   titular   "The Journey To Your Sucess"  (typo del diseño, se
- *             respeta en pantalla y se corrige en la metadata IA)
- *   copy      Work Sans Regular 18 / 30, tracking -0.36px, #4D4D4D
- *   banda     7 retratos, 348px de alto, gap 16, cada uno con un
- *             desplazamiento vertical distinto: 70·124·66·138·65·140·106
+ * Comportamiento del archivo:
+ *   colapsado   7 columnas iguales, gap 16, banda de 488px
+ *   hover       el slot pasa a 520px y los demás bajan a ~137px;
+ *               bajo la foto aparece un panel #F4F1EF con el valor
+ *               (32px), dos párrafos (16/1.5) y un CTA azul tinta
+ *               de 51px; la banda crece a 780px
  *
- * Ese escalonado irregular es lo que da el ritmo. Reproducirlo con
- * offsets iguales lo mataría, así que van tal cual del archivo,
- * normalizados a porcentaje para que escalen con el contenedor.
+ * Los anchos salen exactos de la aritmética del archivo: en 1440px
+ * con 6 huecos de 16 quedan 1344 útiles. Un slot a 520 deja 824 para
+ * los otros seis = 137,33 cada uno — que es justo el valor que trae
+ * la variante. Por eso el flex-grow del expandido es 520/137,33.
+ *
+ * Accesibilidad: el panel no depende solo de :hover. Cada slot lleva
+ * un botón real, así que :focus-within lo abre con teclado, y en
+ * pantallas táctiles la sección se convierte en tarjetas apiladas
+ * con el texto siempre visible.
  */
 import Picture from '@components/Picture.astro';
 import { journey } from '@/data/site';
+
+const EXPANDIDO = (520 / 137.33).toFixed(3); // ≈ 3.787
 ---
 
 <section class="journey" id="success-stories" aria-labelledby="journey-heading">
@@ -28,22 +37,63 @@ import { journey } from '@/data/site';
     </p>
   </div>
 
-  <ul role="list" class="journey__strip" data-animate="stagger" data-stagger="0.07">
+  <ul role="list" class="journey__strip" style={`--expandido:${EXPANDIDO}`}>
     {
-      journey.portraits.map((p) => (
-        <li class="journey__slot" style={`--offset:${p.offset}`}>
-          <Picture src={p.src} alt={p.alt} width={210} height={406} />
+      journey.portraits.map((p, i) => (
+        <li class="slot" style={`--offset:${p.offset}`}>
+          <div class="slot__media">
+            <Picture src={p.src} alt={p.alt} width={210} height={406} />
+          </div>
+
+          <div class="slot__panel" id={`journey-panel-${i}`}>
+            <h3 class="slot__title">{p.title}</h3>
+            {p.body.map((para) => (
+              <p class="slot__text">{para}</p>
+            ))}
+            <a href={journey.cta.href} class="slot__cta" tabindex="-1">
+              {journey.cta.label}
+            </a>
+          </div>
+
+          {/* Botón real: da foco por teclado y anuncia el panel.
+              Se estira sobre la foto para que el hover del ratón y
+              el foco del teclado abran exactamente lo mismo. */}
+          <button class="slot__trigger" type="button" aria-expanded="false" aria-controls={`journey-panel-${i}`}>
+            <span class="visually-hidden">{p.correct}</span>
+          </button>
         </li>
       ))
     }
   </ul>
 </section>
 
+<script>
+  // El estado visual lo lleva el CSS. Esto solo mantiene aria-expanded
+  // sincronizado, que es lo que leen los lectores de pantalla.
+  document.querySelectorAll<HTMLLIElement>('.journey__strip .slot').forEach((slot) => {
+    const trigger = slot.querySelector<HTMLButtonElement>('.slot__trigger');
+    const cta = slot.querySelector<HTMLAnchorElement>('.slot__cta');
+    if (!trigger) return;
+
+    const marcar = (abierto: boolean) => {
+      trigger.setAttribute('aria-expanded', String(abierto));
+      // El CTA solo es alcanzable con Tab cuando el panel está abierto.
+      cta?.setAttribute('tabindex', abierto ? '0' : '-1');
+    };
+
+    slot.addEventListener('mouseenter', () => marcar(true));
+    slot.addEventListener('mouseleave', () => marcar(false));
+    slot.addEventListener('focusin', () => marcar(true));
+    slot.addEventListener('focusout', (event) => {
+      if (!slot.contains(event.relatedTarget as Node)) marcar(false);
+    });
+  });
+</script>
+
 <style>
   .journey {
     background-color: var(--surface);
     padding-block: clamp(3rem, 6vw, 5.5rem) 0;
-    overflow: clip;
   }
 
   .journey__intro {
@@ -63,78 +113,221 @@ import { journey } from '@/data/site';
 
   .journey__copy {
     margin-block-start: clamp(0.75rem, 1.5vw, 1.25rem);
-    font-size: 1.125rem;  /* 18px exacto */
-    line-height: 1.667;   /* 30/18 */
+    font-size: 1.125rem;
+    line-height: 1.667;
     letter-spacing: -0.36px;
     color: var(--brand-slate);
   }
 
-  /* ---------- BANDA DE RETRATOS ----------
-     Siete columnas iguales con gap 16. Cada slot se empuja hacia
-     abajo con su propio --offset, tomado del archivo. */
+  /* ---------- BANDA A SANGRE ----------
+     Ocupa el ancho completo de la ventana, no el del contenedor.
+     El 100vw + centrado por margen negativo evita la barra de
+     scroll horizontal que da `width:100vw` a secas. */
   .journey__strip {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
+    display: flex;
     gap: 16px;
-    align-items: start;
+    align-items: flex-start;
     margin: clamp(2rem, 4vw, 3.5rem) 0 0;
-    padding: 0 0 clamp(2rem, 4vw, 3.5rem);
+    padding: 0;
     list-style: none;
-    inline-size: min(100%, 1443px);
-    margin-inline: auto;
+
+    inline-size: 100vw;
+    margin-inline-start: 50%;
+    translate: -50% 0;
+
+    /* 488 colapsada, 780 expandida — las dos alturas del archivo */
+    min-block-size: clamp(320px, 34vw, 488px);
+    transition: min-block-size var(--dur-slow) var(--ease-out-expo);
   }
 
-  .journey__slot {
-    /* El offset del Figma está sobre 489px de alto de banda:
-       lo expresamos en proporción para que escale con el ancho. */
-    margin-block-start: calc(var(--offset) / 489 * 100%);
+  .journey__strip:hover,
+  .journey__strip:focus-within {
+    min-block-size: clamp(560px, 54vw, 780px);
+  }
+
+  /* ---------- SLOT ---------- */
+
+  .slot {
+    position: relative;
+    flex: 1 1 0;
+    min-inline-size: 0;
+    /* El escalonado del archivo, proporcional a la banda de 489 */
+    margin-block-start: calc(var(--offset) / 489 * clamp(320px, 34vw, 488px));
+    transition:
+      flex-grow var(--dur-slow) var(--ease-out-expo),
+      margin-block-start var(--dur-slow) var(--ease-out-expo);
+  }
+
+  .slot:hover,
+  .slot:focus-within {
+    flex-grow: var(--expandido);
+  }
+
+  .slot__media {
     aspect-ratio: 180 / 348;
     overflow: hidden;
   }
 
-  .journey__slot :global(picture) {
+  .slot__media :global(picture),
+  .slot__media :global(img) {
     display: block;
     inline-size: 100%;
     block-size: 100%;
-  }
-
-  .journey__slot :global(img) {
-    inline-size: 100%;
-    block-size: 100%;
     object-fit: cover;
-    transition: transform var(--dur-slow) var(--ease-out-expo);
   }
 
-  .journey__slot:hover :global(img) {
-    transform: scale(1.05);
+  /* El botón cubre la foto: hover de ratón y foco de teclado
+     disparan el mismo estado. */
+  .slot__trigger {
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    block-size: 100%;
+    z-index: 2;
+    cursor: pointer;
   }
 
-  /* En móvil el escalonado de siete columnas es ilegible: cada
-     retrato queda en una tira de 40px. Se reduce a tres columnas
-     y se anula el offset. */
-  @media (width < 62rem) {
+  .slot:has(.slot__trigger:focus-visible) {
+    outline: 3px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  /* ---------- PANEL ---------- */
+
+  .slot__panel {
+    position: absolute;
+    inset-block-start: 100%;
+    inset-inline: 0;
+    z-index: 1;
+    padding: 23px 32px 30px;
+    background-color: var(--brand-sand);
+    opacity: 0;
+    visibility: hidden;
+    translate: 0 -12px;
+    pointer-events: none;
+    transition:
+      opacity var(--dur-base) var(--ease-out-quart),
+      translate var(--dur-slow) var(--ease-out-expo),
+      visibility 0s linear var(--dur-base);
+  }
+
+  .slot:hover .slot__panel,
+  .slot:focus-within .slot__panel {
+    opacity: 1;
+    visibility: visible;
+    translate: 0 0;
+    pointer-events: auto;
+    transition-delay: 0s, 0s, 0s;
+  }
+
+  /* El contenido solo aparece cuando el slot ya es ancho: si se
+     revela a la vez que la expansión, el texto se ve reflowear. */
+  .slot__title,
+  .slot__text,
+  .slot__cta {
+    opacity: 0;
+    transition: opacity var(--dur-base) var(--ease-out-quart) 0.12s;
+  }
+
+  .slot:hover :is(.slot__title, .slot__text, .slot__cta),
+  .slot:focus-within :is(.slot__title, .slot__text, .slot__cta) {
+    opacity: 1;
+  }
+
+  .slot__title {
+    font-family: var(--font-display);
+    font-size: 2rem; /* 32px */
+    font-weight: 500;
+    line-height: 1.2;
+    color: #000;
+    margin-block-end: 35px;
+  }
+
+  .slot__text {
+    font-size: 1rem; /* 16px */
+    line-height: 1.5;
+    color: #000;
+  }
+
+  .slot__text + .slot__text {
+    margin-block-start: 1.5rem;
+  }
+
+  .slot__cta {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 135px;
+    min-block-size: 51px;
+    margin-block-start: 35px;
+    background-color: var(--brand-ink);
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 500;
+    color: #fff;
+    position: relative;
+    z-index: 3;
+    transition:
+      opacity var(--dur-base) var(--ease-out-quart) 0.12s,
+      transform var(--dur-base) var(--ease-out-expo);
+  }
+
+  .slot__cta:hover {
+    transform: translateY(-2px);
+  }
+
+  /* ---------- TÁCTIL Y MÓVIL ----------
+     Un acordeón por hover no existe en táctil. Por debajo de 62rem
+     se convierte en tarjetas apiladas con el texto siempre visible:
+     misma información, sin depender de un puntero. */
+  @media (width < 62rem), (hover: none) {
     .journey__strip {
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      inline-size: min(100% - 2rem, 720px);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+      gap: clamp(1.5rem, 4vw, 2.5rem);
+      inline-size: min(100% - 2rem, 1100px);
+      margin-inline: auto;
+      translate: none;
+      min-block-size: 0;
+      padding-block-end: clamp(2rem, 5vw, 3.5rem);
     }
 
-    .journey__slot {
+    .journey__strip:hover,
+    .journey__strip:focus-within {
+      min-block-size: 0;
+    }
+
+    .slot,
+    .slot:hover,
+    .slot:focus-within {
+      flex: none;
       margin-block-start: 0;
     }
 
-    .journey__slot:nth-child(n + 7) {
+    .slot__trigger {
       display: none;
     }
-  }
 
-  @media (width < 34rem) {
-    .journey__strip {
-      grid-template-columns: repeat(2, 1fr);
+    .slot__panel {
+      position: static;
+      opacity: 1;
+      visibility: visible;
+      translate: none;
+      pointer-events: auto;
+      padding-inline: 0;
     }
 
-    .journey__slot:nth-child(n + 5) {
-      display: none;
+    .slot__title,
+    .slot__text,
+    .slot__cta {
+      opacity: 1;
+    }
+
+    .slot__title {
+      margin-block-end: 1rem;
+    }
+
+    .slot__cta {
+      margin-block-start: 1.5rem;
     }
   }
 </style>
