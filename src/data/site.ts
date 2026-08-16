@@ -20,12 +20,19 @@ export const site = {
   url: 'https://creative-agency-success-roads1.vercel.app',
 } as const;
 
+/**
+ * Navegación tal como está en el Figma: siete enlaces y un icono de
+ * búsqueda, no los cinco + botón CTA que describía el brief original.
+ * El diseño manda — `display` conserva el typo "Sucess" del archivo.
+ */
 export const navLinks = [
-  { label: 'Success Stories', href: '#success-stories' },
-  { label: 'Resources', href: '#resources' },
-  { label: 'Services', href: '#programs' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Sucess Stories', correct: 'Success Stories', href: '#success-stories' },
+  { label: 'Project Page', correct: 'Project Page', href: '#projects' },
+  { label: 'Resources', correct: 'Resources', href: '#resources' },
+  { label: 'Services', correct: 'Services', href: '#programs' },
+  { label: 'About', correct: 'About', href: '#about' },
+  { label: 'Podcast', correct: 'Podcast', href: '#podcast' },
+  { label: 'Contact', correct: 'Contact', href: '#contact' },
 ] as const;
 
 export const hero = {

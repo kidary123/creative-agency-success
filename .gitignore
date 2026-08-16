@@ -36,3 +36,5 @@ deploy-log.txt
 
 .vercel
 .env*
+get-assets.ps1
+GET-ASSETS.bat

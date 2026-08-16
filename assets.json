@@ -1,0 +1,73 @@
+{
+  "_comment": "Manifiesto de assets exportados del Figma. Las URLs caducan ~7 días desde su generación. Para regenerarlas, volver a pedirlas por el conector de Figma. Ejecutar get-assets.ps1 para descargarlas a public/img/.",
+  "_figmaFile": "jXvZyzTAejZDdFwKlHIScm",
+  "_generated": "2026-08-16",
+  "assets": [
+    {
+      "file": "logo.svg",
+      "nodeId": "635:2739",
+      "name": "Logo Creative Agency Success — escudo hexagonal",
+      "url": "https://www.figma.com/api/mcp/asset/9934d651-4bc9-408c-86fa-7b489caf6c2d.svg"
+    },
+    {
+      "file": "icon-search.svg",
+      "nodeId": "630:2670",
+      "name": "Icono de búsqueda del header",
+      "url": "https://www.figma.com/api/mcp/asset/2ab2f8bc-11e3-4724-8f84-91302acf3ad2.svg"
+    },
+    {
+      "file": "hero-heptagon.svg",
+      "nodeId": "1295:1544",
+      "name": "Hero — contorno del heptágono",
+      "url": "https://www.figma.com/api/mcp/asset/54b415b7-6b58-414c-912d-41cb2937bc1d.svg"
+    },
+    {
+      "file": "hero-shapes.svg",
+      "nodeId": "1295:1549",
+      "name": "Hero — formas superpuestas verde/púrpura/azul",
+      "url": "https://www.figma.com/api/mcp/asset/dd41a87e-ca54-4e73-b62b-a7e4cd71353e.svg"
+    },
+    {
+      "file": "hero-person.png",
+      "nodeId": "1295:1565",
+      "name": "Hero — recorte fotográfico de la persona",
+      "url": "https://www.figma.com/api/mcp/asset/2b852344-9dca-41f2-8579-a7120336164c.png"
+    },
+    {
+      "file": "press-forbes.png",
+      "nodeId": "46:82",
+      "name": "Featured in — Forbes",
+      "url": "https://www.figma.com/api/mcp/asset/9eda3798-6074-4e52-82c4-46dad91e0c8d.png"
+    },
+    {
+      "file": "press-abc.png",
+      "nodeId": "46:81",
+      "name": "Featured in — ABC",
+      "url": "https://www.figma.com/api/mcp/asset/9eb9af8e-cc63-443a-95ec-24c3d5f30803.png"
+    },
+    {
+      "file": "press-entrepreneur.png",
+      "nodeId": "46:78",
+      "name": "Featured in — Entrepreneur",
+      "url": "https://www.figma.com/api/mcp/asset/221f4915-4a4d-4df4-96b9-d2641f76ab63.png"
+    },
+    {
+      "file": "press-nypost.png",
+      "nodeId": "89:447",
+      "name": "Featured in — New York Post",
+      "url": "https://www.figma.com/api/mcp/asset/1bd162cd-8f0d-4aa6-8147-8be0ec060746.png"
+    },
+    {
+      "file": "press-regexseo.png",
+      "nodeId": "46:79",
+      "name": "Featured in — RegexSEO",
+      "url": "https://www.figma.com/api/mcp/asset/2530d0e3-178f-4bae-bfd9-8fee61aadccb.png"
+    },
+    {
+      "file": "press-agencyhighway.png",
+      "nodeId": "46:77",
+      "name": "Featured in — Agency Highway",
+      "url": "https://www.figma.com/api/mcp/asset/b3b8a8f7-3491-4413-8ba1-02fcccb6e91b.png"
+    }
+  ]
+}

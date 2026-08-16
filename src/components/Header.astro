@@ -1,115 +1,154 @@
 ---
 /**
- * Header / nav — logo, enlaces ancla y CTA.
- * En móvil los enlaces colapsan en un panel desplegable.
+ * Header — reconstruido desde el Figma (nodo 640:3463 / Component 48).
+ *
+ * Medidas del archivo, sobre un lienzo de 1440 × 139:
+ *   banda        #F4F1EF, sombra 0 4px 20px -2px rgba(0,0,0,.07)
+ *   logo         x=110  y=12   110 × 110
+ *   nav          x=296  y=47   1048 × 46, alineada a la derecha, gap 49
+ *   enlaces      Arboria Medium 16 / #021E46
+ *   búsqueda     53 × 46, radio 7, icono 26.5 × 27.5
+ *
+ * Traducido a un layout fluido: los 49px de gap y el 16px de los
+ * enlaces se conservan tal cual; el posicionamiento absoluto del
+ * Figma se convierte en flex, que es lo que hace que aguante el
+ * responsive sin reventar.
  */
-import Logo from '@components/Logo.astro';
 import { navLinks } from '@/data/site';
 ---
 
-<header class="header" data-nav>
-  <div class="wrap wrap--wide header__inner">
-    <Logo tone="light" />
+<header class="nav" data-nav>
+  <div class="nav__inner">
+    <a href="/" class="nav__brand" aria-label="Creative Agency Success — inicio">
+      <img src="/img/logo.svg" alt="Creative Agency Success" width="110" height="110" />
+    </a>
 
-    <nav class="header__nav" id="primary-nav" aria-label="Primary">
-      <ul role="list" class="header__list">
+    <nav class="nav__links" aria-label="Navegación principal">
+      <ul role="list" class="nav__list">
         {
           navLinks.map((link) => (
             <li>
-              <a href={link.href} class="header__link">
+              <a href={link.href} class="nav__link">
                 {link.label}
               </a>
             </li>
           ))
         }
       </ul>
+
+      <button class="nav__search" type="button" aria-label="Buscar">
+        <img src="/img/icon-search.svg" alt="" width="27" height="28" aria-hidden="true" />
+      </button>
     </nav>
 
-    <div class="header__actions">
-      <a href="#contact" class="btn btn--accent header__cta">Book A Call</a>
+    <button class="nav__burger" type="button" data-menu-toggle aria-expanded="false" aria-controls="mobile-menu">
+      <span class="visually-hidden">Abrir menú</span>
+      <span class="nav__burger-bar" aria-hidden="true"></span>
+      <span class="nav__burger-bar" aria-hidden="true"></span>
+    </button>
+  </div>
 
-      <button
-        type="button"
-        class="header__toggle"
-        data-nav-toggle
-        aria-expanded="false"
-        aria-controls="primary-nav"
-      >
-        <span class="visually-hidden">Menu</span>
-        <span class="header__bars" aria-hidden="true"></span>
-      </button>
-    </div>
+  <div class="nav__mobile" id="mobile-menu" data-menu hidden>
+    <ul role="list" class="nav__mobile-list">
+      {
+        navLinks.map((link) => (
+          <li>
+            <a href={link.href} class="nav__mobile-link">
+              {link.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </header>
 
 <script>
-  const toggle = document.querySelector<HTMLButtonElement>('[data-nav-toggle]');
-  const header = document.querySelector<HTMLElement>('[data-nav]');
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const panel = document.querySelector<HTMLElement>('[data-menu]');
 
   toggle?.addEventListener('click', () => {
-    const open = header?.classList.toggle('is-open') ?? false;
-    toggle.setAttribute('aria-expanded', String(open));
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    if (panel) panel.hidden = open;
+    document.body.style.overflow = open ? '' : 'hidden';
   });
 
-  // Cierra el panel al navegar a un ancla
-  header?.querySelectorAll('a[href^="#"]').forEach((link) => {
-    link.addEventListener('click', () => {
-      header.classList.remove('is-open');
+  // Al pulsar un enlace del panel, ciérralo: en móvil son anclas
+  // y dejar el panel abierto tapa justo lo que acabas de pedir.
+  panel?.addEventListener('click', (event) => {
+    if ((event.target as HTMLElement).closest('a')) {
       toggle?.setAttribute('aria-expanded', 'false');
-    });
+      panel.hidden = true;
+      document.body.style.overflow = '';
+    }
   });
 </script>
 
 <style>
-  .header {
-    position: fixed;
+  .nav {
+    position: sticky;
     inset-block-start: 0;
-    inset-inline: 0;
     z-index: var(--z-sticky);
-    padding-block: var(--space-xs);
-    color: var(--n-0);
-    transition:
-      padding-block var(--dur-base) var(--ease-out-expo),
-      background-color var(--dur-base) var(--ease-out-quart),
-      box-shadow var(--dur-base) var(--ease-out-quart);
+    background-color: var(--brand-sand);
+    box-shadow: var(--shadow-figma);
   }
 
-  .header:global(.is-scrolled) {
-    padding-block: var(--space-3xs);
-    background-color: oklch(from var(--brand-ink) l c h / 0.86);
-    backdrop-filter: blur(18px) saturate(1.5);
-    box-shadow: 0 1px 0 oklch(from var(--n-0) l c h / 0.10);
-  }
-
-  .header__inner {
+  .nav__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: var(--space-m);
+    inline-size: min(100% - 2rem, 1440px);
+    margin-inline: auto;
+    /* 110px de logo + 12/17 de aire arriba y abajo = 139 de alto */
+    padding-block: 0.75rem 1.0625rem;
+    padding-inline: clamp(1rem, 7.64vw, 110px) clamp(1rem, 6.9vw, 99px);
   }
 
-  .header__list {
+  .nav__brand {
+    display: block;
+    flex-shrink: 0;
+    line-height: 0;
+  }
+
+  .nav__brand img {
+    inline-size: clamp(72px, 7.6vw, 110px);
+    block-size: auto;
+  }
+
+  .nav__links {
     display: flex;
     align-items: center;
-    gap: var(--space-m);
+    gap: clamp(1.25rem, 3.4vw, 49px);
+  }
+
+  .nav__list {
+    display: flex;
+    align-items: center;
+    gap: clamp(1.25rem, 3.4vw, 49px);
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .header__link {
+  .nav__link {
     position: relative;
-    font-size: var(--step--1);
+    font-size: 1rem; /* 16px, exacto del Figma */
     font-weight: 500;
-    color: oklch(from var(--n-0) l c h / 0.78);
+    color: var(--brand-ink);
+    white-space: nowrap;
     transition: color var(--dur-fast) var(--ease-out-quart);
   }
 
-  .header__link::after {
+  /* Subrayado que se dibuja al hover — el Figma no lo especifica,
+     pero un enlace sin estado hover se siente muerto. Usa el púrpura
+     de marca, así que no introduce color nuevo. */
+  .nav__link::after {
     content: '';
     position: absolute;
     inset-inline: 0;
-    inset-block-end: -0.4em;
+    inset-block-end: -0.35em;
     block-size: 2px;
     border-radius: var(--radius-full);
     background-color: var(--accent);
@@ -118,114 +157,95 @@ import { navLinks } from '@/data/site';
     transition: transform var(--dur-base) var(--ease-out-expo);
   }
 
-  .header__link:hover,
-  .header__link:focus-visible {
-    color: var(--n-0);
-  }
-
-  .header__link:hover::after,
-  .header__link:focus-visible::after {
+  .nav__link:hover::after,
+  .nav__link:focus-visible::after {
     transform: scaleX(1);
     transform-origin: left;
   }
 
-  .header__actions {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2xs);
-  }
-
-  /* Botón hamburguesa — tres barras hechas con una sola caja */
-  .header__toggle {
-    display: none;
+  .nav__search {
+    display: grid;
     place-items: center;
-    inline-size: 2.5rem;
-    block-size: 2.5rem;
-    border-radius: var(--radius-s);
-    border: 1px solid oklch(from var(--n-0) l c h / 0.22);
-    color: var(--n-0);
+    inline-size: 53px;
+    block-size: 46px;
+    flex-shrink: 0;
+    border-radius: 7px;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.07));
+    transition: transform var(--dur-fast) var(--ease-spring);
   }
 
-  .header__bars,
-  .header__bars::before,
-  .header__bars::after {
+  .nav__search img {
+    inline-size: 27px;
+    block-size: 28px;
+  }
+
+  .nav__search:hover {
+    transform: scale(1.08);
+  }
+
+  /* ---------- MÓVIL ---------- */
+
+  .nav__burger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    inline-size: 44px;
+    block-size: 44px;
+    flex-shrink: 0;
+  }
+
+  .nav__burger-bar {
     display: block;
-    inline-size: 1.05rem;
+    inline-size: 26px;
     block-size: 2px;
+    margin-inline: auto;
     border-radius: var(--radius-full);
-    background-color: currentColor;
-    transition: transform var(--dur-fast) var(--ease-out-expo);
+    background-color: var(--brand-ink);
+    transition: transform var(--dur-base) var(--ease-out-expo);
   }
 
-  .header__bars::before,
-  .header__bars::after {
-    content: '';
-    position: absolute;
+  .nav__burger[aria-expanded='true'] .nav__burger-bar:first-child {
+    transform: translateY(4px) rotate(45deg);
   }
 
-  .header__bars::before { transform: translateY(-6px); }
-  .header__bars::after  { transform: translateY(6px); }
-
-  .header:global(.is-open) .header__bars {
-    background-color: transparent;
+  .nav__burger[aria-expanded='true'] .nav__burger-bar:last-child {
+    transform: translateY(-4px) rotate(-45deg);
   }
 
-  .header:global(.is-open) .header__bars::before {
-    transform: rotate(45deg);
+  .nav__mobile {
+    background-color: var(--brand-sand);
+    border-block-start: 1px solid oklch(from var(--brand-ink) l c h / 0.08);
   }
 
-  .header:global(.is-open) .header__bars::after {
-    transform: rotate(-45deg);
+  .nav__mobile-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+    margin: 0;
+    padding: var(--space-m) clamp(1rem, 6vw, 3rem) var(--space-l);
+    list-style: none;
   }
 
-  @media (width < 64rem) {
-    .header__toggle {
-      display: grid;
-      position: relative;
-    }
+  .nav__mobile-link {
+    display: block;
+    font-size: var(--step-1);
+    font-weight: 500;
+    color: var(--brand-ink);
+  }
 
-    .header__nav {
-      position: absolute;
-      inset-block-start: 100%;
-      inset-inline: var(--gutter);
-      padding: var(--space-s);
-      border-radius: var(--radius-m);
-      background-color: var(--brand-ink-2);
-      box-shadow: var(--shadow-l);
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-0.5rem);
-      transition:
-        opacity var(--dur-fast) var(--ease-out-quart),
-        transform var(--dur-fast) var(--ease-out-expo),
-        visibility var(--dur-fast);
-    }
-
-    .header:global(.is-open) .header__nav {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-
-    .header__list {
-      flex-direction: column;
-      align-items: stretch;
-      gap: var(--space-2xs);
-    }
-
-    .header__link {
-      display: block;
-      padding-block: var(--space-2xs);
-      font-size: var(--step-0);
-    }
-
-    .header__link::after {
+  @media (width < 68rem) {
+    .nav__links {
       display: none;
     }
+
+    .nav__burger {
+      display: flex;
+    }
   }
 
-  @media (width < 30rem) {
-    .header__cta {
+  @media (width >= 68rem) {
+    .nav__mobile {
       display: none;
     }
   }

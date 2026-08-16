@@ -1,0 +1,95 @@
+---
+/**
+ * Featured in — banda de logos de prensa (nodo 152:209 del Figma).
+ *
+ * Medidas del archivo, lienzo 1440 × 334, fondo blanco:
+ *   título   "Featured in", Arboria Book 20 / 30, #4D4D4D, centrado
+ *   logos    fila de 6, centrada en 1241px de ancho
+ *
+ * Los anchos de cada logo son los del archivo: los logos de prensa
+ * tienen pesos ópticos distintos y escalarlos todos igual los
+ * desequilibra.
+ */
+const logos = [
+  { src: '/img/press-forbes.png', alt: 'Forbes', w: 149, h: 40 },
+  { src: '/img/press-abc.png', alt: 'ABC', w: 74, h: 73 },
+  { src: '/img/press-entrepreneur.png', alt: 'Entrepreneur', w: 282, h: 83 },
+  { src: '/img/press-nypost.png', alt: 'New York Post', w: 273, h: 39 },
+  { src: '/img/press-regexseo.png', alt: 'Regex SEO', w: 210, h: 42 },
+  { src: '/img/press-agencyhighway.png', alt: 'Agency Highway', w: 158, h: 52 },
+];
+---
+
+<section class="press" aria-labelledby="press-heading">
+  <div class="press__inner">
+    <h2 class="press__title" id="press-heading">Featured in</h2>
+
+    <ul role="list" class="press__list" data-animate="stagger" data-stagger="0.06">
+      {
+        logos.map((logo) => (
+          <li class="press__item">
+            <img src={logo.src} alt={logo.alt} width={logo.w} height={logo.h} loading="lazy" />
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .press {
+    background-color: var(--surface);
+    padding-block: clamp(2.5rem, 5vw, 4rem);
+  }
+
+  .press__inner {
+    inline-size: min(100% - 2rem, 1241px);
+    margin-inline: auto;
+  }
+
+  .press__title {
+    font-size: 1.25rem; /* 20px exacto */
+    line-height: 1.5;
+    font-weight: 400;
+    text-align: center;
+    color: var(--brand-slate);
+    margin-block-end: clamp(1.25rem, 2.5vw, 2.125rem);
+  }
+
+  .press__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .press__item img {
+    /* Escalan a la vez manteniendo su proporción relativa: cada uno
+       conserva su ancho del Figma en el tope, y baja en bloque. */
+    inline-size: auto;
+    block-size: auto;
+    max-block-size: clamp(1.75rem, 3.4vw, 3.25rem);
+    max-inline-size: 100%;
+    filter: grayscale(1);
+    opacity: 0.72;
+    transition:
+      filter var(--dur-base) var(--ease-out-quart),
+      opacity var(--dur-base) var(--ease-out-quart);
+  }
+
+  .press__item:hover img {
+    filter: grayscale(0);
+    opacity: 1;
+  }
+
+  @media (width < 48rem) {
+    .press__list {
+      justify-content: center;
+      gap: clamp(1.5rem, 6vw, 2.5rem);
+    }
+  }
+</style>
