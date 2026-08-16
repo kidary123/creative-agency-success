@@ -26,3 +26,8 @@ desktop.ini
 !.vscode/extensions.json
 !.vscode/settings.json
 .idea/
+
+# local deploy helpers (not part of the deliverable)
+deploy.ps1
+DEPLOY-ME.bat
+ENTREGA.txt
