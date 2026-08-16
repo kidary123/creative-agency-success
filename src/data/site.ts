@@ -73,6 +73,7 @@ export const journey = {
       src: '/img/journey-1.png',
       offset: 70,
       alt: 'Agency owner looking ahead, wearing red-rimmed glasses',
+      focus: '58% 28%',
       title: 'Freedom',
       correct: 'Freedom',
       body: [
@@ -84,6 +85,7 @@ export const journey = {
       src: '/img/journey-2.png',
       offset: 124,
       alt: 'Agency founder laughing during a portrait session',
+      focus: '50% 22%',
       title: 'Fulfillment',
       correct: 'Fulfillment',
       body: [
@@ -95,6 +97,7 @@ export const journey = {
       src: '/img/journey-3.png',
       offset: 66,
       alt: 'Creative professional standing outside a glass office building',
+      focus: '36% 32%',
       title: 'Passion',
       correct: 'Passion',
       body: [
@@ -106,6 +109,7 @@ export const journey = {
       src: '/img/journey-4.png',
       offset: 138,
       alt: 'Agency owner smiling on a city street',
+      focus: '48% 42%',
       title: 'Purpose',
       correct: 'Purpose',
       body: [
@@ -117,6 +121,7 @@ export const journey = {
       src: '/img/journey-5.png',
       offset: 65,
       alt: 'Agency partner in a suit leaning against a stone column',
+      focus: '63% 30%',
       title: 'Confidence',
       correct: 'Confidence',
       body: [
@@ -128,6 +133,7 @@ export const journey = {
       src: '/img/journey-6.png',
       offset: 140,
       alt: 'Creative director in a denim jacket, smiling',
+      focus: '48% 24%',
       title: 'Control',
       correct: 'Control',
       body: [
@@ -139,6 +145,7 @@ export const journey = {
       src: '/img/journey-7.png',
       offset: 106,
       alt: 'Agency founder with a green scarf, looking at the camera',
+      focus: '42% 35%',
       /** El archivo dice "Control"; por contenido y por el heptágono es Growth. */
       title: 'Control',
       correct: 'Growth',

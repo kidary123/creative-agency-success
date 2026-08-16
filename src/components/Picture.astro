@@ -18,6 +18,14 @@ interface Props {
   class?: string;
   loading?: 'lazy' | 'eager';
   fetchpriority?: 'high' | 'low' | 'auto';
+  /**
+   * Punto focal para object-fit: cover, en formato "X% Y%".
+   * Necesario cuando la relación de aspecto cambia en runtime (el
+   * acordeón de Journey pasa de retrato a horizontal en hover): un
+   * recorte centrado por defecto corta la cara si no está en el
+   * medio exacto de la foto original.
+   */
+  focus?: string;
 }
 
 const {
@@ -28,6 +36,7 @@ const {
   class: className,
   loading = 'lazy',
   fetchpriority = 'auto',
+  focus = '50% 50%',
 } = Astro.props;
 
 const webp = src.replace(/\.(png|jpe?g)$/i, '.webp');
@@ -43,5 +52,6 @@ const webp = src.replace(/\.(png|jpe?g)$/i, '.webp');
     loading={loading}
     fetchpriority={fetchpriority}
     decoding="async"
+    style={`object-position: ${focus}`}
   />
 </picture>

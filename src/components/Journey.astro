@@ -50,7 +50,7 @@ const EXPANDIDO = 2.6;
       journey.portraits.map((p, i) => (
         <li class="slot" style={`--offset:${p.offset}`}>
           <div class="slot__media">
-            <Picture src={p.src} alt={p.alt} width={210} height={406} />
+            <Picture src={p.src} alt={p.alt} width={210} height={406} focus={p.focus} />
           </div>
 
           <div class="slot__panel" id={`journey-panel-${i}`}>
