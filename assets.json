@@ -34,6 +34,66 @@
       "url": "https://www.figma.com/api/mcp/asset/2b852344-9dca-41f2-8579-a7120336164c.png"
     },
     {
+      "file": "program-accelerator.svg",
+      "nodeId": "89:175",
+      "name": "Program card — ilustración de Agency Accelerator",
+      "url": "https://www.figma.com/api/mcp/asset/815872f1-51cf-4b54-957d-8950d2c7e105.svg"
+    },
+    {
+      "file": "program-partnership.svg",
+      "nodeId": "89:216",
+      "name": "Program card — ilustración de Scale Partnership",
+      "url": "https://www.figma.com/api/mcp/asset/960cc3ca-c490-4eaa-beb1-dec6369df694.svg"
+    },
+    {
+      "file": "stats-media.png",
+      "nodeId": "89:442",
+      "name": "Banda de datos — foto con el botón de play",
+      "url": "https://www.figma.com/api/mcp/asset/13978030-de9c-4ab2-bd5b-afdbd59aac72.png"
+    },
+    {
+      "file": "journey-1.png",
+      "nodeId": "82:206",
+      "name": "Journey — retrato 1",
+      "url": "https://www.figma.com/api/mcp/asset/48626632-1a51-4687-ba29-ee68a251ddd9.png"
+    },
+    {
+      "file": "journey-2.png",
+      "nodeId": "82:208",
+      "name": "Journey — retrato 2",
+      "url": "https://www.figma.com/api/mcp/asset/5c7e508f-6095-4757-ad9d-f3beb7e722c6.png"
+    },
+    {
+      "file": "journey-3.png",
+      "nodeId": "82:210",
+      "name": "Journey — retrato 3",
+      "url": "https://www.figma.com/api/mcp/asset/74c136d8-722d-452b-be9a-c6355d7ae240.png"
+    },
+    {
+      "file": "journey-4.png",
+      "nodeId": "82:212",
+      "name": "Journey — retrato 4",
+      "url": "https://www.figma.com/api/mcp/asset/f326593a-349d-4491-be7a-d9870ca6b96a.png"
+    },
+    {
+      "file": "journey-5.png",
+      "nodeId": "82:214",
+      "name": "Journey — retrato 5",
+      "url": "https://www.figma.com/api/mcp/asset/e1ca1c36-1660-486d-b9c1-2e022490fc2d.png"
+    },
+    {
+      "file": "journey-6.png",
+      "nodeId": "82:216",
+      "name": "Journey — retrato 6",
+      "url": "https://www.figma.com/api/mcp/asset/0bf4693b-5eea-486d-a846-05da51bbb5a9.png"
+    },
+    {
+      "file": "journey-7.png",
+      "nodeId": "82:218",
+      "name": "Journey — retrato 7",
+      "url": "https://www.figma.com/api/mcp/asset/39d4d58c-46f8-49e7-af57-4847d84fb908.png"
+    },
+    {
       "file": "press-forbes.png",
       "nodeId": "46:82",
       "name": "Featured in — Forbes",

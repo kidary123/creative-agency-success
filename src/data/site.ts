@@ -44,37 +44,84 @@ export const hero = {
   cta: { label: 'Book A Call', href: '#contact' },
 } as const;
 
+/**
+ * The Journey To Your Sucess.
+ * El typo "Sucess" es del Figma: se pinta tal cual, y la versión
+ * correcta va a la metadata que consumen los crawlers.
+ */
+export const journey = {
+  heading: 'The Journey To Your Success',
+  headingDisplay: 'The Journey To Your Sucess',
+  body:
+    "The stories of our clients' success inspire us. We've helped them navigate the challenges that come with growth and development, so they can succeed on their own terms.",
+  /** offset = desplazamiento vertical en px del Figma, sobre 489 de banda */
+  portraits: [
+    { src: '/img/journey-1.png', offset: 70,  alt: 'Agency owner looking ahead, wearing red-rimmed glasses' },
+    { src: '/img/journey-2.png', offset: 124, alt: 'Agency founder laughing during a portrait session' },
+    { src: '/img/journey-3.png', offset: 66,  alt: 'Creative professional standing outside a glass office building' },
+    { src: '/img/journey-4.png', offset: 138, alt: 'Agency owner smiling on a city street' },
+    { src: '/img/journey-5.png', offset: 65,  alt: 'Agency partner in a suit leaning against a stone column' },
+    { src: '/img/journey-6.png', offset: 140, alt: 'Creative director in a denim jacket, smiling' },
+    { src: '/img/journey-7.png', offset: 106, alt: 'Agency founder with a green scarf, looking at the camera' },
+  ],
+} as const;
+
+/**
+ * Banda de datos. Las cifras van con el espacio tras el símbolo
+ * ("$ 3,000,000") tal como están escritas en el Figma.
+ * `plain` es la forma normalizada para el JSON-LD y catalog.txt.
+ */
 export const stats = {
   eyebrowDisplay: 'Ready to find your tribe?',
   headingLead: 'Individual Clarity and',
   headingAccent: 'Collective Confidence',
+  media: {
+    src: '/img/stats-media.png',
+    alt: 'Two agency partners high-fiving across a desk after reviewing their numbers together',
+  },
   figures: [
-    { value: '$3,000,000', label: 'Revenue Added In Just 90 Days' },
-    { value: '$1,500,000', label: 'Profit Per Partner Per Year' },
-    { value: '897%', label: 'Revenue Increase in 9 Months' },
-    { value: '83%', label: 'Efficiency Gains' },
+    { value: '$ 3,000,000', plain: '$3,000,000', label: 'Revenue Added In Just 90 Days' },
+    { value: '$ 1,500,000', plain: '$1,500,000', label: 'Profit Per Partner Per Year' },
+    { value: '897%', plain: '897%', label: 'Revenue Increase in 9 Months' },
+    { value: '83%', plain: '83%', label: 'Efficiency Gains' },
   ],
 } as const;
 
+/**
+ * Las dos ofertas. Del Figma:
+ *   bloque superior   612 × 418, púrpura #8686F2 / verde #32E0A5
+ *   insignia          círculo de 130, solapando la esquina inferior
+ *   barra de título   611 × 76, azul tinta, Arboria Medium 36 blanco
+ *   cuerpo            Work Sans 18/30, tracking -0.36, #4D4D4D
+ *   CTA               195 × 59, púrpura, "Get Started", sin redondeo
+ */
 export const programs = [
   {
     id: 'agency-accelerator',
+    badgeTop: '5 to 6',
+    badgeBottom: 'Figures',
+    tone: 'purple' as const,
+    art: '/img/program-accelerator.svg',
     badge: '5 to 6 Figures',
     name: 'Agency Accelerator',
     /** Fiel al diseño, typo incluido */
     nameDisplay: 'Agency Accelerator',
     body: 'Build the systems to get a consistent flow of new clients each month, streamline your services to maximize profit, and get your free time back. Some of our clients now work as little as 5 hours a week while still growing.',
-    cta: { label: 'Learn More', href: '#contact' },
+    cta: { label: 'Get Started', href: '#contact' },
     aiDescription:
       'For agencies at 5 to 6 figures: systems for consistent monthly client flow, streamlined services, higher profit, and reclaimed founder time.',
   },
   {
     id: 'scale-partnership',
+    badgeTop: '6 to 7',
+    badgeBottom: 'Figures',
+    tone: 'green' as const,
+    art: '/img/program-partnership.svg',
     badge: '6 to 7 Figures',
     name: 'Scale Partnership',
     nameDisplay: 'Scale Partnership',
-    body: 'A premium program for agencies already at 7-figures and ready to scale to $10M+ per year. Sustainable growth, maximized profit, a management structure that works for you, a long-term vision, and a maximized valuation.',
-    cta: { label: 'Learn More', href: '#contact' },
+    body: 'This is a premium group for agencies already at 7-figures that are ready to scale to $10M+ revenue per year. You gain access to business wisdom you can use to create sustainable growth for your creative agency.\n\nA tailored approach that will help you maximize profits, create a management structure that works for you, develop a long-term vision for your agency, and maximize valuation.',
+    cta: { label: 'Get Started', href: '#contact' },
     aiDescription:
       'For 6 to 7 figure agencies scaling to $10M+/year: sustainable growth, management structure, long-term vision, and maximized valuation.',
   },

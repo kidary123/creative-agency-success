@@ -1,96 +1,111 @@
 ---
 /**
- * Stats band — "Ready to find your tribe?", imagen con botón de play,
- * y las cuatro cifras de resultados.
+ * Banda de datos — nodos 42:73, 42:74, 89:441 (media + play) y los
+ * cuatro grupos 135:108..111 del Figma.
+ *
+ * Del archivo:
+ *   titular   "Ready to find your tribe?"  centrado, 1241 de ancho
+ *   subtítulo "Individual Clarity and Collective Confidence"
+ *   media     922 × 492 con velo negro al 25% y triángulo de play
+ *             (Polygon 2, 83 × 79, rotado 90°)
+ *   cifras    Arboria Medium 32 / #8686F2  (púrpura)
+ *   etiquetas Arboria Book 20 / #021E46    (azul tinta)
+ *
+ * Estructura real: la media ocupa la izquierda y las cuatro cifras
+ * se apilan en vertical a la derecha, separadas 140px. No es una
+ * fila de cuatro, que es como estaba antes.
  */
 import { stats } from '@/data/site';
 ---
 
-<section class="stats" id="success-stories" aria-labelledby="stats-heading">
-  <div class="wrap wrap--wide stack stack--xl">
-    <header class="stats__header">
-      <p class="stats__eyebrow" data-animate="fade-up">{stats.eyebrowDisplay}</p>
-      <h2 class="stats__heading" id="stats-heading" data-animate="fade-up" data-delay="0.06">
-        {stats.headingLead}{' '}
-        <em class="stats__accent">{stats.headingAccent}</em>
+<section class="stats" id="about" aria-labelledby="stats-heading">
+  <div class="stats__inner">
+    <header class="stats__head">
+      <h2 class="stats__title" id="stats-heading" data-animate="fade-up">
+        {stats.eyebrowDisplay}
       </h2>
+      <p class="stats__sub" data-animate="fade-up" data-delay="0.06">
+        {stats.headingLead}{' '}
+        <strong class="stats__accent">{stats.headingAccent}</strong>
+      </p>
     </header>
 
-    <figure class="stats__media" data-animate="reveal">
-      <img
-        src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=70"
-        alt="Members of a creative agency team collaborating around a table during a working session"
-        width="1600"
-        height="900"
-        loading="lazy"
-        decoding="async"
-      />
+    <div class="stats__body">
+      <figure class="stats__media" data-animate="reveal">
+        <img src={stats.media.src} alt={stats.media.alt} width="922" height="492" loading="lazy" />
+        <button class="stats__play" type="button" data-play>
+          <span class="visually-hidden">Play the Creative Agency Success community video</span>
+          <svg viewBox="0 0 79 83" fill="none" aria-hidden="true">
+            <path d="M39.5 2 77 81H2L39.5 2Z" fill="white" transform="rotate(90 39.5 41.5)" />
+          </svg>
+        </button>
+      </figure>
 
-      <button type="button" class="stats__play" data-play>
-        <span class="visually-hidden">Play the Creative Agency Success community video</span>
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M9 6.5v11a.6.6 0 0 0 .92.5l8.2-5.5a.6.6 0 0 0 0-1l-8.2-5.5A.6.6 0 0 0 9 6.5Z" />
-        </svg>
-      </button>
-    </figure>
-
-    <dl class="stats__figures" data-animate="stagger" data-stagger="0.09">
-      {
-        stats.figures.map((figure) => (
-          <div class="stat">
-            <dt class="stat__value">{figure.value}</dt>
-            <dd class="stat__label">{figure.label}</dd>
-          </div>
-        ))
-      }
-    </dl>
+      <dl class="stats__figures" data-animate="stagger" data-stagger="0.09">
+        {
+          stats.figures.map((f) => (
+            <div class="stats__figure">
+              <dt class="stats__value">{f.value}</dt>
+              <dd class="stats__label">{f.label}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
   </div>
 </section>
 
 <style>
   .stats {
-    padding-block: var(--space-3xl);
     background-color: var(--surface);
+    padding-block: clamp(3rem, 6vw, 5.5rem);
   }
 
-  .stats__header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-2xs);
+  .stats__inner {
+    inline-size: min(100% - 2rem, 1241px);
+    margin-inline: auto;
+  }
+
+  .stats__head {
     text-align: center;
+    margin-block-end: clamp(2rem, 4vw, 3.25rem);
   }
 
-  .stats__eyebrow {
-    font-size: var(--step--1);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-caps);
-    color: var(--accent);
+  .stats__title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+    color: var(--brand-ink);
   }
 
-  .stats__heading {
-    font-size: var(--step-5);
-    font-weight: 800;
-    line-height: var(--leading-tight);
-    letter-spacing: var(--tracking-display);
-    max-inline-size: 20ch;
+  .stats__sub {
+    margin-block-start: clamp(0.5rem, 1vw, 0.875rem);
+    font-size: clamp(1.125rem, 1.5vw, 1.375rem);
+    line-height: 1.45;
+    color: var(--brand-slate);
   }
 
-  /* El acento va en cursiva y en color: separa las dos mitades
-     del concepto sin necesitar un salto de línea forzado. */
   .stats__accent {
+    font-weight: 700;
     color: var(--accent);
-    font-style: italic;
+  }
+
+  /* ---------- CUERPO ---------- */
+
+  .stats__body {
+    display: grid;
+    grid-template-columns: minmax(0, 922fr) minmax(0, 299fr);
+    align-items: center;
+    gap: clamp(2rem, 4vw, 3.5rem);
   }
 
   .stats__media {
     position: relative;
     margin: 0;
-    border-radius: var(--radius-l);
+    aspect-ratio: 922 / 492;
     overflow: hidden;
-    aspect-ratio: 16 / 8;
-    background-color: var(--surface-sunk);
   }
 
   .stats__media img {
@@ -99,15 +114,13 @@ import { stats } from '@/data/site';
     object-fit: cover;
   }
 
+  /* Velo del 25%: es lo que deja respirar al triángulo blanco
+     sobre una foto clara. */
   .stats__media::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to top,
-      oklch(from var(--brand-ink) l c h / 0.55),
-      transparent 55%
-    );
+    background-color: rgb(0 0 0 / 0.25);
     pointer-events: none;
   }
 
@@ -117,97 +130,74 @@ import { stats } from '@/data/site';
     inset-inline-start: 50%;
     translate: -50% -50%;
     z-index: 1;
+    inline-size: clamp(48px, 5.8vw, 83px);
+    aspect-ratio: 83 / 79;
     display: grid;
     place-items: center;
-    inline-size: 5rem;
-    block-size: 5rem;
-    border-radius: var(--radius-full);
-    background-color: var(--accent);
-    color: var(--accent-ink);
     transition: transform var(--dur-base) var(--ease-spring);
   }
 
   .stats__play svg {
-    inline-size: 1.8rem;
-    block-size: 1.8rem;
-    translate: 2px 0;
-  }
-
-  /* Anillo pulsante — atrae el ojo al play sin animar el botón */
-  .stats__play::before {
-    content: '';
-    position: absolute;
-    inset: -0.5rem;
-    border-radius: var(--radius-full);
-    border: 2px solid var(--accent);
-    opacity: 0;
-    animation: pulse-ring 2.8s var(--ease-out-quart) infinite;
+    inline-size: 100%;
+    block-size: 100%;
+    filter: drop-shadow(0 4px 16px rgb(0 0 0 / 0.28));
   }
 
   .stats__play:hover {
-    transform: scale(1.08);
+    transform: scale(1.1);
   }
 
-  @keyframes pulse-ring {
-    0%   { opacity: 0.7; transform: scale(0.9); }
-    70%  { opacity: 0;   transform: scale(1.25); }
-    100% { opacity: 0;   transform: scale(1.25); }
-  }
+  /* ---------- CIFRAS ---------- */
 
   .stats__figures {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-m);
-    margin: 0;
-  }
-
-  .stat {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3xs);
-    padding-inline-start: var(--space-s);
-    border-inline-start: 2px solid var(--accent);
-  }
-
-  .stat__value {
-    font-size: var(--step-4);
-    font-weight: 800;
-    letter-spacing: var(--tracking-display);
-    line-height: 1.05;
-    color: var(--brand-ink);
-  }
-
-  .stat__label {
+    /* 140px entre inicios de cifra, menos los ~99 que ocupa cada
+       bloque, deja unos 41 de aire. */
+    gap: clamp(1.5rem, 2.6vw, 2.5625rem);
     margin: 0;
-    font-size: var(--step--1);
-    line-height: var(--leading-snug);
-    color: var(--ink-muted);
+  }
+
+  .stats__figure {
+    max-inline-size: 299px;
+  }
+
+  .stats__value {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 2.4vw, 2rem); /* 32px */
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--accent);
+  }
+
+  .stats__label {
+    margin: 0.25rem 0 0;
+    font-size: clamp(1rem, 1.35vw, 1.25rem); /* 20px */
+    line-height: 1.28;
+    color: var(--brand-ink);
+    max-inline-size: 205px;
   }
 
   @media (width < 62rem) {
+    .stats__body {
+      grid-template-columns: 1fr;
+    }
+
     .stats__figures {
+      display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: var(--space-l) var(--space-m);
+      gap: clamp(1.5rem, 4vw, 2.5rem);
     }
 
-    .stats__play {
-      inline-size: 4rem;
-      block-size: 4rem;
-    }
-
-    .stats__play svg {
-      inline-size: 1.4rem;
-      block-size: 1.4rem;
+    .stats__figure,
+    .stats__label {
+      max-inline-size: none;
     }
   }
 
   @media (width < 34rem) {
     .stats__figures {
       grid-template-columns: 1fr;
-    }
-
-    .stats__media {
-      aspect-ratio: 4 / 3;
     }
   }
 </style>

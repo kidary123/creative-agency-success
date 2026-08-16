@@ -1,171 +1,193 @@
 ---
 /**
- * Program cards — las dos ofertas lado a lado.
- * Cada tarjeta es un <article> con su propio heading: así un
- * crawler las lee como dos entidades separadas, en línea con
- * los dos Service/Offer del JSON-LD.
+ * Program cards — nodos 53:49, 53:50, 57:631..650 y 170:423 del Figma.
+ *
+ * Anatomía de cada card, medidas del archivo:
+ *   bloque de arte    612 × 418, púrpura #8686F2 o verde #32E0A5,
+ *                     con una ilustración de polígonos superpuestos
+ *   insignia          círculo de 130, solapando la esquina inferior
+ *                     derecha del bloque; color cruzado respecto al
+ *                     bloque (verde sobre púrpura y viceversa)
+ *   barra de título   611 × 76, azul tinta #021E46,
+ *                     Arboria Medium 36 en blanco, centrado
+ *   cuerpo            Work Sans 18/30, tracking -0.36px, #4D4D4D
+ *   CTA               195 × 59, púrpura, "Get Started", esquinas
+ *                     rectas — el diseño no redondea este botón
+ *
+ * El cruce de color de la insignia lo deduje del archivo: en Scale
+ * Partnership el bloque es verde y la insignia púrpura. Aplico el
+ * mismo criterio invertido a Agency Accelerator.
  */
 import { programs } from '@/data/site';
 ---
 
 <section class="programs" id="programs" aria-labelledby="programs-heading">
-  <div class="wrap wrap--wide stack stack--l">
-    <header class="programs__header">
-      <h2 class="programs__heading" id="programs-heading" data-animate="fade-up">
-        Paths To Success
-      </h2>
-      <p class="programs__sub" data-animate="fade-up" data-delay="0.06">
-        Two programs, separated by the stage of your agency and the problem
-        you are actually facing.
-      </p>
-    </header>
+  <h2 class="visually-hidden" id="programs-heading">Our programs</h2>
 
-    <div class="programs__grid">
-      {
-        programs.map((program, index) => (
-          <article
-            class="card"
-            id={program.id}
-            aria-labelledby={`${program.id}-title`}
-            data-animate="fade-up"
-            data-delay={index * 0.1}
-          >
-            <p class="card__badge">{program.badge}</p>
+  <div class="programs__grid">
+    {
+      programs.map((p, i) => (
+        <article
+          class:list={['card', `card--${p.tone}`]}
+          id={p.id}
+          data-animate="fade-up"
+          data-delay={i * 0.1}
+          aria-labelledby={`${p.id}-title`}
+        >
+          <div class="card__art">
+            <img src={p.art} alt="" width="386" height="341" aria-hidden="true" loading="lazy" />
+            <span class="card__badge">
+              <span>{p.badgeTop}</span>
+              <span>{p.badgeBottom}</span>
+            </span>
+          </div>
 
-            <h3 class="card__title" id={`${program.id}-title`}>
-              {program.nameDisplay}
-            </h3>
+          <h3 class="card__title" id={`${p.id}-title`}>
+            {p.nameDisplay}
+          </h3>
 
-            <p class="card__body">{program.body}</p>
+          <div class="card__body">
+            {p.body.split('\n\n').map((para) => (
+              <p>{para}</p>
+            ))}
+          </div>
 
-            <a href={program.cta.href} class="btn btn--dark card__cta">
-              <span>{program.cta.label}</span>
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
-                <path d="M2.5 8h11M9 3.5 13.5 8 9 12.5" stroke-linecap="round" stroke-linejoin="round" />
-              </svg>
-            </a>
-          </article>
-        ))
-      }
-    </div>
+          <a href={p.cta.href} class="card__cta">
+            {p.cta.label}
+          </a>
+        </article>
+      ))
+    }
   </div>
 </section>
 
 <style>
   .programs {
-    padding-block: var(--space-3xl);
-    background-color: var(--surface-alt);
-  }
-
-  .programs__header {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: var(--space-2xs);
-    text-align: center;
-  }
-
-  .programs__heading {
-    font-size: var(--step-5);
-    font-weight: 800;
-    line-height: var(--leading-tight);
-    letter-spacing: var(--tracking-display);
-  }
-
-  .programs__sub {
-    font-size: var(--step-0);
-    color: var(--ink-muted);
-    max-inline-size: 48ch;
+    background-color: var(--surface);
+    padding-block: clamp(3rem, 6vw, 5.5rem);
   }
 
   .programs__grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: var(--space-m);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(2rem, 3vw, 3rem);
+    inline-size: min(100% - 2rem, 1241px);
+    margin-inline: auto;
+    align-items: start;
   }
 
   .card {
     display: flex;
     flex-direction: column;
-    align-items: start;
-    gap: var(--space-s);
-    padding: var(--space-l);
-    border-radius: var(--radius-l);
-    background-color: var(--surface);
-    border: 1px solid var(--line);
-    transition:
-      transform var(--dur-base) var(--ease-out-expo),
-      border-color var(--dur-base) var(--ease-out-quart),
-      box-shadow var(--dur-base) var(--ease-out-expo);
   }
 
-  /* Barra de acento que crece desde la izquierda al hover.
-     Cuesta cuatro líneas y hace que la tarjeta se sienta viva. */
-  .card::before {
-    content: '';
-    position: absolute;
-    inset-block-start: 0;
-    inset-inline-start: var(--space-l);
-    inline-size: 3rem;
-    block-size: 3px;
-    border-radius: var(--radius-full);
-    background-color: var(--accent);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform var(--dur-slow) var(--ease-out-expo);
-  }
+  /* ---------- BLOQUE DE ARTE ---------- */
 
-  .card {
+  .card__art {
     position: relative;
-    overflow: hidden;
+    aspect-ratio: 612 / 418;
+    display: grid;
+    place-items: center;
+    overflow: visible;
   }
 
-  .card:hover::before {
-    transform: scaleX(1);
+  .card--purple .card__art { background-color: var(--accent); }
+  .card--green  .card__art { background-color: var(--accent-2); }
+
+  .card__art img {
+    inline-size: 63%;
+    block-size: auto;
+    max-block-size: 82%;
+    object-fit: contain;
   }
 
-  .card:hover {
-    transform: translateY(-6px);
-    border-color: var(--line-strong);
-    box-shadow: var(--shadow-l);
-  }
-
+  /* Insignia: solapa la esquina, medio dentro medio fuera. Es el
+     detalle que ata el bloque de color con la barra de título. */
   .card__badge {
-    display: inline-flex;
-    padding: 0.45em 1em;
+    position: absolute;
+    inset-block-end: -7.7%;
+    inset-inline-end: 5%;
+    z-index: 2;
+    display: grid;
+    place-content: center;
+    inline-size: clamp(84px, 10.5vw, 130px);
+    aspect-ratio: 1;
     border-radius: var(--radius-full);
-    background-color: var(--accent-soft);
-    color: var(--brand-ink);
-    font-size: var(--step--2);
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-caps);
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 1.65vw, 1.5rem); /* 24px */
+    font-weight: 500;
+    line-height: 1.16;
+    text-align: center;
+    color: #fff;
   }
+
+  .card--purple .card__badge { background-color: var(--accent-2); color: var(--brand-ink); }
+  .card--green  .card__badge { background-color: var(--accent); }
+
+  /* ---------- TÍTULO ---------- */
 
   .card__title {
-    font-size: var(--step-3);
-    font-weight: 800;
-    letter-spacing: var(--tracking-display);
-    line-height: var(--leading-snug);
+    display: grid;
+    place-items: center;
+    min-block-size: clamp(56px, 5.3vw, 76px);
+    padding: 0.5rem clamp(5rem, 12%, 8rem) 0.5rem 1rem;
+    background-color: var(--brand-ink);
+    font-family: var(--font-display);
+    font-size: clamp(1.5rem, 2.5vw, 2.25rem); /* 36px */
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    color: #fff;
   }
+
+  /* ---------- CUERPO ---------- */
 
   .card__body {
-    font-size: var(--step-0);
-    line-height: var(--leading-normal);
-    color: var(--ink-muted);
+    display: flex;
+    flex-direction: column;
+    gap: 1.875rem; /* el hueco de 30px entre párrafos del archivo */
+    margin-block-start: clamp(1.5rem, 3vw, 2.5rem);
+    font-size: 1.125rem;  /* 18px */
+    line-height: 1.667;   /* 30/18 */
+    letter-spacing: -0.36px;
+    color: var(--brand-slate);
+    flex: 1;
   }
 
+  /* ---------- CTA ----------
+     Rectangular a propósito: el diseño no redondea este botón,
+     a diferencia del CTA del hero. */
   .card__cta {
-    margin-block-start: auto;
+    display: grid;
+    place-items: center;
+    inline-size: 195px;
+    min-block-size: 59px;
+    max-inline-size: 100%;
+    margin-block-start: clamp(1.5rem, 3vw, 2.5rem);
+    padding-inline: 1rem;
+    background-color: var(--accent);
+    font-family: var(--font-display);
+    font-size: 1.25rem; /* 20px */
+    font-weight: 500;
+    color: #fff;
+    transition:
+      background-color var(--dur-fast) var(--ease-out-quart),
+      transform var(--dur-base) var(--ease-out-expo);
+  }
+
+  .card__cta:hover {
+    background-color: var(--accent-hover);
+    transform: translateY(-2px);
   }
 
   @media (width < 56rem) {
     .programs__grid {
       grid-template-columns: 1fr;
+      gap: clamp(2.5rem, 6vw, 3.5rem);
     }
 
-    .card {
-      padding: var(--space-m);
+    .card__title {
+      padding-inline: 1rem clamp(5rem, 22%, 7rem);
     }
   }
 </style>

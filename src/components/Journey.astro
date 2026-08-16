@@ -1,0 +1,133 @@
+---
+/**
+ * The Journey To Your Sucess — nodos 42:70, 42:71 y Component 9
+ * (85:464) del Figma.
+ *
+ * Del archivo:
+ *   titular   "The Journey To Your Sucess"  (typo del diseño, se
+ *             respeta en pantalla y se corrige en la metadata IA)
+ *   copy      Work Sans Regular 18 / 30, tracking -0.36px, #4D4D4D
+ *   banda     7 retratos, 348px de alto, gap 16, cada uno con un
+ *             desplazamiento vertical distinto: 70·124·66·138·65·140·106
+ *
+ * Ese escalonado irregular es lo que da el ritmo. Reproducirlo con
+ * offsets iguales lo mataría, así que van tal cual del archivo,
+ * normalizados a porcentaje para que escalen con el contenedor.
+ */
+import { journey } from '@/data/site';
+---
+
+<section class="journey" id="success-stories" aria-labelledby="journey-heading">
+  <div class="journey__intro">
+    <h2 class="journey__title" id="journey-heading" data-animate="fade-up">
+      {journey.headingDisplay}
+    </h2>
+    <p class="journey__copy" data-animate="fade-up" data-delay="0.08">
+      {journey.body}
+    </p>
+  </div>
+
+  <ul role="list" class="journey__strip" data-animate="stagger" data-stagger="0.07">
+    {
+      journey.portraits.map((p) => (
+        <li class="journey__slot" style={`--offset:${p.offset}`}>
+          <img src={p.src} alt={p.alt} width="180" height="348" loading="lazy" />
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .journey {
+    background-color: var(--surface);
+    padding-block: clamp(3rem, 6vw, 5.5rem) 0;
+    overflow: clip;
+  }
+
+  .journey__intro {
+    inline-size: min(100% - 2rem, 720px);
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .journey__title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 3.4vw, 3rem);
+    font-weight: 700;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--brand-ink);
+  }
+
+  .journey__copy {
+    margin-block-start: clamp(0.75rem, 1.5vw, 1.25rem);
+    font-size: 1.125rem;  /* 18px exacto */
+    line-height: 1.667;   /* 30/18 */
+    letter-spacing: -0.36px;
+    color: var(--brand-slate);
+  }
+
+  /* ---------- BANDA DE RETRATOS ----------
+     Siete columnas iguales con gap 16. Cada slot se empuja hacia
+     abajo con su propio --offset, tomado del archivo. */
+  .journey__strip {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 16px;
+    align-items: start;
+    margin: clamp(2rem, 4vw, 3.5rem) 0 0;
+    padding: 0 0 clamp(2rem, 4vw, 3.5rem);
+    list-style: none;
+    inline-size: min(100%, 1443px);
+    margin-inline: auto;
+  }
+
+  .journey__slot {
+    /* El offset del Figma está sobre 489px de alto de banda:
+       lo expresamos en proporción para que escale con el ancho. */
+    margin-block-start: calc(var(--offset) / 489 * 100%);
+    aspect-ratio: 180 / 348;
+    overflow: hidden;
+  }
+
+  .journey__slot img {
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+    transition: transform var(--dur-slow) var(--ease-out-expo);
+  }
+
+  .journey__slot:hover img {
+    transform: scale(1.05);
+  }
+
+  /* En móvil el escalonado de siete columnas es ilegible: cada
+     retrato queda en una tira de 40px. Se reduce a tres columnas
+     y se anula el offset. */
+  @media (width < 62rem) {
+    .journey__strip {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      inline-size: min(100% - 2rem, 720px);
+    }
+
+    .journey__slot {
+      margin-block-start: 0;
+    }
+
+    .journey__slot:nth-child(n + 7) {
+      display: none;
+    }
+  }
+
+  @media (width < 34rem) {
+    .journey__strip {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .journey__slot:nth-child(n + 5) {
+      display: none;
+    }
+  }
+</style>

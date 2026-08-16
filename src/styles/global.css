@@ -63,9 +63,13 @@ body {
   font-weight: 500;
 }
 
-.h1 { font-size: var(--step-5); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); font-weight: 500; }
-.h2 { font-size: var(--step-4); line-height: var(--leading-snug); letter-spacing: var(--tracking-tight); font-weight: 500; }
-.h3 { font-size: var(--step-2); line-height: var(--leading-snug); letter-spacing: var(--tracking-tight); font-weight: 500; }
+/* Los titulares llevan la familia display (sustituta de Arboria);
+   el cuerpo se queda en Work Sans, que es la del diseño. */
+.h1, .h2, .h3 { font-family: var(--font-display); }
+
+.h1 { font-size: var(--step-5); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); font-weight: 700; }
+.h2 { font-size: var(--step-4); line-height: var(--leading-snug); letter-spacing: var(--tracking-tight); font-weight: 700; }
+.h3 { font-size: var(--step-2); line-height: var(--leading-snug); letter-spacing: var(--tracking-tight); font-weight: 700; }
 
 .lede {
   font-size: var(--step-1);
