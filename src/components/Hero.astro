@@ -54,13 +54,19 @@ const vertices = [
       <div class="hero__chart">
         <img class="hero__heptagon" src="/img/hero-heptagon.svg" alt="" width="580" height="438" aria-hidden="true" />
         <img class="hero__shapes" src="/img/hero-shapes.svg" alt="" width="580" height="438" aria-hidden="true" />
-        <img
-          class="hero__person"
-          src="/img/hero-person.png"
-          alt="A creative agency owner standing with open arms at the centre of the seven values the programme builds"
-          width="580"
-          height="365"
-        />
+        {/* El export original pesaba 3.2 MB a 2000px. Reescalado a 2x
+            del tamaño de render y servido en WebP (149 KB) con PNG de
+            respaldo: es la imagen del LCP, no puede costar megas. */}
+        <picture class="hero__person">
+          <source srcset="/img/hero-person.webp" type="image/webp" />
+          <img
+            src="/img/hero-person.png"
+            alt="A creative agency owner standing with open arms at the centre of the seven values the programme builds"
+            width="1160"
+            height="1086"
+            fetchpriority="high"
+          />
+        </picture>
 
         {
           vertices.map((v) => (
@@ -158,6 +164,11 @@ const vertices = [
     inset: 16.67% 15.29% 0 17.77%;
     inline-size: 66.94%;
     block-size: 83.33%;
+  }
+
+  .hero__person img {
+    inline-size: 100%;
+    block-size: 100%;
     object-fit: contain;
     object-position: bottom;
   }
