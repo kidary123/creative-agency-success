@@ -24,31 +24,39 @@
   --n-950: oklch(9% 0.010 65);
 
   /* ---------- MARCA ----------
-     Creative Agency Success.
-     Estos cuatro valores son el único punto de ajuste si al
-     comparar contra el Figma hay que corregir la paleta. */
-  --brand-ink:    oklch(19% 0.032 265); /* azul tinta, fondo oscuro */
-  --brand-ink-2:  oklch(25% 0.036 265); /* elevación sobre el anterior */
-  --accent:       oklch(74% 0.155 78);  /* ámbar cálido, el color de acción */
-  --accent-hover: oklch(79% 0.150 78);
+     Valores extraídos del Figma vía el conector (variables del
+     archivo, no muestreados a ojo). Nombres originales entre
+     paréntesis para poder rastrearlos de vuelta al diseño. */
+  --brand-ink:    #021E46; /* (dark blue) — fondo oscuro y titulares */
+  --brand-ink-2:  #0A2C5C; /* elevación sobre el anterior (derivado) */
+  --brand-sand:   #F4F1EF; /* (grey) — fondo de bandas claras */
+  --brand-slate:  #4D4D4D; /* (dgrey) — texto secundario */
+
+  --accent:       #8686F2; /* (purple) — color de acción */
+  --accent-hover: #6E6EEE; /* derivado, un paso más oscuro */
+  --accent-2:     #32E0A5; /* (green) — acento secundario, datos y checks */
 
   --accent-soft: oklch(from var(--accent) l c h / 0.14);
-  --accent-ink:  oklch(22% 0.04 78); /* texto sobre fondo ámbar */
+  --accent-ink:  #FFFFFF; /* texto sobre fondo púrpura */
 
   /* Tokens semánticos — tema claro por defecto */
-  --surface:      var(--n-0);
-  --surface-alt:  var(--n-50);
-  --surface-sunk: var(--n-100);
-  --ink:          var(--n-900);
-  --ink-muted:    var(--n-600);
-  --ink-subtle:   var(--n-400);
+  --surface:      #FFFFFF;      /* (white) */
+  --surface-alt:  var(--brand-sand);
+  --surface-sunk: #EAE6E3;      /* derivado de sand, un paso más */
+  --ink:          var(--brand-ink);
+  --ink-muted:    var(--brand-slate);
+  --ink-subtle:   #8A8A8A;
   --line:         oklch(from var(--ink) l c h / 0.10);
   --line-strong:  oklch(from var(--ink) l c h / 0.22);
 
   /* ---------- TIPOGRAFÍA ----------
      Escala fluida: cada paso interpola entre 360px y 1440px de
      viewport. Sin media queries para el tamaño de texto. */
-  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* El Figma usa Arboria (Adobe Fonts, comercial — no licenciable
+     para web aquí). Jost es la sustituta: geométrica, mismas
+     proporciones y eje vertical. Si algún día se licencia Arboria,
+     basta anteponerla en esta línea. */
+  --font-sans: 'Jost', 'Arboria', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-display: var(--font-sans);
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
@@ -117,6 +125,9 @@
   --dur-base: 420ms;
   --dur-slow: 720ms;
   --dur-glacial: 1200ms;
+
+  /* Sombra exacta del Figma (variable "drop shadow") */
+  --shadow-figma: 0 4px 20px -2px #00000012;
 
   /* Sombras: capas suaves en vez de un blur grande y opaco */
   --shadow-s:
