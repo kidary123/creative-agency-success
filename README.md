@@ -3,7 +3,14 @@
 Rebuild of the Creative Agency Success site in **Astro**, with a first-class
 AI-readability layer.
 
-**Live:** _(add the Vercel URL after deploying — see [DEPLOY.md](./DEPLOY.md))_
+**Live:** <https://creative-agency-success-roads1.vercel.app>
+
+| | |
+|---|---|
+| Landing | <https://creative-agency-success-roads1.vercel.app> |
+| AI overview | <https://creative-agency-success-roads1.vercel.app/llms.txt> |
+| Machine catalog | <https://creative-agency-success-roads1.vercel.app/catalog.txt> |
+| Content files | <https://creative-agency-success-roads1.vercel.app/ai/about.md> |
 
 ```bash
 npm install

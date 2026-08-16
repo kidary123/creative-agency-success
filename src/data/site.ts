@@ -17,7 +17,7 @@ export const site = {
   description:
     'Coaching and scaling systems for creative-agency owners — predictable client flow, systemized operations, and the path from 5–6 to 6–7 figures with the founder’s time back.',
   // Se reemplaza por la URL real de Vercel antes del deploy final.
-  url: 'https://creative-agency-success-dywa8d0wv-roads1.vercel.app',
+  url: 'https://creative-agency-success-roads1.vercel.app',
 } as const;
 
 export const navLinks = [
