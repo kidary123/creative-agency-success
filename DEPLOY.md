@@ -1,78 +1,57 @@
-# Deploy — pasos exactos
+# Deploy
 
-Todos los comandos se corren desde la carpeta del proyecto:
+Run everything from the project folder:
 
 ```powershell
 cd "$env:USERPROFILE\Desktop\New folder"
 ```
 
----
-
-## 1. Limpiar el estado de git
-
-Inicialicé el repo desde mi entorno, pero el montaje de archivos dejó un
-lock a medias. Bórralo y arranca limpio:
-
-```powershell
-Remove-Item -Recurse -Force .git
-git init
-git add -A
-git commit -m "Creative Agency Success landing - Astro + AI-readable metadata"
-git branch -M main
-```
+Git is already initialised, on `main`, with the first commit made and
+`node_modules` ignored. Two steps left.
 
 ---
 
-## 2. Crear el repo en GitHub
+## 1. Push to GitHub
 
-No tienes `gh` CLI, así que este paso es manual:
+Create an **empty public** repo at <https://github.com/new> — name it
+`creative-agency-success`. Do **not** tick "Add a README", `.gitignore`
+or a license; the repo must be empty or the push is rejected.
 
-1. Ve a **https://github.com/new**
-2. Nombre: `creative-agency-success` (o el que prefieras)
-3. Visibilidad: **Public** — el brief lo pide explícitamente
-4. **No** marques "Add a README", "Add .gitignore" ni licencia. El repo
-   debe quedar vacío o el push falla.
-5. Create repository
-
-Luego conecta y sube (reemplaza `TU-USUARIO`):
+Then, replacing `YOUR-USERNAME`:
 
 ```powershell
-git remote add origin https://github.com/TU-USUARIO/creative-agency-success.git
+git remote add origin https://github.com/YOUR-USERNAME/creative-agency-success.git
 git push -u origin main
 ```
 
 ---
 
-## 3. Deploy a Vercel
+## 2. Deploy to Vercel
 
 ```powershell
 npx vercel login
 npx vercel --prod
 ```
 
-- `vercel login` abre el navegador — autentícate ahí, no en la terminal.
-- Vercel detecta Astro solo. Acepta los valores por defecto:
-  - Framework: **Astro**
-  - Build command: `npm run build`
-  - Output directory: `dist`
-
-Al terminar imprime la URL de producción.
+`vercel login` opens the browser — authenticate there, not in the terminal.
+Vercel auto-detects Astro; accept the defaults (build `npm run build`,
+output `dist`). It prints the production URL when it finishes.
 
 ---
 
-## 4. Paso final importante
+## 3. Set the real URL
 
-Vercel te da la URL real. Ábrela en `src/data/site.ts` y reemplaza:
+Vercel gives you the live domain. Open `src/data/site.ts` and replace:
 
 ```ts
 url: 'https://creative-agency-success.vercel.app',
 ```
 
-por tu URL real. Esto alimenta el `canonical`, las `og:url` y el campo
-`url` del JSON-LD — si queda mal, el structured data apunta a un dominio
-que no existe.
+with the real one. That single value feeds the canonical link, the
+`og:url`, and the `url` field in the JSON-LD — if it's wrong, the
+structured data points at a domain that doesn't exist.
 
-Luego:
+Then ship it:
 
 ```powershell
 git add -A
@@ -83,24 +62,27 @@ npx vercel --prod
 
 ---
 
-## 5. Verificación post-deploy
+## 4. Post-deploy checks
 
-Comprueba que estas cuatro rutas responden en la URL de producción:
+Four routes must respond on the production domain:
 
-- `/` — la landing
-- `/llms.txt` — el overview para IA
-- `/catalog.txt` — el catálogo machine-readable
-- `/ai/about.md` — uno de los archivos de contenido enlazados desde llms.txt
+| Route            | What it is                                    |
+| ---------------- | --------------------------------------------- |
+| `/`              | the landing page                               |
+| `/llms.txt`      | AI overview                                    |
+| `/catalog.txt`   | machine-readable catalog                       |
+| `/ai/about.md`   | one of the files `llms.txt` links to           |
 
-Y valida el structured data en:
-**https://validator.schema.org/** — pega la URL de producción.
+Then paste the production URL into <https://validator.schema.org/> and
+confirm both JSON-LD blocks parse (`Organization` and `ItemList`).
 
 ---
 
-## Comandos locales
+## Local commands
 
-| Comando           | Qué hace                                |
-| ----------------- | --------------------------------------- |
-| `npm run dev`     | Servidor local en http://localhost:4321 |
-| `npm run build`   | Verifica tipos y compila a `dist/`      |
-| `npm run preview` | Sirve el build de producción            |
+| Command           | What it does                             |
+| ----------------- | ---------------------------------------- |
+| `npm run dev`     | Dev server at http://localhost:4321      |
+| `npm run build`   | Type-check, then build to `dist/`        |
+| `npm run preview` | Serve the production build locally       |
+| `npm run check`   | Type-check only                          |
