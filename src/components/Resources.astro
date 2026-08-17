@@ -119,12 +119,24 @@ import { resources } from '@/data/site';
   .card__media {
     position: relative;
     aspect-ratio: 298 / 210;
+    isolation: isolate;
     /* Deja sitio al disco que sobresale por abajo */
     margin-block-end: calc(var(--disco) * 0.42 + 0.75rem);
     --disco: clamp(56px, 5.8vw, 86px);
   }
 
-  .card__media :global(picture),
+  /* La foto se ancla a los cuatro lados en vez de depender de un
+     `height: 100%` que resuelve contra el aspect-ratio del padre.
+     Con la imagen posicionada no hay ambigüedad: las cuatro
+     tarjetas miden exactamente lo mismo aunque los originales
+     lleguen con proporciones distintas. */
+  .card__media :global(picture) {
+    position: absolute;
+    inset: 0;
+    display: block;
+    overflow: hidden;
+  }
+
   .card__media :global(img) {
     display: block;
     inline-size: 100%;

@@ -47,6 +47,41 @@ ANCHOS = {
 CALIDAD_WEBP = 84
 COLORES_PNG = 256
 
+# Proporción forzada, recortando desde el centro.
+#
+# Las cuatro fotos de Resources salen de Figma con alturas distintas
+# (resource-1 venía 596 × 894 y el resto 596 × 397). Aunque el CSS
+# las recorte con object-fit, dejar el original al doble de alto
+# significa servir el doble de bytes para píxeles que nadie ve, y
+# cualquier fallo de layout se nota al instante. Se recortan aquí,
+# una vez, a la proporción de la tarjeta del archivo (298 × 210).
+RECORTES = {
+    "resource-": 298 / 210,
+}
+
+
+def recorte_objetivo(nombre: str) -> float | None:
+    for clave, ratio in RECORTES.items():
+        if nombre.startswith(clave):
+            return ratio
+    return None
+
+
+def recortar_centrado(im: Image.Image, ratio: float) -> Image.Image:
+    """Recorta al ratio pedido conservando el centro de la imagen."""
+    actual = im.width / im.height
+    if abs(actual - ratio) < 0.001:
+        return im
+
+    if actual > ratio:  # demasiado ancha: se recorta a los lados
+        nuevo_ancho = round(im.height * ratio)
+        margen = (im.width - nuevo_ancho) // 2
+        return im.crop((margen, 0, margen + nuevo_ancho, im.height))
+
+    nuevo_alto = round(im.width / ratio)  # demasiado alta: arriba y abajo
+    margen = (im.height - nuevo_alto) // 2
+    return im.crop((0, margen, im.width, margen + nuevo_alto))
+
 
 def ancho_objetivo(nombre: str) -> int | None:
     for clave, ancho in ANCHOS.items():
@@ -69,6 +104,10 @@ def main() -> None:
 
         with Image.open(png) as im:
             im = im.convert("RGBA" if "A" in im.getbands() else "RGB")
+
+            ratio = recorte_objetivo(png.stem)
+            if ratio is not None:
+                im = recortar_centrado(im, ratio)
 
             # Solo se reduce; ampliar una imagen no añade detalle.
             if im.width > objetivo:

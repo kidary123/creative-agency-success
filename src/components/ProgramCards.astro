@@ -97,12 +97,18 @@ import { programs } from '@/data/site';
     gap: clamp(2rem, 3vw, 3rem);
     inline-size: min(100% - 2rem, 1241px);
     margin-inline: auto;
-    align-items: start;
+    /* `stretch` (por defecto) en lugar de `start`: las dos cards
+       miden lo mismo de alto aunque su texto no. */
   }
 
+  /* Rejilla de cuatro filas con la del cuerpo elástica. Como ambas
+     cards se estiran a la misma altura, la fila del CTA cae a la
+     misma línea en las dos — que es como está en el archivo (los
+     dos botones en y=3668) y no dependía de que los textos
+     midieran igual. */
   .card {
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
   }
 
   /* ---------- BLOQUE DE ARTE ---------- */
@@ -254,7 +260,6 @@ import { programs } from '@/data/site';
     line-height: 1.667;  /* 30/18 */
     letter-spacing: -0.36px;
     color: var(--brand-slate);
-    flex: 1;
   }
 
   /* ---------- CTA ----------
@@ -264,6 +269,8 @@ import { programs } from '@/data/site';
   .card__cta {
     display: grid;
     place-items: center;
+    justify-self: start;
+    align-self: end;
     inline-size: 195px;
     min-block-size: 59px;
     max-inline-size: 100%;

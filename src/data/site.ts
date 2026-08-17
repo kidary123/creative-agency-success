@@ -40,8 +40,21 @@ export const hero = {
   headlineDisplay: 'Your Agency Vision Made Real,',
   subcopy:
     'Creative Agency Owners, we’ve got you. Impact, Freedom and Profit is what we want for you, and we know exactly how to get you there.',
+  /**
+   * Nodo 42:65. Va en DOS pesos: la primera frase en Arboria Book y
+   * la segunda en Medium. Y no está centrado bajo toda la sección:
+   * vive en x=775..1273, es decir centrado bajo la columna del
+   * gráfico, no bajo el titular.
+   */
+  kickerLead: 'You scale your agency.',
+  kickerStrong: 'We simplify your life.',
   kicker: 'You scale your agency. We simplify your life.',
-  cta: { label: 'Book A Call', href: '#contact' },
+  /**
+   * El CTA del hero es Component 1 (38:168): verde #32E0A5 con texto
+   * azul tinta y la etiqueta "Get Started" — no el botón púrpura
+   * "Book A Call" que yo había puesto.
+   */
+  cta: { label: 'Get Started', href: '#contact' },
 } as const;
 
 /**

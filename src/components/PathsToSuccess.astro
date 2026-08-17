@@ -85,6 +85,9 @@ import { pathsToSuccess } from '@/data/site';
   .paths__photo {
     position: absolute;
     inset: 10.46% 0 2.08% 0;
+    transform-origin: 50% 50%;
+    transition: transform var(--dur-slow) var(--ease-out-expo);
+    will-change: transform;
     mask-image: url('/img/paths-mask.svg');
     mask-repeat: no-repeat;
     mask-size: contain;
@@ -111,6 +114,33 @@ import { pathsToSuccess } from '@/data/site';
     block-size: 100%;
     max-inline-size: none;
     pointer-events: none;
+    transform-origin: 50% 50%;
+    transition: transform var(--dur-slow) var(--ease-out-expo);
+    will-change: transform;
+  }
+
+  /* ---------- HOVER (variante 233:1886, "Group 80") ----------
+     El mismo recurso que las program cards: foto y contorno giran en
+     sentidos opuestos, así que el hexágono verde parece despegarse
+     de la imagen. Los ángulos son los del archivo. */
+  .paths__figure:hover .paths__photo {
+    transform: rotate(-4.04deg) scale(1.03);
+  }
+
+  .paths__figure:hover .paths__outline {
+    transform: rotate(3.42deg) scale(1.03);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .paths__photo,
+    .paths__outline {
+      transition: none;
+    }
+
+    .paths__figure:hover .paths__photo,
+    .paths__figure:hover .paths__outline {
+      transform: none;
+    }
   }
 
   /* ---------- TEXTO ---------- */

@@ -175,13 +175,25 @@ const dg = {
     block-size: var(--dg-h);
   }
 
+  /* Los insets llevan los cuatro lados (sin inline/block-size) para
+     que el navegador pueda interpolarlos: el hover del archivo NO
+     es un `scale`, son insets distintos, y transicionarlos así
+     reproduce el movimiento exacto en vez de aproximarlo. */
   .scale__layer {
     position: absolute;
     max-inline-size: none;
     pointer-events: none;
+    transition:
+      inset var(--dur-slow) var(--ease-out-expo),
+      inline-size var(--dur-slow) var(--ease-out-expo),
+      block-size var(--dur-slow) var(--ease-out-expo),
+      transform var(--dur-slow) var(--ease-out-expo);
   }
 
-  /* Insets exactos del componente 89:289 */
+  /* Insets exactos del componente 89:289 (variante en reposo).
+     Un <img> es un elemento reemplazado: con los cuatro insets
+     puestos pero `width:auto` usaría su tamaño intrínseco, así que
+     el alto y el ancho van también explícitos. */
   .scale__layer--base {
     inset: 0;
     inline-size: 100%;
@@ -206,6 +218,20 @@ const dg = {
     block-size: 87.03%;
   }
 
+  /* ---------- HOVER (variante 89:288, "Group 3") ----------
+     Comparando las dos variantes, solo se mueven DOS cosas:
+       · el polígono azul claro se desplaza arriba y a la derecha y
+         gira 1.74°
+       · la foto crece un poco por los cuatro lados
+     Los hexágonos de fondo y el botón de play no se tocan. */
+  .scale__stage:hover .scale__layer--s3,
+  .scale__stage:focus-within .scale__layer--s3 {
+    inset: 10.32% 2.7% 0.3% 18.13%;
+    inline-size: 79.17%;
+    block-size: 89.38%;
+    transform: rotate(1.74deg);
+  }
+
   /* Foto: 15px de radio y velo negro al 10%, como en el archivo. */
   .scale__media {
     position: absolute;
@@ -213,6 +239,32 @@ const dg = {
     margin: 0;
     border-radius: 15px;
     overflow: hidden;
+    transition: inset var(--dur-slow) var(--ease-out-expo);
+  }
+
+  .scale__stage:hover .scale__media,
+  .scale__stage:focus-within .scale__media {
+    inset: 25.02% 6.69% 22.24% 6.61%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .scale__layer,
+    .scale__media {
+      transition: none;
+    }
+
+    .scale__stage:hover .scale__layer--s3,
+    .scale__stage:focus-within .scale__layer--s3 {
+      inset: 11.5% 3.97% 1.47% 19.4%;
+      inline-size: 76.63%;
+      block-size: 87.03%;
+      transform: none;
+    }
+
+    .scale__stage:hover .scale__media,
+    .scale__stage:focus-within .scale__media {
+      inset: 26.78% 8.19% 24.09% 8.05%;
+    }
   }
 
   .scale__media :global(picture),

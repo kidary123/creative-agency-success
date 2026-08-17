@@ -83,10 +83,40 @@ const EXPANDIDO = 2.6;
     const cta = slot.querySelector<HTMLAnchorElement>('.slot__cta');
     if (!trigger) return;
 
+    const strip = slot.closest<HTMLUListElement>('.journey__strip');
+    const panel = slot.querySelector<HTMLDivElement>('.slot__panel');
+
+    /**
+     * El panel está posicionado en absoluto bajo la foto, así que no
+     * suma altura a la banda: se salía por abajo y se montaba encima
+     * de "Featured in". Un min-height fijo no vale, porque el panel
+     * mide distinto en cada slot (los textos no tienen el mismo
+     * largo) y además cambia con el ancho de ventana.
+     *
+     * Se mide el panel una vez abierto y se reserva esa altura en la
+     * banda. Así la sección de abajo se desplaza justo lo necesario.
+     */
+    const reservarAlto = (abierto: boolean) => {
+      if (!strip || !panel) return;
+
+      if (!abierto) {
+        strip.style.minBlockSize = '';
+        return;
+      }
+
+      // En el siguiente frame el panel ya tiene su altura real.
+      requestAnimationFrame(() => {
+        const fondoPanel = panel.getBoundingClientRect().bottom;
+        const topBanda = strip.getBoundingClientRect().top;
+        strip.style.minBlockSize = `${Math.ceil(fondoPanel - topBanda)}px`;
+      });
+    };
+
     const marcar = (abierto: boolean) => {
       trigger.setAttribute('aria-expanded', String(abierto));
       // El CTA solo es alcanzable con Tab cuando el panel está abierto.
       cta?.setAttribute('tabindex', abierto ? '0' : '-1');
+      reservarAlto(abierto);
     };
 
     slot.addEventListener('mouseenter', () => marcar(true));
@@ -102,6 +132,10 @@ const EXPANDIDO = 2.6;
   .journey {
     background-color: var(--surface);
     padding-block: clamp(3rem, 6vw, 5.5rem) 0;
+    /* Sin esto el panel, que sobresale por abajo, se pintaría sobre
+       la banda de logos aunque la altura ya esté reservada. */
+    position: relative;
+    z-index: 1;
   }
 
   .journey__intro {
