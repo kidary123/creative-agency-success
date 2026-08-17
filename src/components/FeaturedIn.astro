@@ -23,6 +23,21 @@ const logos = [
 ---
 
 <section class="press" aria-labelledby="press-heading">
+  {/* PRIMER elemento de la banda blanca: así queda justo debajo del
+      hombre, pegado al borde del hero, sin los logos en medio.
+      Sigue perteneciendo a esta sección, no al bloque arena.
+
+      Se alinea con el gráfico de arriba repitiendo la MISMA rejilla
+      del hero (574fr / 580fr, mismo hueco y mismo ancho de
+      contenedor) y colocando el texto en la segunda columna. Si se
+      alineara al borde derecho del contenedor de los logos, que es
+      21px más ancho, se desplazaría respecto al hombre. */}
+  <div class="press__kickerrow">
+    <p class="press__kicker" data-animate="fade-up">
+      {hero.kickerLead} <strong>{hero.kickerStrong}</strong>
+    </p>
+  </div>
+
   <div class="press__inner">
     <h2 class="press__title" id="press-heading">Featured in</h2>
 
@@ -36,23 +51,6 @@ const logos = [
       }
     </ul>
 
-  </div>
-
-  {/* La frase de posicionamiento (42:65) PERTENECE a esta banda, no
-      al bloque arena del hero, pero se alinea con el gráfico de
-      arriba: en el archivo ocupa x=775..1273 (centro 1024) y el
-      gráfico del hero va de 747 a 1327 (centro 1037). O sea, queda
-      centrada justo debajo del hombre.
-
-      Para que eso se cumpla a cualquier ancho, este bloque repite
-      la MISMA rejilla del hero (574fr / 580fr con su mismo hueco y
-      su mismo ancho de contenedor) y coloca el texto en la segunda
-      columna. Si se alineara al borde derecho del contenedor de los
-      logos, que es más ancho, se desplazaría respecto al hombre. */}
-  <div class="press__kickerrow">
-    <p class="press__kicker" data-animate="fade-up" data-delay="0.12">
-      {hero.kickerLead} <strong>{hero.kickerStrong}</strong>
-    </p>
   </div>
 </section>
 
@@ -132,7 +130,10 @@ const logos = [
     gap: clamp(2rem, 5vw, 4.75rem);
     inline-size: min(100% - 2rem, 1220px);
     margin-inline: auto;
-    margin-block-start: clamp(1.5rem, 3vw, 2.25rem);
+    /* Separa el kicker de los logos, no del hero: va pegado arriba
+       (el relleno de la sección ya deja sitio al saliente del CTA)
+       y abre hueco por abajo. */
+    margin-block-end: clamp(2rem, 4vw, 3.25rem);
   }
 
   /* Arboria 24/28 azul tinta, caja de 498 centrada en la segunda
