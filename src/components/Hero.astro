@@ -45,7 +45,7 @@ const vertices = [
       </p>
 
       <div data-animate="fade-up" data-delay="0.16">
-        <a href={hero.cta.href} class="hero__cta">
+        <a href={hero.cta.href} class="cta cta--green">
           {hero.cta.label}
         </a>
       </div>
@@ -86,13 +86,6 @@ const vertices = [
         }
       </div>
     </div>
-
-    {/* En el archivo el kicker está en x=775..1273: centrado bajo la
-        columna del gráfico, no bajo el titular. Por eso vive dentro
-        de la rejilla del hero, en la segunda columna. */}
-    <p class="hero__kicker" data-animate="fade-up" data-delay="0.24">
-      {hero.kickerLead} <strong>{hero.kickerStrong}</strong>
-    </p>
   </div>
 </section>
 
@@ -113,11 +106,8 @@ const vertices = [
     margin-inline: auto;
   }
 
-  /* El contenido y el gráfico ocupan la fila 1; el kicker cuelga de
-     la segunda columna en la fila 2. */
   .hero__content { grid-column: 1; grid-row: 1; }
   .hero__figure  { grid-column: 2; grid-row: 1; }
-  .hero__kicker  { grid-column: 2; grid-row: 2; }
 
   .hero__content {
     display: flex;
@@ -230,62 +220,14 @@ const vertices = [
   .hero__vertex--fulfilment { inset-block-start: 63.54%; inset-inline-start: 0; }
   .hero__vertex--passion    { inset-block-start: 23.41%; inset-inline-start: 7.08%; }
 
-  /* ---------- CTA ----------
-     Component 1 del archivo: verde con texto azul tinta, 195 × 59 y
-     sin redondeo. */
-  .hero__cta {
-    display: inline-grid;
-    place-items: center;
-    inline-size: 195px;
-    min-block-size: 59px;
-    max-inline-size: 100%;
-    padding-inline: 1rem;
-    background-color: var(--accent-2);
-    font-family: var(--font-display);
-    font-size: 1.25rem; /* 20 */
-    font-weight: 500;
-    color: var(--brand-ink);
-    transition:
-      filter var(--dur-fast) var(--ease-out-quart),
-      transform var(--dur-base) var(--ease-out-expo);
-  }
-
-  .hero__cta:hover {
-    filter: brightness(1.06);
-    transform: translateY(-2px);
-  }
-
-  /* ---------- KICKER ----------
-     Arboria 24/28 azul tinta, centrado en un ancho de 498 bajo el
-     gráfico. Dos pesos: la primera frase en Book y la segunda en
-     Medium — el diseño acentúa la promesa, no la premisa. */
-  .hero__kicker {
-    justify-self: center;
-    inline-size: min(100%, 498px);
-    margin-block-start: clamp(1rem, 2vw, 1.25rem);
-    font-family: var(--font-display);
-    font-size: clamp(1.125rem, 1.67vw, 1.5rem); /* 24 */
-    font-weight: 400;
-    line-height: 1.167; /* 28/24 */
-    text-align: center;
-    color: var(--brand-ink);
-  }
-
-  .hero__kicker strong {
-    font-weight: 500;
-  }
-
   @media (width < 62rem) {
     .hero__inner {
       grid-template-columns: 1fr;
       gap: clamp(2rem, 6vw, 3rem);
     }
 
-    /* En una sola columna el orden manda sobre las coordenadas del
-       archivo: contenido, gráfico y kicker al final. */
     .hero__content { grid-column: 1; grid-row: 1; }
     .hero__figure  { grid-column: 1; grid-row: 2; }
-    .hero__kicker  { grid-column: 1; grid-row: 3; }
 
     .hero__content {
       align-items: center;

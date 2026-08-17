@@ -29,6 +29,12 @@ const multiple = testimonials.length > 1;
   <div class="tmn__inner">
     <h2 class="tmn__title" id="tmn-heading" data-animate="fade-up">Testimonials</h2>
 
+    {/* Comilla decorativa del archivo (85:507): Helvetica 150px en
+        BLANCO sobre la banda arena. Es una marca de agua, no un
+        elemento de lectura: aria-hidden para que ningún lector de
+        pantalla anuncie un signo suelto. */}
+    <p class="tmn__quotemark" aria-hidden="true">&ldquo;</p>
+
     <div class="tmn__carousel" data-carousel data-animate="fade-up" data-delay="0.08">
       {
         multiple && (
@@ -174,6 +180,25 @@ const multiple = testimonials.length > 1;
     color: var(--brand-ink);
   }
 
+  /* Comilla de 150px, blanca, centrada. La caja del archivo mide
+     90 × 69 aunque la fuente sea de 150: el glifo se recorta por
+     arriba y por abajo a propósito. Se reproduce con una altura
+     fija y overflow oculto, y con márgenes negativos para que no
+     empuje al carrusel. */
+  .tmn__quotemark {
+    inline-size: 90px;
+    block-size: 69px;
+    margin-inline: auto;
+    margin-block: clamp(0.5rem, 1.5vw, 1rem) 0;
+    overflow: hidden;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 150px;
+    line-height: 0.995;
+    text-align: center;
+    color: #fff;
+    user-select: none;
+  }
+
   /* ---------- CARRUSEL ---------- */
 
   .tmn__carousel {
@@ -184,7 +209,7 @@ const multiple = testimonials.length > 1;
     column-gap: clamp(0.75rem, 2.5vw, 2.5rem);
     inline-size: min(100%, 1030px);
     margin-inline: auto;
-    margin-block-start: clamp(2rem, 4.5vw, 3.75rem);
+    margin-block-start: clamp(1rem, 2.5vw, 1.5rem);
   }
 
   .tmn__arrow {

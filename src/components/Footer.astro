@@ -21,15 +21,16 @@
  * El form no tiene backend: valida y confirma en cliente. Cambiar
  * `action` cuando exista endpoint.
  */
-import Logo from '@components/Logo.astro';
-import { footerColumns, footerMeta } from '@/data/site';
+import { footerColumns, footerMeta, site } from '@/data/site';
 ---
 
 <footer class="ft" id="contact">
   <div class="ft__inner">
-    <div class="ft__brand">
-      <Logo tone="light" />
-    </div>
+    {/* Logo real del archivo (154:169), no el marcador dibujado a
+        mano: hexágono de la marca con el nombre dentro, 97 × 97. */}
+    <a class="ft__brand" href="#main" aria-label={`${site.name} — home`}>
+      <img src="/img/logo-light.svg" alt="" width="97" height="97" />
+    </a>
 
     {
       footerColumns.map((column) => (
@@ -112,13 +113,24 @@ import { footerColumns, footerMeta } from '@/data/site';
     grid-template-columns: auto auto auto minmax(0, 1fr);
     align-items: start;
     column-gap: clamp(1.5rem, 4vw, 4.5rem);
-    row-gap: clamp(1.5rem, 3vw, 2rem);
+    /* La fila 2 solo lleva el bloque legal, que se pega al logo con
+       su propio margen: aquí el hueco tiene que ser 0. */
+    row-gap: 0;
     inline-size: min(100% - 2rem, 1241px);
     margin-inline: auto;
   }
 
-  .ft__brand :global(svg),
-  .ft__brand :global(img) {
+  .ft__brand {
+    display: block;
+    transition: opacity var(--dur-fast) var(--ease-out-quart);
+  }
+
+  .ft__brand:hover {
+    opacity: 0.82;
+  }
+
+  .ft__brand img {
+    display: block;
     inline-size: clamp(64px, 6.7vw, 97px);
     block-size: auto;
   }
@@ -216,11 +228,14 @@ import { footerColumns, footerMeta } from '@/data/site';
   }
 
   /* ---------- LEGAL ----------
-     En el archivo cuelga bajo el logo, en la primera columna. */
+     En el archivo cuelga bajo el logo, en la primera columna:
+     el logo acaba en y=7088 y el copyright empieza en 7100, o sea
+     12px de separación. Antes había un margen de hasta 28 que lo
+     dejaba flotando lejos de la marca. */
   .ft__legal {
     grid-column: 1 / 2;
     grid-row: 2;
-    margin-block-start: clamp(1rem, 2.5vw, 1.75rem);
+    margin-block-start: 12px;
   }
 
   .ft__copy {

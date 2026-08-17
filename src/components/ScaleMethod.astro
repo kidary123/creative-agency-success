@@ -95,6 +95,10 @@ const dg = {
           />
           <button class="scale__play" type="button">
             <span class="visually-hidden">Play the Scale Method overview video</span>
+            {/* En reposo el triángulo es un contorno; en la variante
+                de hover del archivo (89:330) está RELLENO de blanco.
+                Se anima `fill`, no la posición: el botón no se
+                mueve. */}
             <svg viewBox="0 0 60 66" fill="none" aria-hidden="true">
               <path
                 d="M4 3.5 56 33 4 62.5V3.5Z"
@@ -295,7 +299,6 @@ const dg = {
     aspect-ratio: 60 / 66;
     display: grid;
     place-items: center;
-    transition: transform var(--dur-base) var(--ease-spring);
   }
 
   .scale__play svg {
@@ -304,8 +307,17 @@ const dg = {
     filter: drop-shadow(0 4px 16px rgb(0 0 0 / 0.3));
   }
 
-  .scale__play:hover {
-    transform: translate(-50%, -50%) scale(1.08);
+  .scale__play svg path {
+    fill: transparent;
+    transition: fill var(--dur-base) var(--ease-out-quart);
+  }
+
+  /* Se rellena de blanco al pasar por encima del escenario —
+     el botón NO se desplaza ni escala, solo cambia el relleno.
+     Es lo que hace la variante 89:330 del archivo. */
+  .scale__stage:hover .scale__play svg path,
+  .scale__play:focus-visible svg path {
+    fill: #fff;
   }
 
   /* ---------- PILARES ---------- */

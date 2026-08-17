@@ -76,7 +76,12 @@ import { programs } from '@/data/site';
             ))}
           </div>
 
-          <a href={p.cta.href} class="card__cta">
+          {/* CTA en el color contrario al bloque: verde en
+              Accelerator, púrpura en Partnership. */}
+          <a
+            href={p.cta.href}
+            class:list={['cta', p.tone === 'purple' ? 'cta--green' : 'cta--purple', 'card__cta']}
+          >
             {p.cta.label}
           </a>
         </article>
@@ -263,40 +268,12 @@ import { programs } from '@/data/site';
   }
 
   /* ---------- CTA ----------
-     Rectangular a propósito, y en el color contrario al bloque.
-     Verde con texto azul tinta en Accelerator; púrpura con texto
-     blanco en Partnership. */
+     Colores y hover viven en las clases .cta del global; aquí solo
+     su sitio dentro de la rejilla de la card. */
   .card__cta {
-    display: grid;
-    place-items: center;
     justify-self: start;
     align-self: end;
-    inline-size: 195px;
-    min-block-size: 59px;
-    max-inline-size: 100%;
     margin-block-start: clamp(1.5rem, 3vw, 2.5rem);
-    padding-inline: 1rem;
-    font-family: var(--font-display);
-    font-size: 1.25rem; /* 20 */
-    font-weight: 500;
-    transition:
-      filter var(--dur-fast) var(--ease-out-quart),
-      transform var(--dur-base) var(--ease-out-expo);
-  }
-
-  .card--purple .card__cta {
-    background-color: var(--accent-2);
-    color: var(--brand-ink);
-  }
-
-  .card--green .card__cta {
-    background-color: var(--accent);
-    color: #fff;
-  }
-
-  .card__cta:hover {
-    filter: brightness(1.06);
-    transform: translateY(-2px);
   }
 
   @media (width < 56rem) {

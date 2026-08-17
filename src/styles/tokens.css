@@ -52,15 +52,19 @@
   /* ---------- TIPOGRAFÍA ----------
      Escala fluida: cada paso interpola entre 360px y 1440px de
      viewport. Sin media queries para el tamaño de texto. */
-  /* El Figma usa DOS familias:
-       Arboria    → logo, nav, titulares.  Adobe Fonts, comercial.
-                    Sustituida por Jost: geométrica, mismas
-                    proporciones. Si se licencia Arboria, basta
-                    anteponerla en --font-display.
-       Work Sans  → cuerpo de texto.  Es Google Font, así que va
-                    exacta, sin sustituir. */
-  --font-sans: 'Work Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-display: 'Jost', 'Arboria', 'Work Sans', system-ui, sans-serif;
+  /* UNA sola familia en todo el proyecto.
+     El Figma usa Arboria (titulares, nav, logo) y Work Sans
+     (cuerpo). Arboria es de Adobe Fonts: comercial, no se puede
+     servir sin licencia.
+     La sustituta es OUTFIT, no Jost. El rasgo que decide es la
+     'a': Arboria la tiene de UN SOLO PISO (un círculo con
+     asta), igual que Outfit. Jost la tiene de dos pisos, que es
+     lo que hacía que el texto no se pareciera por mucho que
+     coincidieran los tamaños. Outfit comparte además la 'g' de
+     un piso, los descendentes cortos y los cuencos circulares.
+     Si algún día se licencia Arboria, basta anteponerla aquí. */
+  --font-sans: 'Outfit', 'Arboria', 'Poppins', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: var(--font-sans);
   --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
 
   --step--2: clamp(0.69rem, 0.66rem + 0.15vw, 0.79rem);

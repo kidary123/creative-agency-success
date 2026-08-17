@@ -63,9 +63,59 @@ body {
   font-weight: 500;
 }
 
-/* Los titulares llevan la familia display (sustituta de Arboria);
-   el cuerpo se queda en Work Sans, que es la del diseño. */
+/* Una sola familia en todo el sitio: --font-display apunta a
+   --font-sans, así que esto ya no cambia de tipografía, solo
+   mantiene el punto único donde tocarlo si se separan otra vez. */
 .h1, .h2, .h3 { font-family: var(--font-display); }
+
+/* ============================================================
+   BOTONES DEL DISEÑO — hover por INVERSIÓN
+   Component 1 del Figma tiene dos variantes:
+     reposo  (38:163)  fondo verde #32E0A5, texto azul #021E46
+     hover   (38:162)  fondo azul  #021E46, texto verde #32E0A5
+   O sea: el hover intercambia fondo y texto. No aclara, no
+   desplaza, no cambia de tono — invierte. Se aplica el mismo
+   criterio al botón púrpura, que es el mismo componente en la
+   otra gama.
+   Clases utilitarias para no repetir la regla en cada sección. */
+.cta {
+  display: inline-grid;
+  place-items: center;
+  inline-size: 195px;
+  min-block-size: 59px;
+  max-inline-size: 100%;
+  padding-inline: 1rem;
+  font-family: var(--font-display);
+  font-size: 1.25rem; /* 20 */
+  font-weight: 500;
+  /* Sin redondeo: el diseño no lo lleva en ningún CTA */
+  border-radius: 0;
+  transition:
+    background-color var(--dur-fast) var(--ease-out-quart),
+    color var(--dur-fast) var(--ease-out-quart);
+}
+
+.cta--green {
+  background-color: var(--accent-2);
+  color: var(--brand-ink);
+}
+
+.cta--green:hover,
+.cta--green:focus-visible {
+  background-color: var(--brand-ink);
+  color: var(--accent-2);
+}
+
+.cta--purple {
+  background-color: var(--accent);
+  color: #fff;
+}
+
+.cta--purple:hover,
+.cta--purple:focus-visible {
+  background-color: var(--brand-ink);
+  color: var(--accent);
+}
 
 .h1 { font-size: var(--step-5); line-height: var(--leading-tight); letter-spacing: var(--tracking-display); font-weight: 700; }
 .h2 { font-size: var(--step-4); line-height: var(--leading-snug); letter-spacing: var(--tracking-tight); font-weight: 700; }

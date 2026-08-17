@@ -242,6 +242,12 @@
       "nodeId": "189:238",
       "name": "Foto tarjeta Podcast",
       "url": "https://www.figma.com/api/mcp/asset/175c5fc5-b54f-4ab0-a79b-0212659a2170.png"
+    },
+    {
+      "file": "logo-light.svg",
+      "nodeId": "154:169",
+      "name": "Logo hexagonal de la marca, version clara (footer)",
+      "url": "https://www.figma.com/api/mcp/asset/7903b6c1-db42-4b21-89e3-fc722086988a.svg"
     }
   ]
 }

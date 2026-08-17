@@ -10,6 +10,8 @@
  * tienen pesos ópticos distintos y escalarlos todos igual los
  * desequilibra.
  */
+import { hero } from '@/data/site';
+
 const logos = [
   { src: '/img/press-forbes.png', alt: 'Forbes', w: 149, h: 40 },
   { src: '/img/press-abc.png', alt: 'ABC', w: 74, h: 73 },
@@ -33,6 +35,15 @@ const logos = [
         ))
       }
     </ul>
+
+    {/* La frase de posicionamiento (42:65) cae dentro de esta banda
+        en el archivo, no en el bloque arena del hero: x=775..1273,
+        y=715, bajo la fila de logos y pegada a la derecha.
+        Va en dos pesos — el diseño acentúa la promesa, no la
+        premisa. */}
+    <p class="press__kicker" data-animate="fade-up" data-delay="0.12">
+      {hero.kickerLead} <strong>{hero.kickerStrong}</strong>
+    </p>
   </div>
 </section>
 
@@ -100,10 +111,32 @@ const logos = [
     opacity: 1;
   }
 
+  /* ---------- KICKER ----------
+     Arboria 24/28 azul tinta, caja de 498 alineada a la derecha
+     (x=775 sobre 1440, es decir empieza pasada la mitad). */
+  .press__kicker {
+    inline-size: min(100%, 498px);
+    margin-inline-start: auto;
+    margin-block-start: clamp(1.5rem, 3vw, 2.25rem);
+    font-size: clamp(1.125rem, 1.67vw, 1.5rem); /* 24 */
+    font-weight: 400;
+    line-height: 1.167; /* 28/24 */
+    text-align: center;
+    color: var(--brand-ink);
+  }
+
+  .press__kicker strong {
+    font-weight: 500;
+  }
+
   /* En móvil seis en fila darían ~45px cada uno: ilegible. Se pasa
      a dos filas de tres, que es una decisión de rejilla, no un
      salto accidental. */
   @media (width < 48rem) {
+    .press__kicker {
+      margin-inline: auto;
+    }
+
     .press__list {
       flex-wrap: wrap;
       row-gap: clamp(1.5rem, 5vw, 2.25rem);

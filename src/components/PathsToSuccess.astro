@@ -47,7 +47,9 @@ import { pathsToSuccess } from '@/data/site';
         {pathsToSuccess.body}
       </p>
       <div data-animate="fade-up" data-delay="0.16">
-        <a class="paths__cta" href={pathsToSuccess.cta.href}>{pathsToSuccess.cta.label}</a>
+        <a class="cta cta--green paths__cta" href={pathsToSuccess.cta.href}>
+          {pathsToSuccess.cta.label}
+        </a>
       </div>
     </div>
   </div>
@@ -161,26 +163,10 @@ import { pathsToSuccess } from '@/data/site';
     color: #fff;
   }
 
-  /* Verde sobre púrpura. Sin redondeo, 195 × 59 como en el archivo. */
+  /* Verde sobre púrpura. Colores y hover en las clases .cta del
+     global; aquí solo la separación respecto al párrafo. */
   .paths__cta {
-    display: inline-grid;
-    place-items: center;
-    inline-size: 195px;
-    min-block-size: 59px;
     margin-block-start: clamp(1.25rem, 2.5vw, 1.9375rem);
-    background-color: var(--accent-2);
-    font-family: var(--font-display);
-    font-size: 1.25rem; /* 20 */
-    font-weight: 500;
-    color: var(--brand-ink);
-    transition:
-      transform var(--dur-base) var(--ease-out-expo),
-      filter var(--dur-fast) var(--ease-out-quart);
-  }
-
-  .paths__cta:hover {
-    transform: translateY(-2px);
-    filter: brightness(1.06);
   }
 
   @media (width < 62rem) {
