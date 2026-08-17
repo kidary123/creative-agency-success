@@ -11,10 +11,27 @@ import Resources from '@components/Resources.astro';
 import PathsToSuccess from '@components/PathsToSuccess.astro';
 ---
 
+{/*
+  Orden de secciones tomado de la coordenada Y de cada titular en el
+  Figma, que es el único dato fiable (el lienzo tiene maquetaciones
+  superpuestas, así que los fondos no sirven para ordenar):
+
+    Featured in .......  618
+    Journey ...........  899
+    Ready to find… .... 2031
+    Agency Accelerator  3286
+    Testimonials ...... 3919
+    The Scale Method .. 4505
+    Resources ......... 5598
+    Paths To Success .. 6530
+
+  Journey y Featured in estaban invertidos: la banda de logos va
+  JUSTO debajo del hero, no después del acordeón de retratos.
+*/}
 <BaseLayout>
   <Hero />
-  <Journey />
   <FeaturedIn />
+  <Journey />
   <StatsBand />
   <ProgramCards />
   <Testimonials />
