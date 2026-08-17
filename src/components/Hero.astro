@@ -169,10 +169,18 @@ const vertices = [
     block-size: 92.92%;
   }
 
+  /* La figura se reduce respecto al archivo sin tocar el heptágono
+     ni las etiquetas: se escala desde el borde inferior y el centro
+     horizontal, así sigue apoyada en la misma base y centrada en el
+     mismo eje. El factor va en una variable para poder afinarlo
+     sin recalcular los insets. */
   .hero__person {
+    --persona: 0.82;
     inset: 16.67% 15.29% 0 17.77%;
     inline-size: 66.94%;
     block-size: 83.33%;
+    transform: scale(var(--persona));
+    transform-origin: 50% 100%;
   }
 
   .hero__person :global(img) {
