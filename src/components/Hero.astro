@@ -104,13 +104,14 @@ const vertices = [
     padding-block: clamp(2.5rem, 5vw, 4.25rem) 0;
   }
 
-  /* `end` en vez de `center`: las dos columnas apoyan su base en el
-     borde de la banda, que es lo que hace que el CTA y el gráfico
-     acaben a la misma altura como en el archivo. */
+  /* `stretch` para que ambas columnas midan lo mismo de alto; cada
+     una decide dentro dónde apoya su contenido. Con `end` no
+     funcionaba: al fijar `block-size:100%` en la columna de texto,
+     el alineado de la rejilla queda anulado. */
   .hero__inner {
     display: grid;
     grid-template-columns: minmax(0, 574fr) minmax(0, 580fr);
-    align-items: end;
+    align-items: stretch;
     gap: clamp(2rem, 5vw, 4.75rem);
     inline-size: min(100% - 2rem, 1220px);
     margin-inline: auto;
@@ -124,10 +125,10 @@ const vertices = [
     flex-direction: column;
     align-items: start;
     gap: clamp(1.25rem, 2vw, 1.75rem);
-    /* El texto se reparte el alto de la columna; el CTA se queda
-       abajo del todo. */
-    justify-content: center;
-    block-size: 100%;
+    /* Al fondo de la columna: el CTA es el último hijo, así que su
+       base queda en el borde inferior de la banda. `center` dejaba
+       el bloque a media altura y el botón nunca llegaba al límite. */
+    justify-content: flex-end;
   }
 
   /* Los 19px que el botón invade la sección siguiente. z-index
@@ -158,8 +159,12 @@ const vertices = [
 
   /* ---------- GRÁFICO ---------- */
 
+  /* El gráfico también apoya su base en el borde de la banda: en el
+     archivo acaba en y=695 y la banda en 696. */
   .hero__figure {
     position: relative;
+    display: flex;
+    align-items: flex-end;
   }
 
   .hero__chart {
@@ -254,7 +259,11 @@ const vertices = [
     .hero__content {
       align-items: center;
       text-align: center;
-      block-size: auto;
+      justify-content: flex-start;
+    }
+
+    .hero__figure {
+      display: block;
     }
 
     /* En una columna el botón ya no está en el borde de la sección,
