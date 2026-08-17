@@ -1,0 +1,334 @@
+---
+/**
+ * The Scale Method — nodos 42:15, 42:16 y 89:304 del Figma.
+ *
+ * Medidas del archivo (lienzo 1440, banda y=4405..5477):
+ *   fondo        blanco (Rectangle 22, 57:654)
+ *   titular      y=4505, Arboria Medium 36, #021E46, centrado
+ *   cuerpo       y=4566, 779 de ancho, Work Sans 18, #4D4D4D,
+ *                tracking -0.36, centrado
+ *   diagrama     x=368 y=4692, 681 × 664 — hexágonos concéntricos,
+ *                dos polígonos azul claro, foto redondeada a 15px
+ *                con velo negro al 10% y triángulo de play
+ *   etiquetas    Arboria Book 21, #4D4D4D, en las seis esquinas
+ *
+ * El diagrama son cuatro capas SVG/PNG exportadas: no se redibujan
+ * a mano porque los hexágonos del archivo no son regulares (están
+ * rotados y con las esquinas redondeadas de forma desigual).
+ *
+ * Las etiquetas se posicionan en porcentaje sobre el contenedor del
+ * diagrama, calculados desde las coordenadas absolutas del archivo,
+ * así que acompañan al hexágono cuando escala.
+ */
+import Picture from '@components/Picture.astro';
+import { scaleMethod } from '@/data/site';
+
+/**
+ * Caja del diagrama en el archivo: x 368..1049, y 4692..5356.
+ * Las etiquetas viven FUERA de esa caja, así que el contenedor
+ * posicionado es más ancho — de x=199 (Specialization) a x=1178
+ * (Authority + su ancho) y de y=4692 a y=5413.
+ */
+const CAJA = { x: 199, y: 4692, w: 979, h: 721 };
+const DIAGRAMA = { x: 368, y: 4692, w: 681, h: 664 };
+
+/** Coordenadas absolutas de cada etiqueta en el Figma. */
+const ANCLAS = {
+  tl: { x: 276, y: 4802, w: 105 },
+  tr: { x: 1041, y: 4802, w: 89 },
+  ml: { x: 199, y: 5112, w: 132 },
+  mr: { x: 1089, y: 5112, w: 88 },
+  bl: { x: 428, y: 5388, w: 192 },
+  br: { x: 811, y: 5388, w: 182 },
+};
+
+const pct = (n: number) => `${(n * 100).toFixed(3)}%`;
+
+const etiquetas = scaleMethod.pillars.map((p) => {
+  const a = ANCLAS[p.pos];
+  return {
+    ...p,
+    left: pct((a.x - CAJA.x) / CAJA.w),
+    top: pct((a.y - CAJA.y) / CAJA.h),
+    width: pct(a.w / CAJA.w),
+  };
+});
+
+const dg = {
+  left: pct((DIAGRAMA.x - CAJA.x) / CAJA.w),
+  top: pct((DIAGRAMA.y - CAJA.y) / CAJA.h),
+  width: pct(DIAGRAMA.w / CAJA.w),
+  height: pct(DIAGRAMA.h / CAJA.h),
+};
+---
+
+<section class="scale" id="scale-method" aria-labelledby="scale-heading">
+  <div class="scale__inner">
+    <h2 class="scale__title" id="scale-heading" data-animate="fade-up">
+      {scaleMethod.heading}
+    </h2>
+    <p class="scale__copy" data-animate="fade-up" data-delay="0.08">
+      {scaleMethod.body}
+    </p>
+
+    <div
+      class="scale__stage"
+      data-animate="reveal"
+      data-delay="0.12"
+      style={`--dg-left:${dg.left};--dg-top:${dg.top};--dg-w:${dg.width};--dg-h:${dg.height}`}
+    >
+      <div class="scale__diagram">
+        {/* Cuatro capas exportadas del archivo, apiladas en el mismo
+            orden que en Figma. Los insets son los del componente. */}
+        <img class="scale__layer scale__layer--base" src="/img/scale-hexagons.svg" alt="" aria-hidden="true" />
+        <img class="scale__layer scale__layer--s1" src="/img/scale-shape-1.svg" alt="" aria-hidden="true" />
+        <img class="scale__layer scale__layer--s2" src="/img/scale-shape-2.svg" alt="" aria-hidden="true" />
+        <img class="scale__layer scale__layer--s3" src="/img/scale-shape-3.svg" alt="" aria-hidden="true" />
+
+        <figure class="scale__media">
+          <Picture
+            src="/img/scale-media.png"
+            alt={scaleMethod.media.alt}
+            width={1140}
+            height={654}
+            focus="50% 45%"
+          />
+          <button class="scale__play" type="button">
+            <span class="visually-hidden">Play the Scale Method overview video</span>
+            <svg viewBox="0 0 60 66" fill="none" aria-hidden="true">
+              <path
+                d="M4 3.5 56 33 4 62.5V3.5Z"
+                stroke="#fff"
+                stroke-width="4"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        </figure>
+      </div>
+
+      {/* Los seis pilares son una lista de verdad: para un lector de
+          pantalla es "seis pasos", no seis textos sueltos flotando
+          alrededor de una imagen. */}
+      <ol role="list" class="scale__pillars">
+        {
+          etiquetas.map((p) => (
+            <li
+              class:list={['scale__pillar', `scale__pillar--${p.pos}`]}
+              style={`--l:${p.left};--t:${p.top};--w:${p.width}`}
+            >
+              {p.display}
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </div>
+</section>
+
+<style>
+  .scale {
+    background-color: var(--surface);
+    padding-block: clamp(3rem, 6vw, 5.5rem) clamp(2rem, 4vw, 3.5rem);
+  }
+
+  .scale__inner {
+    inline-size: min(100% - 2rem, 1241px);
+    margin-inline: auto;
+  }
+
+  .scale__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 2.6vw, 2.25rem); /* 36 */
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--brand-ink);
+  }
+
+  .scale__copy {
+    inline-size: min(100%, 779px);
+    margin: clamp(0.75rem, 1.5vw, 1.125rem) auto 0;
+    font-size: 1.125rem; /* 18 */
+    line-height: 1.34;
+    letter-spacing: -0.36px;
+    text-align: center;
+    color: var(--brand-slate);
+  }
+
+  /* ---------- ESCENARIO ----------
+     Caja con la proporción exacta del archivo (979 × 721). Todo lo
+     de dentro va en porcentaje, así que hexágono y etiquetas se
+     mueven juntos al escalar. */
+  .scale__stage {
+    position: relative;
+    inline-size: min(100%, 979px);
+    margin: clamp(1.5rem, 3vw, 2.5rem) auto 0;
+    aspect-ratio: 979 / 721;
+  }
+
+  .scale__diagram {
+    position: absolute;
+    inset-inline-start: var(--dg-left);
+    inset-block-start: var(--dg-top);
+    inline-size: var(--dg-w);
+    block-size: var(--dg-h);
+  }
+
+  .scale__layer {
+    position: absolute;
+    max-inline-size: none;
+    pointer-events: none;
+  }
+
+  /* Insets exactos del componente 89:289 */
+  .scale__layer--base {
+    inset: 0;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .scale__layer--s1 {
+    inset: 5.83% 5.64%;
+    inline-size: 88.72%;
+    block-size: 88.34%;
+  }
+
+  .scale__layer--s2 {
+    inset: 12.9% 12.73% 12.89% 12.74%;
+    inline-size: 74.53%;
+    block-size: 74.21%;
+  }
+
+  .scale__layer--s3 {
+    inset: 11.5% 3.97% 1.47% 19.4%;
+    inline-size: 76.63%;
+    block-size: 87.03%;
+  }
+
+  /* Foto: 15px de radio y velo negro al 10%, como en el archivo. */
+  .scale__media {
+    position: absolute;
+    inset: 26.78% 8.19% 24.09% 8.05%;
+    margin: 0;
+    border-radius: 15px;
+    overflow: hidden;
+  }
+
+  .scale__media :global(picture),
+  .scale__media :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  .scale__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: rgb(0 0 0 / 0.1);
+    pointer-events: none;
+  }
+
+  /* Triángulo hueco de trazo blanco — en esta sección el play es
+     un contorno, no el triángulo macizo de la banda de datos. */
+  .scale__play {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    translate: -50% -50%;
+    z-index: 1;
+    inline-size: clamp(38px, 4.2vw, 60px);
+    aspect-ratio: 60 / 66;
+    display: grid;
+    place-items: center;
+    transition: transform var(--dur-base) var(--ease-spring);
+  }
+
+  .scale__play svg {
+    inline-size: 100%;
+    block-size: 100%;
+    filter: drop-shadow(0 4px 16px rgb(0 0 0 / 0.3));
+  }
+
+  .scale__play:hover {
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+  /* ---------- PILARES ---------- */
+
+  .scale__pillars {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .scale__pillar {
+    position: absolute;
+    inset-inline-start: var(--l);
+    inset-block-start: var(--t);
+    inline-size: var(--w);
+    font-family: var(--font-display);
+    font-size: clamp(0.9375rem, 1.46vw, 1.3125rem); /* 21 */
+    line-height: 1.2;
+    text-align: center;
+    color: var(--brand-slate);
+    white-space: nowrap;
+  }
+
+  /* Las etiquetas de la derecha se anclan por su borde derecho,
+     si no el `white-space: nowrap` las empuja fuera de la caja
+     cuando la fuente sustituta mide un poco más que Arboria. */
+  .scale__pillar--tr,
+  .scale__pillar--mr,
+  .scale__pillar--br {
+    text-align: start;
+  }
+
+  .scale__pillar--tl,
+  .scale__pillar--ml,
+  .scale__pillar--bl {
+    text-align: end;
+  }
+
+  /* ---------- MÓVIL ----------
+     El hexágono con seis etiquetas flotando no cabe por debajo de
+     48rem: los textos se solapan. Se separa en diagrama arriba y
+     lista numerada debajo, que además comunica mejor que son seis
+     pasos en orden. */
+  @media (width < 48rem) {
+    .scale__stage {
+      aspect-ratio: auto;
+    }
+
+    .scale__diagram {
+      position: static;
+      inline-size: 100%;
+      block-size: auto;
+      aspect-ratio: 681 / 664;
+    }
+
+    .scale__pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+      gap: 0.75rem 1rem;
+      margin-block-start: clamp(1.5rem, 5vw, 2rem);
+      counter-reset: pilar;
+    }
+
+    .scale__pillar {
+      position: static;
+      inline-size: auto;
+      text-align: center;
+      white-space: normal;
+      counter-increment: pilar;
+    }
+
+    .scale__pillar::before {
+      content: counter(pilar) '. ';
+      color: var(--accent);
+      font-weight: 600;
+    }
+  }
+</style>

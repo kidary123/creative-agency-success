@@ -46,7 +46,7 @@ const schema = {
     name: 'The Scale Method',
     description:
       'The six-pillar framework underneath both programs, refined over a decade to scale creative agencies — creating impact, providing freedom and maximizing profits.',
-    itemListElement: scaleMethod.map((pillar, index) => ({
+    itemListElement: scaleMethod.pillars.map((pillar, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       name: pillar.correct,

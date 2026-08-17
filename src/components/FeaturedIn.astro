@@ -27,7 +27,7 @@ const logos = [
     <ul role="list" class="press__list" data-animate="stagger" data-stagger="0.06">
       {
         logos.map((logo) => (
-          <li class="press__item">
+          <li class="press__item" style={`--w:${logo.w}px`}>
             <img src={logo.src} alt={logo.alt} width={logo.w} height={logo.h} loading="lazy" />
           </li>
         ))
@@ -56,24 +56,38 @@ const logos = [
     margin-block-end: clamp(1.25rem, 2.5vw, 2.125rem);
   }
 
+  /* Una sola fila, sin salto.
+     Los seis anchos del Figma suman 1146 y el contenedor es 1241,
+     así que en el archivo caben en línea con ~19px de aire. El
+     problema anterior era topar por ALTO: al igualar alturas, el
+     NY Post (273 × 39, muy apaisado) se iba a 364px de ancho y
+     desbordaba la fila.
+     Ahora manda el ANCHO — cada logo lleva su medida del archivo
+     como flex-basis y solo puede encoger. Como flex-shrink reparte
+     el recorte en proporción a la base, los seis mantienen entre
+     sí exactamente la misma relación de tamaño a cualquier ancho
+     de ventana. */
   .press__list {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
-    justify-content: space-between;
-    gap: clamp(1.5rem, 3vw, 2.5rem);
+    justify-content: center;
+    gap: clamp(0.75rem, 1.6vw, 1.25rem);
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
+  .press__item {
+    flex: 0 1 var(--w);
+    min-inline-size: 0;
+    display: grid;
+    place-items: center;
+  }
+
   .press__item img {
-    /* Escalan a la vez manteniendo su proporción relativa: cada uno
-       conserva su ancho del Figma en el tope, y baja en bloque. */
-    inline-size: auto;
+    inline-size: 100%;
     block-size: auto;
-    max-block-size: clamp(1.75rem, 3.4vw, 3.25rem);
-    max-inline-size: 100%;
     filter: grayscale(1);
     opacity: 0.72;
     transition:
@@ -86,10 +100,18 @@ const logos = [
     opacity: 1;
   }
 
+  /* En móvil seis en fila darían ~45px cada uno: ilegible. Se pasa
+     a dos filas de tres, que es una decisión de rejilla, no un
+     salto accidental. */
   @media (width < 48rem) {
     .press__list {
-      justify-content: center;
-      gap: clamp(1.5rem, 6vw, 2.5rem);
+      flex-wrap: wrap;
+      row-gap: clamp(1.5rem, 5vw, 2.25rem);
+      column-gap: clamp(1.5rem, 5vw, 2.5rem);
+    }
+
+    .press__item {
+      flex: 0 1 calc((100% - 2 * clamp(1.5rem, 5vw, 2.5rem)) / 3);
     }
   }
 </style>

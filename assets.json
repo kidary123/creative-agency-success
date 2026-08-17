@@ -1,7 +1,7 @@
 {
   "_comment": "Manifiesto de assets exportados del Figma. Las URLs caducan ~7 días desde su generación. Para regenerarlas, volver a pedirlas por el conector de Figma. Ejecutar get-assets.ps1 para descargarlas a public/img/.",
   "_figmaFile": "jXvZyzTAejZDdFwKlHIScm",
-  "_generated": "2026-08-16",
+  "_generated": "2026-08-17",
   "assets": [
     {
       "file": "logo.svg",
@@ -128,6 +128,90 @@
       "nodeId": "46:77",
       "name": "Featured in — Agency Highway",
       "url": "https://www.figma.com/api/mcp/asset/b3b8a8f7-3491-4413-8ba1-02fcccb6e91b.png"
+    },
+    {
+      "file": "scale-hexagons.svg",
+      "nodeId": "89:289",
+      "name": "Hexágonos concéntricos del diagrama Scale Method",
+      "url": "https://www.figma.com/api/mcp/asset/329645d0-f4c5-47b0-bda4-f3d68f72159e.svg"
+    },
+    {
+      "file": "scale-shape-1.svg",
+      "nodeId": "89:278",
+      "name": "Contorno hexagonal exterior del diagrama",
+      "url": "https://www.figma.com/api/mcp/asset/9d947c2a-0622-4952-9b71-a2985a6493c1.svg"
+    },
+    {
+      "file": "scale-shape-2.svg",
+      "nodeId": "89:279",
+      "name": "Contorno hexagonal interior del diagrama",
+      "url": "https://www.figma.com/api/mcp/asset/28090d20-74df-49fa-8c47-2f2706992532.svg"
+    },
+    {
+      "file": "scale-shape-3.svg",
+      "nodeId": "89:280",
+      "name": "Poligono azul claro de fondo del diagrama",
+      "url": "https://www.figma.com/api/mcp/asset/6f2b9037-9e17-455b-8f11-e9b25fcf7d78.svg"
+    },
+    {
+      "file": "scale-media.png",
+      "nodeId": "89:281",
+      "name": "Foto del video del Scale Method",
+      "url": "https://www.figma.com/api/mcp/asset/4844c8c2-408a-40ca-b603-1657ae1f133a.png"
+    },
+    {
+      "file": "resource-1.png",
+      "nodeId": "89:331",
+      "name": "Foto tarjeta Facebook Group",
+      "url": "https://www.figma.com/api/mcp/asset/37ccbe85-4505-4cf0-9f9a-591271ac73fc.png"
+    },
+    {
+      "file": "icon-facebook.svg",
+      "nodeId": "195:324",
+      "name": "Icono Facebook Group",
+      "url": "https://www.figma.com/api/mcp/asset/72f80bf0-6562-4ce3-9a93-f5c5de71aa17.svg"
+    },
+    {
+      "file": "icon-books.svg",
+      "nodeId": "195:301",
+      "name": "Icono Books",
+      "url": "https://www.figma.com/api/mcp/asset/cd57e85f-d4d7-4e0f-9655-bcd2631f3d80.svg"
+    },
+    {
+      "file": "icon-trainings.svg",
+      "nodeId": "195:388",
+      "name": "Icono Free Trainings",
+      "url": "https://www.figma.com/api/mcp/asset/14568107-2bb8-4948-b1b6-917b36277fde.svg"
+    },
+    {
+      "file": "icon-podcast.svg",
+      "nodeId": "195:323",
+      "name": "Icono Podcast",
+      "url": "https://www.figma.com/api/mcp/asset/1a247bdc-c72e-4a46-847d-40983f5cfe33.svg"
+    },
+    {
+      "file": "icon-arrow-right.svg",
+      "nodeId": "191:247",
+      "name": "Flecha del enlace Learn More",
+      "url": "https://www.figma.com/api/mcp/asset/25e88fad-ad67-43a6-a8f0-71241efa2a13.svg"
+    },
+    {
+      "file": "paths-photo.png",
+      "nodeId": "233:1878",
+      "name": "Foto de la banda Paths To Success",
+      "url": "https://www.figma.com/api/mcp/asset/62f34afd-a171-40a8-88fc-538148fc25be.png"
+    },
+    {
+      "file": "paths-mask.svg",
+      "nodeId": "233:1877",
+      "name": "Mascara hexagonal de la foto Paths To Success",
+      "url": "https://www.figma.com/api/mcp/asset/2d7ceec5-1c0b-4015-bc00-787949b84b04.svg"
+    },
+    {
+      "file": "paths-outline.svg",
+      "nodeId": "233:1876",
+      "name": "Contorno verde de la banda Paths To Success",
+      "url": "https://www.figma.com/api/mcp/asset/80c3da62-04ea-4232-a3c5-f0594ea3845e.svg"
     }
   ]
 }

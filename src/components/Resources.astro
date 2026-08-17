@@ -1,0 +1,225 @@
+---
+/**
+ * Resources — nodos 89:444, 89:445 y las cuatro tarjetas
+ * 89:331 / 189:220 / 189:229 / 189:238 del Figma.
+ *
+ * Medidas del archivo (banda y=5477..6441, fondo #F4F1EF):
+ *   titular   y=5598, Arboria Medium 36, #021E46, centrado
+ *   cuerpo    y=5667, 813 de ancho, Work Sans 18/28, -0.36
+ *   tarjetas  cuatro columnas de 298 desde x=100, paso 313
+ *             (298 + 15 de hueco)
+ *   foto      298 × 210
+ *   círculo   84 × 86 púrpura, y=5940 → montado a caballo del
+ *             borde inferior de la foto (foto acaba en 6005),
+ *             desplazado 8px a la derecha del borde de la tarjeta
+ *   título    y=6040, Arboria Medium 24/30, #021E46
+ *   cuerpo    y=6094, 280 de ancho, Work Sans 18/1.5
+ *   CTA       y=6278, "Learn More" Arboria Medium 20/30 púrpura
+ *             + flecha de 13 × 8
+ */
+import Picture from '@components/Picture.astro';
+import { resources } from '@/data/site';
+---
+
+<section class="res" id="resources" aria-labelledby="res-heading">
+  <div class="res__inner">
+    <h2 class="res__title" id="res-heading" data-animate="fade-up">{resources.heading}</h2>
+    <p class="res__copy" data-animate="fade-up" data-delay="0.08">{resources.body}</p>
+
+    <ul role="list" class="res__grid" data-animate="stagger" data-stagger="0.08">
+      {
+        resources.items.map((item) => (
+          <li class="card">
+            <div class="card__media">
+              <Picture
+                src={resources.sharedImage.src}
+                alt={resources.sharedImage.alt}
+                width={596}
+                height={420}
+              />
+              {/* El disco púrpura vive a caballo del borde de la
+                  foto; el icono va centrado dentro. */}
+              <span class="card__disc" aria-hidden="true">
+                <img src={item.icon} alt="" width="34" height="34" />
+              </span>
+            </div>
+
+            <h3 class="card__name">{item.name}</h3>
+            <p class="card__body">{resources.sharedBody}</p>
+
+            {/* El enlace cubre toda la tarjeta con ::after, así que
+                el objetivo de clic es la tarjeta entera y no un
+                texto de 106px. */}
+            <a class="card__cta" href={resources.cta.href}>
+              {resources.cta.label}
+              <span class="visually-hidden"> about {item.name}</span>
+              <svg viewBox="0 0 13 8" fill="none" aria-hidden="true">
+                <path
+                  d="M0 4h11.5M8.5 1 12 4l-3.5 3"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .res {
+    background-color: var(--brand-sand);
+    padding-block: clamp(3rem, 6vw, 5.5rem) clamp(3rem, 6vw, 5rem);
+  }
+
+  .res__inner {
+    inline-size: min(100% - 2rem, 1241px);
+    margin-inline: auto;
+  }
+
+  .res__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 2.6vw, 2.25rem); /* 36 */
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--brand-ink);
+  }
+
+  .res__copy {
+    inline-size: min(100%, 813px);
+    margin: clamp(0.75rem, 1.5vw, 1.125rem) auto 0;
+    font-size: 1.125rem;
+    line-height: 1.556; /* 28/18 */
+    letter-spacing: -0.36px;
+    text-align: center;
+    color: var(--brand-slate);
+  }
+
+  /* Cuatro columnas de 298 con 15 de hueco — la proporción del
+     archivo, expresada en fracciones para que escale. */
+  .res__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: clamp(1rem, 1.2vw, 0.9375rem);
+    margin: clamp(2rem, 4.5vw, 3.5rem) 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card__media {
+    position: relative;
+    aspect-ratio: 298 / 210;
+    /* Deja sitio al disco que sobresale por abajo */
+    margin-block-end: calc(var(--disco) * 0.42 + 0.75rem);
+    --disco: clamp(56px, 5.8vw, 86px);
+  }
+
+  .card__media :global(picture),
+  .card__media :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  /* 84 × 86 en el archivo: un pelo más alto que ancho, no es un
+     círculo perfecto. Se respeta. */
+  .card__disc {
+    position: absolute;
+    inset-block-end: calc(var(--disco) * -0.42);
+    inset-inline-start: 8px;
+    display: grid;
+    place-items: center;
+    inline-size: var(--disco);
+    aspect-ratio: 84 / 86;
+    border-radius: var(--radius-full);
+    background-color: var(--accent);
+    transition: transform var(--dur-base) var(--ease-spring);
+  }
+
+  .card__disc img {
+    inline-size: 40%;
+    block-size: auto;
+  }
+
+  .card:hover .card__disc {
+    transform: translateY(-4px);
+  }
+
+  .card__name {
+    font-family: var(--font-display);
+    font-size: clamp(1.125rem, 1.67vw, 1.5rem); /* 24 */
+    font-weight: 500;
+    line-height: 1.25;
+    color: var(--brand-ink);
+  }
+
+  .card__body {
+    margin-block-start: 0.75rem;
+    font-size: clamp(1rem, 1.25vw, 1.125rem);
+    line-height: 1.5;
+    letter-spacing: -0.36px;
+    color: var(--brand-slate);
+    /* Empuja el CTA al fondo: las cuatro tarjetas alinean su
+       enlace aunque el texto cambie de largo. */
+    flex: 1;
+  }
+
+  .card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-block-start: clamp(1rem, 2vw, 1.5rem);
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 1.39vw, 1.25rem); /* 20 */
+    font-weight: 500;
+    line-height: 1.5;
+    color: var(--accent);
+    transition: color var(--dur-fast) var(--ease-out-quart);
+  }
+
+  .card__cta svg {
+    inline-size: 13px;
+    block-size: 8px;
+    transition: transform var(--dur-base) var(--ease-out-expo);
+  }
+
+  /* Objetivo de clic = tarjeta entera */
+  .card__cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .card:hover .card__cta {
+    color: var(--accent-hover);
+  }
+
+  .card:hover .card__cta svg {
+    transform: translateX(5px);
+  }
+
+  @media (width < 62rem) {
+    .res__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: clamp(1.5rem, 4vw, 2.5rem);
+    }
+  }
+
+  @media (width < 34rem) {
+    .res__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

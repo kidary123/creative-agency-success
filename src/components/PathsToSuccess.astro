@@ -1,0 +1,177 @@
+---
+/**
+ * Paths To Success — banda final antes del footer.
+ * Nodos 152:292 (fondo), 233:1890 (imagen), 152:303, 152:304 y
+ * el CTA 152:306.
+ *
+ * Medidas del archivo (y=6441..6961, 1440 × 520):
+ *   fondo     #8686F2 púrpura, a sangre
+ *   imagen    x=101 y=6472, 510 × 454 — foto recortada con una
+ *             máscara hexagonal y un contorno verde #32E0A5
+ *             desplazado, que asoma por arriba y por abajo
+ *   titular   x=728 y=6530, 476 de ancho, Arboria Medium 36,
+ *             #F4F1EF, interlineado 113.33%
+ *   cuerpo    x=728 y=6658, 612 de ancho, Work Sans 18/28.5,
+ *             blanco
+ *   CTA       x=729 y=6813, 195 × 59, fondo VERDE #32E0A5 con
+ *             texto azul tinta — es el único CTA verde del sitio,
+ *             porque sobre púrpura el CTA púrpura desaparecería
+ */
+import Picture from '@components/Picture.astro';
+import { pathsToSuccess } from '@/data/site';
+---
+
+<section class="paths" aria-labelledby="paths-heading">
+  <div class="paths__inner">
+    <figure class="paths__figure" data-animate="reveal">
+      {/* La máscara y el contorno son dos capas distintas en el
+          archivo: el contorno NO sigue el borde de la foto, está
+          girado respecto a ella. Por eso van separados. */}
+      <div class="paths__photo">
+        <Picture
+          src="/img/paths-photo.png"
+          alt={pathsToSuccess.media.alt}
+          width={1004}
+          height={780}
+          focus="50% 40%"
+        />
+      </div>
+      <img class="paths__outline" src="/img/paths-outline.svg" alt="" aria-hidden="true" />
+    </figure>
+
+    <div class="paths__content">
+      <h2 class="paths__title" id="paths-heading" data-animate="fade-up">
+        {pathsToSuccess.heading}
+      </h2>
+      <p class="paths__copy" data-animate="fade-up" data-delay="0.08">
+        {pathsToSuccess.body}
+      </p>
+      <div data-animate="fade-up" data-delay="0.16">
+        <a class="paths__cta" href={pathsToSuccess.cta.href}>{pathsToSuccess.cta.label}</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .paths {
+    background-color: var(--accent);
+    padding-block: clamp(2.5rem, 4.5vw, 3.75rem);
+    overflow: hidden;
+  }
+
+  /* 510fr / 612fr son los anchos reales de imagen y columna de
+     texto en el archivo. */
+  .paths__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 510fr) minmax(0, 612fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 7.3rem);
+    inline-size: min(100% - 2rem, 1241px);
+    margin-inline: auto;
+  }
+
+  /* ---------- IMAGEN ---------- */
+
+  .paths__figure {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 510 / 454;
+  }
+
+  /* La máscara hexagonal del archivo, aplicada como mask-image.
+     Con `contain` el recorte conserva su proporción aunque la
+     caja escale. */
+  .paths__photo {
+    position: absolute;
+    inset: 10.46% 0 2.08% 0;
+    mask-image: url('/img/paths-mask.svg');
+    mask-repeat: no-repeat;
+    mask-size: contain;
+    mask-position: center;
+    -webkit-mask-image: url('/img/paths-mask.svg');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-size: contain;
+    -webkit-mask-position: center;
+  }
+
+  .paths__photo :global(picture),
+  .paths__photo :global(img) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    object-fit: cover;
+  }
+
+  /* Contorno verde: inset exacto del componente 233:1876 */
+  .paths__outline {
+    position: absolute;
+    inset: 0 11.23% 0 14.16%;
+    inline-size: 74.61%;
+    block-size: 100%;
+    max-inline-size: none;
+    pointer-events: none;
+  }
+
+  /* ---------- TEXTO ---------- */
+
+  .paths__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 2.6vw, 2.25rem); /* 36 */
+    font-weight: 500;
+    line-height: 1.1333;
+    color: var(--brand-sand);
+    max-inline-size: 476px;
+  }
+
+  .paths__copy {
+    margin-block-start: clamp(1rem, 2vw, 1.5rem);
+    font-size: 1.125rem;
+    line-height: 1.583; /* 28.5/18 */
+    color: #fff;
+  }
+
+  /* Verde sobre púrpura. Sin redondeo, 195 × 59 como en el archivo. */
+  .paths__cta {
+    display: inline-grid;
+    place-items: center;
+    inline-size: 195px;
+    min-block-size: 59px;
+    margin-block-start: clamp(1.25rem, 2.5vw, 1.9375rem);
+    background-color: var(--accent-2);
+    font-family: var(--font-display);
+    font-size: 1.25rem; /* 20 */
+    font-weight: 500;
+    color: var(--brand-ink);
+    transition:
+      transform var(--dur-base) var(--ease-out-expo),
+      filter var(--dur-fast) var(--ease-out-quart);
+  }
+
+  .paths__cta:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+  }
+
+  @media (width < 62rem) {
+    .paths__inner {
+      grid-template-columns: 1fr;
+      gap: clamp(2rem, 6vw, 3rem);
+    }
+
+    .paths__figure {
+      inline-size: min(100%, 420px);
+      margin-inline: auto;
+    }
+
+    .paths__title {
+      max-inline-size: none;
+    }
+  }
+
+  @media (width < 34rem) {
+    .paths__cta {
+      inline-size: 100%;
+    }
+  }
+</style>

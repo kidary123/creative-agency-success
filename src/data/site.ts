@@ -245,35 +245,128 @@ export const testimonials = [
 ] as const;
 
 /**
- * Los seis pilares. `display` reproduce los typos del Figma,
- * `correct` alimenta la metadata.
+ * The Scale Method — nodos 42:15 (titular), 42:16 (cuerpo),
+ * 89:304 (diagrama hexagonal) y las seis etiquetas 53:37..53:46.
+ *
+ * Del archivo: fondo blanco, titular Arboria Medium 36 #021E46,
+ * cuerpo Work Sans 18 #4D4D4D centrado en 779px, y las etiquetas
+ * en Arboria Book 21 #4D4D4D repartidas alrededor del hexágono.
+ *
+ * `display` reproduce los typos del Figma ("Expertize",
+ * "Recurning"), `correct` alimenta la metadata para IA.
+ *
+ * `pos` es la esquina del hexágono, deducida de las coordenadas
+ * del archivo (el diagrama va de x=368 a x=1049, centro ≈708):
+ *   Positioning  x=276  y=4802  → arriba izquierda
+ *   Expertize    x=1041 y=4802  → arriba derecha
+ *   Specialization x=199 y=5112 → medio izquierda
+ *   Authority    x=1089 y=5112  → medio derecha
+ *   Seamless Op. x=428  y=5388  → abajo izquierda
+ *   Recurning R. x=811  y=5388  → abajo derecha
  */
-export const scaleMethod = [
-  { display: 'Positioning', correct: 'Positioning' },
-  { display: 'Expertize', correct: 'Expertise' },
-  { display: 'Specialization', correct: 'Specialization' },
-  { display: 'Authority', correct: 'Authority' },
-  { display: 'Seamless Operation', correct: 'Seamless Operation' },
-  { display: 'Recurning Revenue', correct: 'Recurring Revenue' },
-] as const;
+export const scaleMethod = {
+  heading: 'The Scale Method',
+  body: 'We spent over a decade perfecting the exact six steps it takes to scale a creative agency, creating impact, providing freedom and maximizing profits.',
+  media: {
+    alt: 'Three agency team members laughing together over laptops at a shared table',
+  },
+  pillars: [
+    { display: 'Positioning', correct: 'Positioning', pos: 'tl' as const },
+    { display: 'Expertize', correct: 'Expertise', pos: 'tr' as const },
+    { display: 'Specialization', correct: 'Specialization', pos: 'ml' as const },
+    { display: 'Authority', correct: 'Authority', pos: 'mr' as const },
+    { display: 'Seamless Operation', correct: 'Seamless Operation', pos: 'bl' as const },
+    { display: 'Recurning Revenue', correct: 'Recurring Revenue', pos: 'br' as const },
+  ],
+} as const;
 
+/**
+ * Resources — nodos 89:444 (titular), 89:445 (cuerpo) y las cuatro
+ * tarjetas 89:331 / 189:220 / 189:229 / 189:238.
+ *
+ * Del archivo: banda #F4F1EF, tarjetas de 298 × 210 con foto,
+ * círculo púrpura de 84 × 86 montado a caballo del borde inferior
+ * de la foto, título Arboria Medium 24 #021E46 y enlace "Learn
+ * More" en púrpura con flecha.
+ *
+ * NOTA: las cuatro tarjetas del Figma repiten la MISMA foto y el
+ * MISMO párrafo — es maquetación con relleno, no copy final. Se
+ * respeta tal cual; cambiar `img` y `body` por tarjeta cuando
+ * haya contenido real.
+ */
+export const resources = {
+  heading: 'Resources',
+  body: 'We have created a deep library of free resources and trainings designed to help you and your agency on the path to success. Take a step today to begin building the agency of your dreams..',
+  cta: { label: 'Learn More', href: '#contact' },
+  items: [
+    { id: 'facebook-group', name: 'Facebook Group', icon: '/img/icon-facebook.svg' },
+    { id: 'books', name: 'Books', icon: '/img/icon-books.svg' },
+    { id: 'free-trainings', name: 'Free Trainings', icon: '/img/icon-trainings.svg' },
+    { id: 'podcast', name: 'Podcast', icon: '/img/icon-podcast.svg' },
+  ],
+  /** Compartidos por las cuatro tarjetas, como en el archivo. */
+  sharedImage: {
+    src: '/img/resource-1.png',
+    alt: 'Four people stacking their hands together over a desk',
+  },
+  sharedBody:
+    'We spent over a decade perfecting the exact six steps it takes to scale a creative agency to a million dollars in revenue while increasing profits and giving you free time again.',
+} as const;
+
+/**
+ * Banda final "Paths To Success" — nodos 152:292 (fondo púrpura),
+ * 233:1890 (foto recortada en hexágono con contorno verde),
+ * 152:303 / 152:304 y el CTA 152:306 (verde #32E0A5, 195 × 59,
+ * texto azul tinta — NO es el CTA púrpura del resto del sitio).
+ */
+export const pathsToSuccess = {
+  heading: 'Paths To Success For Creative Agency Owners',
+  body: 'It doesn’t matter if you’re just starting out or have been in business for years, you are sitting on a million-dollar business already. You just have to unlock it. Schedule a profitability accelerator call now and we will help you create a custom step-by-step plan.',
+  cta: { label: 'Get Started', href: '#contact' },
+  media: {
+    alt: 'A photographer framing a shot with a camera, surrounded by greenery',
+  },
+} as const;
+
+/**
+ * Footer — nodos 62:109 (fondo #021E46, 1440 × 274), 154:202 y
+ * 154:214 (las dos columnas), 154:226 / 154:231 (newsletter),
+ * 154:198 (copyright) y 154:200 (Privacy Policy).
+ *
+ * Columnas exactas del archivo: cinco enlaces cada una, título en
+ * Arboria Bold 14 y enlaces en Arboria Book 14, todo blanco.
+ * "Sucess Stories" conserva el typo del diseño.
+ */
 export const footerColumns = [
   {
     title: 'Menu',
     links: [
-      { label: 'Success Stories', href: '#success-stories' },
-      { label: 'Services', href: '#programs' },
-      { label: 'About', href: '#about' },
-      { label: 'Contact', href: '#contact' },
+      { label: 'Sucess Stories', correct: 'Success Stories', href: '#success-stories' },
+      { label: 'Resources', correct: 'Resources', href: '#resources' },
+      { label: 'Services', correct: 'Services', href: '#programs' },
+      { label: 'About', correct: 'About', href: '#about' },
+      { label: 'Contact', correct: 'Contact', href: '#contact' },
     ],
   },
   {
     title: 'Resources',
     links: [
-      { label: 'Facebook Group', href: '#resources' },
-      { label: 'Books', href: '#resources' },
-      { label: 'Free Trainings', href: '#resources' },
-      { label: 'Podcast', href: '#resources' },
+      { label: 'Group', correct: 'Facebook Group', href: '#resources' },
+      { label: 'Books', correct: 'Books', href: '#resources' },
+      { label: 'Free Trainings', correct: 'Free Trainings', href: '#resources' },
+      { label: 'Podcast', correct: 'Podcast', href: '#resources' },
+      { label: 'Blog', correct: 'Blog', href: '#resources' },
     ],
   },
 ] as const;
+
+/** Textos sueltos del footer, literales del archivo. */
+export const footerMeta = {
+  newsletterTitle: 'Subscribe to Newsletter',
+  subscribeLabel: 'Subscribe',
+  /** El archivo dice 2022; el año vivo se calcula en el componente. */
+  copyrightYear: 2022,
+  copyright: 'Creative Agency Success',
+  rights: 'All Rights Reserved',
+  privacy: { label: 'Privacy Policy', href: '#privacy' },
+} as const;
