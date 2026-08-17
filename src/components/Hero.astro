@@ -44,7 +44,10 @@ const vertices = [
         {hero.subcopy}
       </p>
 
-      <div data-animate="fade-up" data-delay="0.16">
+      {/* El CTA sobresale por debajo del bloque arena: en el archivo
+          va de y=656 a 715 y la banda acaba en 696, así que ~19px
+          del botón quedan ya sobre la sección blanca. */}
+      <div class="hero__ctawrap" data-animate="fade-up" data-delay="0.16">
         <a href={hero.cta.href} class="cta cta--green">
           {hero.cta.label}
         </a>
@@ -90,17 +93,24 @@ const vertices = [
 </section>
 
 <style>
+  /* Sin relleno inferior: el borde de la banda arena es justo la
+     línea que el botón tiene que cruzar. En el archivo el gráfico
+     acaba en y=695 y la banda en 696, así que ambos terminan a la
+     vez y solo el CTA sobresale. */
   .hero {
     position: relative;
     background-color: var(--brand-sand);
     color: var(--brand-ink);
-    padding-block: clamp(2.5rem, 5vw, 4.25rem) clamp(2.5rem, 4vw, 3.5rem);
+    padding-block: clamp(2.5rem, 5vw, 4.25rem) 0;
   }
 
+  /* `end` en vez de `center`: las dos columnas apoyan su base en el
+     borde de la banda, que es lo que hace que el CTA y el gráfico
+     acaben a la misma altura como en el archivo. */
   .hero__inner {
     display: grid;
     grid-template-columns: minmax(0, 574fr) minmax(0, 580fr);
-    align-items: center;
+    align-items: end;
     gap: clamp(2rem, 5vw, 4.75rem);
     inline-size: min(100% - 2rem, 1220px);
     margin-inline: auto;
@@ -114,6 +124,18 @@ const vertices = [
     flex-direction: column;
     align-items: start;
     gap: clamp(1.25rem, 2vw, 1.75rem);
+    /* El texto se reparte el alto de la columna; el CTA se queda
+       abajo del todo. */
+    justify-content: center;
+    block-size: 100%;
+  }
+
+  /* Los 19px que el botón invade la sección siguiente. z-index
+     para que quede por encima del fondo blanco de abajo. */
+  .hero__ctawrap {
+    position: relative;
+    z-index: 2;
+    margin-block-end: -19px;
   }
 
   /* 158px de alto para dos líneas en 574 de ancho ⇒ ~64/72.
@@ -232,6 +254,18 @@ const vertices = [
     .hero__content {
       align-items: center;
       text-align: center;
+      block-size: auto;
+    }
+
+    /* En una columna el botón ya no está en el borde de la sección,
+       así que el saliente sobra y hay que devolver el aire de
+       abajo que se le quitó a la banda. */
+    .hero__ctawrap {
+      margin-block-end: 0;
+    }
+
+    .hero {
+      padding-block-end: clamp(2.5rem, 6vw, 3.5rem);
     }
 
     .hero__title {
