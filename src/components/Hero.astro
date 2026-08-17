@@ -58,15 +58,24 @@ const vertices = [
         {/* El export original pesaba 3.2 MB a 2000px. Reescalado a 2x
             del tamaño de render y servido en WebP (149 KB): es la
             imagen del LCP, no puede costar megas. */}
-        <Picture
-          class="hero__person"
-          src="/img/hero-person.png"
-          alt="A creative agency owner standing with open arms at the centre of the seven values the programme builds"
-          width={1160}
-          height={1086}
-          loading="eager"
-          fetchpriority="high"
-        />
+        {/* El <picture> va envuelto en un div propio del Hero a
+            propósito. Astro acota los estilos añadiendo un atributo
+            data-astro-cid-* a los elementos del componente, y
+            Picture.astro no tiene estilos propios, así que su raíz
+            NO recibe ese atributo: una regla `.hero__person {…}`
+            escrita aquí se compila como
+            `.hero__person[data-astro-cid-…]` y no casa con nada.
+            El div sí lo lleva, y el <picture> lo rellena. */}
+        <div class="hero__person">
+          <Picture
+            src="/img/hero-person.png"
+            alt="A creative agency owner standing with open arms at the centre of the seven values the programme builds"
+            width={1160}
+            height={1086}
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
 
         {
           vertices.map((v) => (
@@ -169,25 +178,33 @@ const vertices = [
     block-size: 92.92%;
   }
 
-  /* La figura se reduce respecto al archivo sin tocar el heptágono
-     ni las etiquetas: se escala desde el borde inferior y el centro
-     horizontal, así sigue apoyada en la misma base y centrada en el
-     mismo eje. El factor va en una variable para poder afinarlo
-     sin recalcular los insets. */
+  /* Caja exacta del nodo 1295:1565 del archivo: 388 × 365 sobre el
+     lienzo de 580 × 438, apoyada en la base. Sin escalados extra —
+     medí el resultado contra el render del Figma y coincide. */
   .hero__person {
-    --persona: 0.82;
     inset: 16.67% 15.29% 0 17.77%;
     inline-size: 66.94%;
     block-size: 83.33%;
-    transform: scale(var(--persona));
-    transform-origin: 50% 100%;
   }
 
+  .hero__person :global(picture) {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  /* `cover` es lo que usa el archivo (object-cover en el nodo
+     1295:1565). Con la proporción de la caja (388/365 = 1.063) y la
+     del recorte exportado (1160/1086 = 1.068) la diferencia es de un
+     píxel, pero conviene que el modo sea el mismo por si el asset
+     se vuelve a exportar con otro encuadre.
+     El object-position va en la hoja de estilos, no en el atributo
+     `focus` del componente: un style inline ganaría a esta regla. */
   .hero__person :global(img) {
     inline-size: 100%;
     block-size: 100%;
-    object-fit: contain;
-    object-position: bottom;
+    object-fit: cover;
+    object-position: 50% 100%;
   }
 
   /* ---------- ETIQUETAS DE LOS VÉRTICES ----------
