@@ -1,0 +1,312 @@
+---
+/**
+ * Testimonials — banda 85:504 + titular 85:514 + carrusel 85:643.
+ *
+ * Medidas del archivo (lienzo 1440):
+ *   banda      #F4F1EF, y=3855..4410, 1502 de ancho → sangra a
+ *              pantalla completa
+ *   titular    y=3919, Arboria Medium 36, #021E46, centrado
+ *   carrusel   x=205 y=4100, 1030 × 232
+ *   cita       581 de ancho, Work Sans 18/26, #4D4D4D, centrada
+ *   firma      Work Sans SemiBold Italic, mismo tamaño
+ *   flechas    22 × 41, trazo púrpura, pegadas a los extremos
+ *   puntos     grupo de 70 × 10 → seis de 10px con 2 de separación
+ *
+ * Las flechas del archivo son un chevron de dos segmentos, no un
+ * glifo con curvas: se reproduce con un path exacto sobre su caja
+ * de 22 × 41 en vez de arrastrar dos SVG de 300 bytes.
+ *
+ * Con un solo testimonio los controles no aportan nada, así que se
+ * ocultan solos. En cuanto haya dos o más aparecen flechas, puntos,
+ * teclado y arrastre.
+ */
+import { testimonials } from '@/data/site';
+
+const multiple = testimonials.length > 1;
+---
+
+<section class="tmn" aria-labelledby="tmn-heading">
+  <div class="tmn__inner">
+    <h2 class="tmn__title" id="tmn-heading" data-animate="fade-up">Testimonials</h2>
+
+    <div class="tmn__carousel" data-carousel data-animate="fade-up" data-delay="0.08">
+      {
+        multiple && (
+          <button class="tmn__arrow tmn__arrow--prev" type="button" data-prev>
+            <span class="visually-hidden">Previous testimonial</span>
+            <svg viewBox="0 0 22 41" fill="none" aria-hidden="true">
+              <path
+                d="M20.5 1.5 2 20.5 20.5 39.5"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        )
+      }
+
+      {/* aria-live sin `off` inicial: al cambiar de cita el lector
+          anuncia solo la nueva, no toda la sección. */}
+      <div class="tmn__viewport">
+        <ul role="list" class="tmn__track" data-track aria-live="polite">
+          {
+            testimonials.map((t, i) => (
+              <li class="tmn__slide" data-slide aria-hidden={i === 0 ? undefined : 'true'}>
+                <blockquote class="tmn__quote">
+                  <p>
+                    {t.quote}{' '}
+                    <cite class="tmn__author">{t.author}</cite>
+                  </p>
+                </blockquote>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      {
+        multiple && (
+          <button class="tmn__arrow tmn__arrow--next" type="button" data-next>
+            <span class="visually-hidden">Next testimonial</span>
+            <svg viewBox="0 0 22 41" fill="none" aria-hidden="true">
+              <path
+                d="M1.5 1.5 20 20.5 1.5 39.5"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </button>
+        )
+      }
+
+      {
+        multiple && (
+          <div class="tmn__dots" role="tablist" aria-label="Choose a testimonial">
+            {testimonials.map((_, i) => (
+              <button
+                class="tmn__dot"
+                type="button"
+                role="tab"
+                data-dot
+                aria-selected={i === 0 ? 'true' : 'false'}
+                aria-label={`Testimonial ${i + 1} of ${testimonials.length}`}
+              />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-carousel]').forEach((root) => {
+    const track = root.querySelector<HTMLUListElement>('[data-track]');
+    const slides = [...root.querySelectorAll<HTMLLIElement>('[data-slide]')];
+    const dots = [...root.querySelectorAll<HTMLButtonElement>('[data-dot]')];
+    if (!track || slides.length < 2) return;
+
+    let actual = 0;
+
+    const ir = (i: number) => {
+      // Circular: desde el último, "siguiente" vuelve al primero.
+      actual = (i + slides.length) % slides.length;
+      track.style.transform = `translateX(${-actual * 100}%)`;
+
+      slides.forEach((s, n) => {
+        // Las diapositivas ocultas salen del árbol accesible y del
+        // orden de tabulación: si no, el lector lee las seis.
+        s.toggleAttribute('aria-hidden', n !== actual);
+        s.inert = n !== actual;
+      });
+
+      dots.forEach((d, n) => d.setAttribute('aria-selected', String(n === actual)));
+    };
+
+    root.querySelector('[data-prev]')?.addEventListener('click', () => ir(actual - 1));
+    root.querySelector('[data-next]')?.addEventListener('click', () => ir(actual + 1));
+    dots.forEach((d, n) => d.addEventListener('click', () => ir(n)));
+
+    // Flechas del teclado cuando el foco está dentro del carrusel.
+    root.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowLeft') ir(actual - 1);
+      if (event.key === 'ArrowRight') ir(actual + 1);
+    });
+
+    // Arrastre / swipe. Solo el eje X y con umbral, para no robarle
+    // el scroll vertical al dedo.
+    let inicioX: number | null = null;
+    root.addEventListener('pointerdown', (e) => (inicioX = e.clientX));
+    root.addEventListener('pointerup', (e) => {
+      if (inicioX === null) return;
+      const delta = e.clientX - inicioX;
+      if (Math.abs(delta) > 48) ir(actual + (delta < 0 ? 1 : -1));
+      inicioX = null;
+    });
+
+    ir(0);
+  });
+</script>
+
+<style>
+  /* Banda a sangre: en el archivo el rectángulo sobresale del
+     lienzo por ambos lados, así que ocupa el ancho de ventana. */
+  .tmn {
+    background-color: var(--brand-sand);
+    padding-block: clamp(3rem, 5.5vw, 4.5rem) clamp(3rem, 5.5vw, 4.75rem);
+  }
+
+  .tmn__inner {
+    inline-size: min(100% - 2rem, 1241px);
+    margin-inline: auto;
+  }
+
+  .tmn__title {
+    font-family: var(--font-display);
+    font-size: clamp(1.75rem, 2.6vw, 2.25rem); /* 36px */
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: center;
+    color: var(--brand-ink);
+  }
+
+  /* ---------- CARRUSEL ---------- */
+
+  .tmn__carousel {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: clamp(0.75rem, 2.5vw, 2.5rem);
+    inline-size: min(100%, 1030px);
+    margin-inline: auto;
+    margin-block-start: clamp(2rem, 4.5vw, 3.75rem);
+  }
+
+  .tmn__arrow {
+    display: grid;
+    place-items: center;
+    inline-size: clamp(14px, 1.6vw, 22px);
+    aspect-ratio: 22 / 41;
+    color: var(--accent);
+    cursor: pointer;
+    transition:
+      color var(--dur-fast) var(--ease-out-quart),
+      transform var(--dur-fast) var(--ease-out-expo);
+  }
+
+  .tmn__arrow svg {
+    inline-size: 100%;
+    block-size: 100%;
+  }
+
+  .tmn__arrow--prev:hover {
+    transform: translateX(-3px);
+    color: var(--accent-hover);
+  }
+
+  .tmn__arrow--next:hover {
+    transform: translateX(3px);
+    color: var(--accent-hover);
+  }
+
+  /* El viewport recorta; la pista se desplaza en múltiplos de 100%.
+     Transform en vez de scroll para que el cambio sea idéntico con
+     ratón, teclado y dedo. */
+  .tmn__viewport {
+    overflow: hidden;
+  }
+
+  .tmn__track {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    transition: transform var(--dur-slow) var(--ease-out-expo);
+  }
+
+  .tmn__slide {
+    flex: 0 0 100%;
+    min-inline-size: 0;
+    display: grid;
+    place-items: center;
+  }
+
+  .tmn__quote {
+    margin: 0;
+    /* 581px es el ancho de línea del archivo. Es lo que hace que la
+       cita se lea como un bloque compacto y no como una franja. */
+    max-inline-size: 581px;
+    text-align: center;
+    font-size: 1.125rem; /* 18 */
+    line-height: 1.444;  /* 26 */
+    color: var(--brand-slate);
+  }
+
+  .tmn__author {
+    font-style: italic;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* ---------- PUNTOS ---------- */
+
+  .tmn__dots {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+    margin-block-start: clamp(1.25rem, 2.5vw, 1.375rem);
+  }
+
+  .tmn__dot {
+    inline-size: 10px;
+    block-size: 10px;
+    border-radius: var(--radius-full);
+    /* Vacío = solo contorno; activo = relleno. Igual que el archivo. */
+    box-shadow: inset 0 0 0 1.5px var(--accent);
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-out-quart);
+  }
+
+  .tmn__dot[aria-selected='true'] {
+    background-color: var(--accent);
+  }
+
+  /* Área de toque de 44px sin agrandar el punto visible: el
+     pseudo-elemento crece, el círculo no. */
+  .tmn__dot::before {
+    content: '';
+    position: absolute;
+    inline-size: 44px;
+    block-size: 44px;
+    translate: -50% -50%;
+    margin-inline-start: 5px;
+    margin-block-start: 5px;
+  }
+
+  .tmn__dot {
+    position: relative;
+  }
+
+  @media (width < 48rem) {
+    .tmn__carousel {
+      column-gap: 0.5rem;
+    }
+
+    .tmn__quote {
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tmn__track {
+      transition: none;
+    }
+  }
+</style>

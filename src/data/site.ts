@@ -220,6 +220,31 @@ export const programs = [
 ] as const;
 
 /**
+ * Testimonios — Component 10 (85:643) sobre la banda 85:504.
+ *
+ * Del archivo:
+ *   banda      #F4F1EF, 1502 × 555 (sangra fuera del lienzo de 1440)
+ *   titular    "Testimonials", Arboria Medium 36, #021E46, centrado
+ *   carrusel   1030 × 232 — cita Work Sans 18/26 #4D4D4D en 581 de
+ *              ancho, atribución en SemiBold Italic, flechas púrpura
+ *              de 22 × 41 a los lados y seis puntos de 10px abajo
+ *
+ * IMPORTANTE: el Figma solo trae UNA cita escrita, y su firma es el
+ * marcador "- Name". Los seis puntos indican que el diseñador previó
+ * seis testimonios, pero el copy real no está en el archivo. No los
+ * inventamos: eso sería fabricar prueba social. El carrusel es
+ * data-driven y pinta tantos puntos como entradas haya aquí, así que
+ * añadir los cinco restantes es solo ampliar este array.
+ */
+export const testimonials = [
+  {
+    quote:
+      '”Robert… when I started with your group I would have BALKED at the idea of a $15K/mo retainer. We typically signed $5k at that time and were pretty amped when that happened. This week I signed an existing client into a $15K retainer, and have two others on $10K, and I didn’t even flinch. The mindset shift has been pretty dramatic for me”',
+    author: '- Name',
+  },
+] as const;
+
+/**
  * Los seis pilares. `display` reproduce los typos del Figma,
  * `correct` alimenta la metadata.
  */
