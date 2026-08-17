@@ -142,11 +142,17 @@ import { programs } from '@/data/site';
 
   /* ---------- CUERPO ---------- */
 
+  /* 39px entre la barra de título y el cuerpo en el archivo
+     (la barra acaba en 3350, el texto empieza en 3389). Fijo, no
+     fluido: las dos cards comparten clase, así que cualquier
+     variación por viewport las movía a las dos por igual pero
+     separaba el texto del bloque de color más de la cuenta en
+     pantallas anchas. */
   .card__body {
     display: flex;
     flex-direction: column;
     gap: 1.875rem; /* el hueco de 30px entre párrafos del archivo */
-    margin-block-start: clamp(1.5rem, 3vw, 2.5rem);
+    margin-block-start: 39px;
     font-size: 1.125rem;  /* 18px */
     line-height: 1.667;   /* 30/18 */
     letter-spacing: -0.36px;

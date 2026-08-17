@@ -26,8 +26,7 @@ import { stats } from '@/data/site';
         {stats.eyebrowDisplay}
       </h2>
       <p class="stats__sub" data-animate="fade-up" data-delay="0.06">
-        {stats.headingLead}{' '}
-        <strong class="stats__accent">{stats.headingAccent}</strong>
+        {stats.subheading}
       </p>
     </header>
 
@@ -57,12 +56,38 @@ import { stats } from '@/data/site';
 </section>
 
 <style>
+  /* Fondo del archivo (Rectangle 10, 42:72): banda arena #F4F1EF
+     cuyo borde superior NO es horizontal — cae unos 20px de
+     izquierda a derecha sobre 1440 de ancho. Faltaba por completo:
+     la sección estaba sobre blanco.
+
+     Va con clip-path y no con el SVG exportado a propósito. El
+     export tiene una proporción fija de 1440 × 842; al estirarlo a
+     una ventana más ancha o más estrecha, el ángulo del corte
+     cambia. Con clip-path el corte mantiene su ALTURA en píxeles a
+     cualquier ancho, que es lo que hace que se lea igual en 1280 y
+     en 2560. La geometría es una diagonal de dos puntos: se
+     reproduce exacta, no es un glifo del que falte información. */
   .stats {
+    position: relative;
+    background-color: var(--brand-sand);
+    padding-block: clamp(4rem, 7vw, 6.5rem) clamp(3rem, 6vw, 5.5rem);
+  }
+
+  .stats::before {
+    content: '';
+    position: absolute;
+    inset-block-start: 0;
+    inset-inline: 0;
+    /* Alto del corte diagonal en el archivo, proporcional al ancho */
+    block-size: clamp(28px, 3vw, 44px);
     background-color: var(--surface);
-    padding-block: clamp(3rem, 6vw, 5.5rem);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 42%);
+    pointer-events: none;
   }
 
   .stats__inner {
+    position: relative;
     inline-size: min(100% - 2rem, 1241px);
     margin-inline: auto;
   }
@@ -81,16 +106,14 @@ import { stats } from '@/data/site';
     color: var(--brand-ink);
   }
 
+  /* Work Sans 20/30 con -0.4 de tracking, gris. Exacto del archivo:
+     no va en púrpura ni en negrita. */
   .stats__sub {
     margin-block-start: clamp(0.5rem, 1vw, 0.875rem);
-    font-size: clamp(1.125rem, 1.5vw, 1.375rem);
-    line-height: 1.45;
+    font-size: 1.25rem;
+    line-height: 1.5;
+    letter-spacing: -0.4px;
     color: var(--brand-slate);
-  }
-
-  .stats__accent {
-    font-weight: 700;
-    color: var(--accent);
   }
 
   /* ---------- CUERPO ---------- */

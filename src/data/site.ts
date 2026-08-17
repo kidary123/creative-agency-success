@@ -165,8 +165,12 @@ export const journey = {
  */
 export const stats = {
   eyebrowDisplay: 'Ready to find your tribe?',
-  headingLead: 'Individual Clarity and',
-  headingAccent: 'Collective Confidence',
+  /**
+   * El subtítulo del archivo (42:74) es solo "Collective Confidence",
+   * en Work Sans 20/30 gris — no lleva "Individual Clarity and"
+   * delante ni va en púrpura.
+   */
+  subheading: 'Collective Confidence',
   media: {
     src: '/img/stats-media.png',
     alt: 'Two agency partners high-fiving across a desk after reviewing their numbers together',
@@ -198,7 +202,9 @@ export const programs = [
     name: 'Agency Accelerator',
     /** Fiel al diseño, typo incluido */
     nameDisplay: 'Agency Accelerator',
-    body: 'Build the systems to get a consistent flow of new clients each month, streamline your services to maximize profit, and get your free time back. Some of our clients now work as little as 5 hours a week while still growing.',
+    /** Literal del nodo 57:655: dos párrafos, igual que Scale
+     *  Partnership. El texto anterior era una paráfrasis mía. */
+    body: 'Scale your creative agency to 7-figures. We will help you build systems to consistently get a flow of new clients each month, streamline services to maximize profits, and do it all with the goal of giving you free time back again.\n\nSome of our clients work as little as 5 hours a week now while still increasing profits.',
     cta: { label: 'Get Started', href: '#contact' },
     aiDescription:
       'For agencies at 5 to 6 figures: systems for consistent monthly client flow, streamlined services, higher profit, and reclaimed founder time.',
