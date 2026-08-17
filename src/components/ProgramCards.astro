@@ -1,22 +1,35 @@
 ---
 /**
- * Program cards — nodos 53:49, 53:50, 57:631..650 y 170:423 del Figma.
+ * Program cards — Group 48 (170:425) y Group 47 (170:423) del Figma.
  *
- * Anatomía de cada card, medidas del archivo:
- *   bloque de arte    612 × 418, púrpura #8686F2 o verde #32E0A5,
- *                     con una ilustración de polígonos superpuestos
- *   insignia          círculo de 130, solapando la esquina inferior
- *                     derecha del bloque; color cruzado respecto al
- *                     bloque (verde sobre púrpura y viceversa)
- *   barra de título   611 × 76, azul tinta #021E46,
- *                     Arboria Medium 36 en blanco, centrado
- *   cuerpo            Work Sans 18/30, tracking -0.36px, #4D4D4D
- *   CTA               195 × 59, púrpura, "Get Started", esquinas
- *                     rectas — el diseño no redondea este botón
+ * Anatomía real de cada card, medidas del archivo:
+ *   bloque de arte    612 × 418, púrpura #8686F2 o verde #32E0A5
+ *   arte              DOS polígonos superpuestos, no un dibujo plano:
+ *                       Accelerator  rayas blancas + contorno verde
+ *                       Partnership  masa azul palidísima + contorno
+ *                                    púrpura
+ *   insignia          círculo de 130 en color contrario, top 74.4%
+ *                     del bloque y 23px del borde derecho; pisa la
+ *                     barra de título. Texto Arboria Medium 24 en dos
+ *                     líneas con interlineado 82.9%
+ *   barra de título   611 × 76, azul tinta, Arboria Medium 36 blanco
+ *   cuerpo            Work Sans 18/30, tracking -0.36, #4D4D4D
+ *   CTA               195 × 59, sin redondeo, color CONTRARIO al del
+ *                     bloque: verde en Accelerator, púrpura en
+ *                     Partnership
  *
- * El cruce de color de la insignia lo deduje del archivo: en Scale
- * Partnership el bloque es verde y la insignia púrpura. Aplico el
- * mismo criterio invertido a Agency Accelerator.
+ * ---------- EL HOVER ----------
+ * El archivo trae una segunda variante de cada componente de arte
+ * (138:143 y 138:193). Comparando ambas se ve qué cambia: las dos
+ * capas GIRAN EN SENTIDOS OPUESTOS y crecen un poco. No es un
+ * fundido ni un desplazamiento.
+ *
+ *   Accelerator  rayas −7.21°   contorno +6.97°
+ *   Partnership  masa  −5.68°   contorno +8.74°
+ *
+ * Los ángulos salen de restar la rotación de la variante por defecto
+ * a la de la variante 2 (en Partnership las dos parten de 90°, por
+ * eso 84.32 y 98.74 se traducen a −5.68 y +8.74).
  */
 import { programs } from '@/data/site';
 ---
@@ -35,7 +48,18 @@ import { programs } from '@/data/site';
           aria-labelledby={`${p.id}-title`}
         >
           <div class="card__art">
-            <img src={p.art} alt="" width="386" height="341" aria-hidden="true" loading="lazy" />
+            {/* Capa recortada: las formas se salen al girar y aquí es
+                donde se cortan. La insignia queda fuera de este
+                recorte porque en el archivo sobresale por abajo. */}
+            <span class="card__clip">
+              <span class="card__shape card__shape--fill">
+                <img src={p.artFill} alt="" aria-hidden="true" loading="lazy" />
+              </span>
+              <span class="card__shape card__shape--line">
+                <img src={p.artLine} alt="" aria-hidden="true" loading="lazy" />
+              </span>
+            </span>
+
             <span class="card__badge">
               <span>{p.badgeTop}</span>
               <span>{p.badgeBottom}</span>
@@ -86,83 +110,157 @@ import { programs } from '@/data/site';
   .card__art {
     position: relative;
     aspect-ratio: 612 / 418;
-    display: grid;
-    place-items: center;
-    overflow: visible;
   }
 
-  .card--purple .card__art { background-color: var(--accent); }
-  .card--green  .card__art { background-color: var(--accent-2); }
-
-  .card__art img {
-    inline-size: 63%;
-    block-size: auto;
-    max-block-size: 82%;
-    object-fit: contain;
+  .card__clip {
+    position: absolute;
+    inset: 0;
+    display: block;
+    overflow: hidden;
   }
 
-  /* Insignia: solapa la esquina, medio dentro medio fuera. Es el
-     detalle que ata el bloque de color con la barra de título. */
+  .card--purple .card__clip { background-color: var(--accent); }
+  .card--green  .card__clip { background-color: var(--accent-2); }
+
+  .card__shape {
+    position: absolute;
+    display: block;
+    /* Cada capa gira desde su propio centro */
+    transform-origin: 50% 50%;
+    transition: transform var(--dur-slow) var(--ease-out-expo);
+    will-change: transform;
+  }
+
+  .card__shape img {
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
+    max-inline-size: none;
+  }
+
+  /* Insets del componente de arte dentro del bloque de color.
+     Accelerator: 318 × 374 en x=241 y=2880 sobre un bloque
+     612 × 418 en x=99 y=2858 → 23.2% / 5.3%. */
+  .card--purple .card__shape {
+    inline-size: 51.96%;
+    block-size: 89.42%;
+    inset-inline-start: 23.2%;
+    inset-block-start: 5.26%;
+  }
+
+  /* Partnership: 386 × 341 en x=840 y=2902 sobre bloque en
+     x=728 y=2858 → 18.3% / 10.5%. */
+  .card--green .card__shape {
+    inline-size: 63.07%;
+    block-size: 81.58%;
+    inset-inline-start: 18.3%;
+    inset-block-start: 10.53%;
+  }
+
+  /* Ángulos exactos de la variante 2 del archivo. El contorno gira
+     en un sentido y el relleno en el otro: es ese cruce lo que da
+     la sensación de que la figura "se abre". */
+  .card--purple:hover .card__shape--fill,
+  .card--purple:focus-within .card__shape--fill {
+    transform: rotate(-7.21deg) scale(1.06);
+  }
+
+  .card--purple:hover .card__shape--line,
+  .card--purple:focus-within .card__shape--line {
+    transform: rotate(6.97deg) scale(1.06);
+  }
+
+  .card--green:hover .card__shape--fill,
+  .card--green:focus-within .card__shape--fill {
+    transform: rotate(-5.68deg) scale(1.05);
+  }
+
+  .card--green:hover .card__shape--line,
+  .card--green:focus-within .card__shape--line {
+    transform: rotate(8.74deg) scale(1.05);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card__shape {
+      transition: none;
+    }
+
+    .card:hover .card__shape,
+    .card:focus-within .card__shape {
+      transform: none;
+    }
+  }
+
+  /* ---------- INSIGNIA ----------
+     130px a 74.4% del alto del bloque y 23px del borde derecho:
+     queda medio dentro del color y medio sobre la barra de título.
+     Va fuera del recorte del arte, por eso cuelga del .card. */
   .card__badge {
     position: absolute;
-    inset-block-end: -7.7%;
-    inset-inline-end: 5%;
-    z-index: 2;
+    inset-block-start: 74.4%;
+    inset-inline-end: 3.76%;
+    z-index: 3;
     display: grid;
     place-content: center;
     inline-size: clamp(84px, 10.5vw, 130px);
     aspect-ratio: 1;
     border-radius: var(--radius-full);
     font-family: var(--font-display);
-    font-size: clamp(1rem, 1.65vw, 1.5rem); /* 24px */
+    font-size: clamp(1rem, 1.65vw, 1.5rem); /* 24 */
     font-weight: 500;
-    line-height: 1.16;
+    /* 82.9% del archivo: las dos líneas casi se tocan */
+    line-height: 0.829;
     text-align: center;
-    color: #fff;
   }
 
-  .card--purple .card__badge { background-color: var(--accent-2); color: var(--brand-ink); }
-  .card--green  .card__badge { background-color: var(--accent); }
+  /* Colores cruzados: la insignia nunca es del color de su bloque */
+  .card--purple .card__badge {
+    background-color: var(--accent-2);
+    color: #000;
+  }
+
+  .card--green .card__badge {
+    background-color: var(--accent);
+    color: #fff;
+  }
 
   /* ---------- TÍTULO ---------- */
 
   .card__title {
+    position: relative;
+    z-index: 1;
     display: grid;
     place-items: center;
     min-block-size: clamp(56px, 5.3vw, 76px);
     padding: 0.5rem clamp(5rem, 12%, 8rem) 0.5rem 1rem;
     background-color: var(--brand-ink);
     font-family: var(--font-display);
-    font-size: clamp(1.5rem, 2.5vw, 2.25rem); /* 36px */
+    font-size: clamp(1.5rem, 2.5vw, 2.25rem); /* 36 */
     font-weight: 500;
     line-height: 1.2;
     text-align: center;
     color: #fff;
   }
 
-  /* ---------- CUERPO ---------- */
-
-  /* 39px entre la barra de título y el cuerpo en el archivo
-     (la barra acaba en 3350, el texto empieza en 3389). Fijo, no
-     fluido: las dos cards comparten clase, así que cualquier
-     variación por viewport las movía a las dos por igual pero
-     separaba el texto del bloque de color más de la cuenta en
-     pantallas anchas. */
+  /* ---------- CUERPO ----------
+     39px entre la barra de título y el cuerpo en el archivo
+     (la barra acaba en 3350, el texto empieza en 3389). */
   .card__body {
     display: flex;
     flex-direction: column;
     gap: 1.875rem; /* el hueco de 30px entre párrafos del archivo */
     margin-block-start: 39px;
-    font-size: 1.125rem;  /* 18px */
-    line-height: 1.667;   /* 30/18 */
+    font-size: 1.125rem; /* 18 */
+    line-height: 1.667;  /* 30/18 */
     letter-spacing: -0.36px;
     color: var(--brand-slate);
     flex: 1;
   }
 
   /* ---------- CTA ----------
-     Rectangular a propósito: el diseño no redondea este botón,
-     a diferencia del CTA del hero. */
+     Rectangular a propósito, y en el color contrario al bloque.
+     Verde con texto azul tinta en Accelerator; púrpura con texto
+     blanco en Partnership. */
   .card__cta {
     display: grid;
     place-items: center;
@@ -171,18 +269,26 @@ import { programs } from '@/data/site';
     max-inline-size: 100%;
     margin-block-start: clamp(1.5rem, 3vw, 2.5rem);
     padding-inline: 1rem;
-    background-color: var(--accent);
     font-family: var(--font-display);
-    font-size: 1.25rem; /* 20px */
+    font-size: 1.25rem; /* 20 */
     font-weight: 500;
-    color: #fff;
     transition:
-      background-color var(--dur-fast) var(--ease-out-quart),
+      filter var(--dur-fast) var(--ease-out-quart),
       transform var(--dur-base) var(--ease-out-expo);
   }
 
+  .card--purple .card__cta {
+    background-color: var(--accent-2);
+    color: var(--brand-ink);
+  }
+
+  .card--green .card__cta {
+    background-color: var(--accent);
+    color: #fff;
+  }
+
   .card__cta:hover {
-    background-color: var(--accent-hover);
+    filter: brightness(1.06);
     transform: translateY(-2px);
   }
 

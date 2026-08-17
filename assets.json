@@ -34,18 +34,6 @@
       "url": "https://www.figma.com/api/mcp/asset/2b852344-9dca-41f2-8579-a7120336164c.png"
     },
     {
-      "file": "program-accelerator.svg",
-      "nodeId": "89:175",
-      "name": "Program card — ilustración de Agency Accelerator",
-      "url": "https://www.figma.com/api/mcp/asset/815872f1-51cf-4b54-957d-8950d2c7e105.svg"
-    },
-    {
-      "file": "program-partnership.svg",
-      "nodeId": "89:216",
-      "name": "Program card — ilustración de Scale Partnership",
-      "url": "https://www.figma.com/api/mcp/asset/960cc3ca-c490-4eaa-beb1-dec6369df694.svg"
-    },
-    {
       "file": "stats-media.png",
       "nodeId": "89:442",
       "name": "Banda de datos — foto con el botón de play",
@@ -212,6 +200,48 @@
       "nodeId": "233:1876",
       "name": "Contorno verde de la banda Paths To Success",
       "url": "https://www.figma.com/api/mcp/asset/80c3da62-04ea-4232-a3c5-f0594ea3845e.svg"
+    },
+    {
+      "file": "prog-accel-stripes.svg",
+      "nodeId": "85:783",
+      "name": "Forma rayada blanca de Agency Accelerator",
+      "url": "https://www.figma.com/api/mcp/asset/e152bc20-53dd-44a6-a5dd-72760e3eab73.svg"
+    },
+    {
+      "file": "prog-accel-outline.svg",
+      "nodeId": "85:816",
+      "name": "Contorno verde de Agency Accelerator",
+      "url": "https://www.figma.com/api/mcp/asset/90fb32fc-12df-4b9c-8f1c-022ca12a60c7.svg"
+    },
+    {
+      "file": "prog-part-solid.svg",
+      "nodeId": "89:211",
+      "name": "Forma solida azul palido de Scale Partnership",
+      "url": "https://www.figma.com/api/mcp/asset/74cfba6f-8497-4c6b-85b1-bc9ed49f6a64.svg"
+    },
+    {
+      "file": "prog-part-outline.svg",
+      "nodeId": "89:212",
+      "name": "Contorno purpura de Scale Partnership",
+      "url": "https://www.figma.com/api/mcp/asset/9ac3ead3-304b-4357-b1f9-02900044b61f.svg"
+    },
+    {
+      "file": "resource-2.png",
+      "nodeId": "189:220",
+      "name": "Foto tarjeta Books",
+      "url": "https://www.figma.com/api/mcp/asset/38c2988e-5372-4409-9f29-59af9194ecb9.png"
+    },
+    {
+      "file": "resource-3.png",
+      "nodeId": "189:229",
+      "name": "Foto tarjeta Free Trainings",
+      "url": "https://www.figma.com/api/mcp/asset/feea9e30-157b-49d7-82dd-eaa267b52125.png"
+    },
+    {
+      "file": "resource-4.png",
+      "nodeId": "189:238",
+      "name": "Foto tarjeta Podcast",
+      "url": "https://www.figma.com/api/mcp/asset/175c5fc5-b54f-4ab0-a79b-0212659a2170.png"
     }
   ]
 }

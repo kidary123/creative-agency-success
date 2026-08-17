@@ -184,12 +184,25 @@ export const stats = {
 } as const;
 
 /**
- * Las dos ofertas. Del Figma:
+ * Las dos ofertas (Group 48 = 170:425 y Group 47 = 170:423).
+ *
+ * Del Figma:
  *   bloque superior   612 × 418, púrpura #8686F2 / verde #32E0A5
- *   insignia          círculo de 130, solapando la esquina inferior
+ *   arte              DOS polígonos superpuestos, no una ilustración
+ *                     plana: uno de relleno y otro de contorno, en el
+ *                     color contrario al del bloque
+ *   insignia          círculo de 130 en color contrario, a 74.4% de
+ *                     alto y 23px del borde derecho — pisa la barra
+ *                     de título; texto Arboria Medium 24 en dos
+ *                     líneas muy juntas (interlineado 82.9%)
  *   barra de título   611 × 76, azul tinta, Arboria Medium 36 blanco
  *   cuerpo            Work Sans 18/30, tracking -0.36, #4D4D4D
- *   CTA               195 × 59, púrpura, "Get Started", sin redondeo
+ *   CTA               195 × 59, sin redondeo, EN COLOR CONTRARIO:
+ *                     verde en Accelerator, púrpura en Partnership.
+ *                     No es púrpura en las dos.
+ *
+ * `badgeInk` es el color del texto de la insignia: negro sobre verde
+ * y blanco sobre púrpura, como en el archivo.
  */
 export const programs = [
   {
@@ -197,7 +210,9 @@ export const programs = [
     badgeTop: '5 to 6',
     badgeBottom: 'Figures',
     tone: 'purple' as const,
-    art: '/img/program-accelerator.svg',
+    /** Capa de relleno (rayas blancas) + capa de contorno (verde) */
+    artFill: '/img/prog-accel-stripes.svg',
+    artLine: '/img/prog-accel-outline.svg',
     badge: '5 to 6 Figures',
     name: 'Agency Accelerator',
     /** Fiel al diseño, typo incluido */
@@ -214,7 +229,9 @@ export const programs = [
     badgeTop: '6 to 7',
     badgeBottom: 'Figures',
     tone: 'green' as const,
-    art: '/img/program-partnership.svg',
+    /** Capa de relleno (azul palidísimo) + contorno púrpura */
+    artFill: '/img/prog-part-solid.svg',
+    artLine: '/img/prog-part-outline.svg',
     badge: '6 to 7 Figures',
     name: 'Scale Partnership',
     nameDisplay: 'Scale Partnership',
@@ -235,17 +252,48 @@ export const programs = [
  *              ancho, atribución en SemiBold Italic, flechas púrpura
  *              de 22 × 41 a los lados y seis puntos de 10px abajo
  *
- * IMPORTANTE: el Figma solo trae UNA cita escrita, y su firma es el
- * marcador "- Name". Los seis puntos indican que el diseñador previó
- * seis testimonios, pero el copy real no está en el archivo. No los
- * inventamos: eso sería fabricar prueba social. El carrusel es
- * data-driven y pinta tantos puntos como entradas haya aquí, así que
- * añadir los cinco restantes es solo ampliar este array.
+ * Las SEIS citas están en el archivo, pero no una detrás de otra:
+ * son seis VARIANTES del mismo componente (Property 1=Group 30..35),
+ * que es como Figma representa los estados de un carrusel. Por eso
+ * al mirar el lienzo solo se ve una.
+ *
+ * La firma "- Name" es un marcador del propio diseño en las seis:
+ * el archivo no trae los nombres reales.
  */
 export const testimonials = [
   {
+    /** Group 30 (85:617) */
     quote:
       '”Robert… when I started with your group I would have BALKED at the idea of a $15K/mo retainer. We typically signed $5k at that time and were pretty amped when that happened. This week I signed an existing client into a $15K retainer, and have two others on $10K, and I didn’t even flinch. The mindset shift has been pretty dramatic for me”',
+    author: '- Name',
+  },
+  {
+    /** Group 31 (85:614) */
+    quote:
+      '“Just sold a $22K/year contract for Web + SEO — this one’s significant because it’s the first official contract within our MRR model that went from start to finish using @Robert Patin’s exact sales model!“',
+    author: '- Name',
+  },
+  {
+    /** Group 32 (85:613) */
+    quote:
+      '“We just confirmed a new branding project today using our new Blueprint pricing model! Which is 25% more than we would have normally charged! Thank you“',
+    author: '- Name',
+  },
+  {
+    /** Group 33 (85:615) */
+    quote:
+      '“Ran the numbers and we doubled our revenue from Jan => Feb. and are on track to double revenue again in March“',
+    author: '- Name',
+  },
+  {
+    /** Group 34 (85:612) */
+    quote:
+      '“We landed a $50K deal today that I’ve been nurturing for a while. AND my team landed a $3k project on their own. I. did. nothing. on that one.“',
+    author: '- Name',
+  },
+  {
+    /** Group 35 (85:616) */
+    quote: '“Landed and onboarded a $20k project while I was skiing with my kid“',
     author: '- Name',
   },
 ] as const;
@@ -295,26 +343,46 @@ export const scaleMethod = {
  * de la foto, título Arboria Medium 24 #021E46 y enlace "Learn
  * More" en púrpura con flecha.
  *
- * NOTA: las cuatro tarjetas del Figma repiten la MISMA foto y el
- * MISMO párrafo — es maquetación con relleno, no copy final. Se
- * respeta tal cual; cambiar `img` y `body` por tarjeta cuando
- * haya contenido real.
+ * Cada tarjeta tiene su propia foto (nodos 89:331, 189:220, 189:229
+ * y 189:238 — el nombre de capa "krakenimages…unsplash 1..4" hacía
+ * pensar que era la misma repetida, pero son cuatro distintas).
+ * El párrafo sí se repite en las cuatro: eso es relleno del diseño.
  */
 export const resources = {
   heading: 'Resources',
   body: 'We have created a deep library of free resources and trainings designed to help you and your agency on the path to success. Take a step today to begin building the agency of your dreams..',
   cta: { label: 'Learn More', href: '#contact' },
   items: [
-    { id: 'facebook-group', name: 'Facebook Group', icon: '/img/icon-facebook.svg' },
-    { id: 'books', name: 'Books', icon: '/img/icon-books.svg' },
-    { id: 'free-trainings', name: 'Free Trainings', icon: '/img/icon-trainings.svg' },
-    { id: 'podcast', name: 'Podcast', icon: '/img/icon-podcast.svg' },
+    {
+      id: 'facebook-group',
+      name: 'Facebook Group',
+      icon: '/img/icon-facebook.svg',
+      img: '/img/resource-1.png',
+      alt: 'Four people stacking their hands together over a desk',
+    },
+    {
+      id: 'books',
+      name: 'Books',
+      icon: '/img/icon-books.svg',
+      img: '/img/resource-2.png',
+      alt: 'The fanned-out pages of an open book in warm light',
+    },
+    {
+      id: 'free-trainings',
+      name: 'Free Trainings',
+      icon: '/img/icon-trainings.svg',
+      img: '/img/resource-3.png',
+      alt: 'Two colleagues high-fiving across a desk in a bright office',
+    },
+    {
+      id: 'podcast',
+      name: 'Podcast',
+      icon: '/img/icon-podcast.svg',
+      img: '/img/resource-4.png',
+      alt: 'A woman in headphones recording into a studio microphone',
+    },
   ],
-  /** Compartidos por las cuatro tarjetas, como en el archivo. */
-  sharedImage: {
-    src: '/img/resource-1.png',
-    alt: 'Four people stacking their hands together over a desk',
-  },
+  /** El párrafo sí es el mismo en las cuatro tarjetas del archivo. */
   sharedBody:
     'We spent over a decade perfecting the exact six steps it takes to scale a creative agency to a million dollars in revenue while increasing profits and giving you free time again.',
 } as const;

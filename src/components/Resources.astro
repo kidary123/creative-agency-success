@@ -12,6 +12,10 @@
  *   círculo   84 × 86 púrpura, y=5940 → montado a caballo del
  *             borde inferior de la foto (foto acaba en 6005),
  *             desplazado 8px a la derecha del borde de la tarjeta
+ *
+ * Cada tarjeta lleva SU foto (89:331, 189:220, 189:229, 189:238).
+ * Los nombres de capa del archivo ("krakenimages…unsplash 1..4")
+ * daban a entender que era la misma repetida; son cuatro distintas.
  *   título    y=6040, Arboria Medium 24/30, #021E46
  *   cuerpo    y=6094, 280 de ancho, Work Sans 18/1.5
  *   CTA       y=6278, "Learn More" Arboria Medium 20/30 púrpura
@@ -31,12 +35,7 @@ import { resources } from '@/data/site';
         resources.items.map((item) => (
           <li class="card">
             <div class="card__media">
-              <Picture
-                src={resources.sharedImage.src}
-                alt={resources.sharedImage.alt}
-                width={596}
-                height={420}
-              />
+              <Picture src={item.img} alt={item.alt} width={596} height={420} />
               {/* El disco púrpura vive a caballo del borde de la
                   foto; el icono va centrado dentro. */}
               <span class="card__disc" aria-hidden="true">
