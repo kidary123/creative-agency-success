@@ -35,6 +35,7 @@ Requiere Pillow:  pip install Pillow
 """
 
 import json
+import re
 from pathlib import Path
 
 from PIL import Image
@@ -93,7 +94,44 @@ def recortar_centrado(im: Image.Image, ratio: float) -> Image.Image:
     return im.crop((0, margen, im.width, margen + alto))
 
 
+def limpiar_svgs() -> None:
+    """
+    Quita el rectángulo de fondo que Figma cuela en algunos SVG.
+
+    Cuando se exporta un nodo cuyo marco no tiene relleno propio,
+    Figma añade un <rect> del tamaño del lienzo con el gris de su
+    interfaz (#E5E5E5). En el archivo no se ve; en la web sale como
+    un recuadro gris detrás del logo.
+
+    Se borra solo si el rect cubre TODO el viewBox y lleva ese gris
+    exacto: así no se toca ningún fondo que sí forme parte del
+    dibujo.
+    """
+    patron = re.compile(
+        r'<rect\s+width="([\d.]+)"\s+height="([\d.]+)"\s+fill="#E5E5E5"\s*/>',
+        re.I,
+    )
+
+    for svg in sorted(IMG.glob("*.svg")):
+        texto = svg.read_text(encoding="utf-8")
+        medidas = re.search(r'viewBox="0 0 ([\d.]+) ([\d.]+)"', texto)
+        if not medidas:
+            continue
+
+        ancho, alto = medidas.group(1), medidas.group(2)
+
+        def es_el_fondo(m: re.Match) -> str:
+            return "" if (m.group(1), m.group(2)) == (ancho, alto) else m.group(0)
+
+        limpio = patron.sub(es_el_fondo, texto)
+        if limpio != texto:
+            svg.write_text(limpio, encoding="utf-8")
+            print(f"  SVG {svg.name}: fondo gris de Figma eliminado")
+
+
 def main() -> None:
+    limpiar_svgs()
+
     hecho = {}
     if REGISTRO.exists():
         hecho = json.loads(REGISTRO.read_text(encoding="utf-8"))

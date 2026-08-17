@@ -26,11 +26,24 @@ import { footerColumns, footerMeta, site } from '@/data/site';
 
 <footer class="ft" id="contact">
   <div class="ft__inner">
-    {/* Logo real del archivo (154:169), no el marcador dibujado a
-        mano: hexágono de la marca con el nombre dentro, 97 × 97. */}
-    <a class="ft__brand" href="#main" aria-label={`${site.name} — home`}>
-      <img src="/img/logo-light.svg" alt="" width="97" height="97" />
-    </a>
+    {/* Logo y bloque legal comparten celda: así el copyright cuelga
+        SIEMPRE justo debajo del logo, sin depender de lo que mida
+        la columna del newsletter. Antes el legal iba en una segunda
+        fila de la rejilla y quedaba muy por debajo de la marca. */}
+    <div class="ft__col1">
+      {/* Logo real del archivo (154:169), no el marcador dibujado a
+          mano: hexágono de la marca con el nombre dentro, 97 × 97. */}
+      <a class="ft__brand" href="#main" aria-label={`${site.name} — home`}>
+        <img src="/img/logo-light.svg" alt="" width="97" height="97" />
+      </a>
+
+      <div class="ft__legal">
+        <p class="ft__copy">
+          ©{footerMeta.copyrightYear} {footerMeta.copyright}<br />{footerMeta.rights}
+        </p>
+        <a href={footerMeta.privacy.href} class="ft__link ft__privacy">{footerMeta.privacy.label}</a>
+      </div>
+    </div>
 
     {
       footerColumns.map((column) => (
@@ -70,12 +83,6 @@ import { footerColumns, footerMeta, site } from '@/data/site';
       <p class="sub__msg" data-subscribe-msg role="status" aria-live="polite"></p>
     </div>
 
-    <div class="ft__legal">
-      <p class="ft__copy">
-        ©{footerMeta.copyrightYear} {footerMeta.copyright}<br />{footerMeta.rights}
-      </p>
-      <a href={footerMeta.privacy.href} class="ft__link ft__privacy">{footerMeta.privacy.label}</a>
-    </div>
   </div>
 </footer>
 
@@ -113,9 +120,7 @@ import { footerColumns, footerMeta, site } from '@/data/site';
     grid-template-columns: auto auto auto minmax(0, 1fr);
     align-items: start;
     column-gap: clamp(1.5rem, 4vw, 4.5rem);
-    /* La fila 2 solo lleva el bloque legal, que se pega al logo con
-       su propio margen: aquí el hueco tiene que ser 0. */
-    row-gap: 0;
+    row-gap: clamp(1.5rem, 3vw, 2rem);
     inline-size: min(100% - 2rem, 1241px);
     margin-inline: auto;
   }
@@ -228,13 +233,10 @@ import { footerColumns, footerMeta, site } from '@/data/site';
   }
 
   /* ---------- LEGAL ----------
-     En el archivo cuelga bajo el logo, en la primera columna:
-     el logo acaba en y=7088 y el copyright empieza en 7100, o sea
-     12px de separación. Antes había un margen de hasta 28 que lo
-     dejaba flotando lejos de la marca. */
+     12px bajo el logo: en el archivo el logo acaba en y=7088 y el
+     copyright empieza en 7100. Al vivir en la misma celda que la
+     marca, esa distancia se mantiene aunque el newsletter crezca. */
   .ft__legal {
-    grid-column: 1 / 2;
-    grid-row: 2;
     margin-block-start: 12px;
   }
 
@@ -245,9 +247,11 @@ import { footerColumns, footerMeta, site } from '@/data/site';
     color: #fff;
   }
 
+  /* 23px bajo el copyright: el bloque acaba en y=7140 y "Privacy
+     Policy" empieza en 7163. */
   .ft__privacy {
     display: inline-block;
-    margin-block-start: clamp(1rem, 2.5vw, 1.5rem);
+    margin-block-start: 23px;
   }
 
   @media (width < 62rem) {
@@ -258,11 +262,6 @@ import { footerColumns, footerMeta, site } from '@/data/site';
     .ft__news {
       grid-column: 1 / -1;
       justify-self: start;
-    }
-
-    .ft__legal {
-      grid-column: 1 / -1;
-      grid-row: auto;
     }
   }
 
