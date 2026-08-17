@@ -39,3 +39,5 @@ deploy-log.txt
 get-assets.ps1
 GET-ASSETS.bat
 DEV.bat
+login-vercel.ps1
+LOGIN-VERCEL.bat
