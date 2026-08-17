@@ -2,6 +2,7 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Hero from '@components/Hero.astro';
 import Journey from '@components/Journey.astro';
+import Kicker from '@components/Kicker.astro';
 import FeaturedIn from '@components/FeaturedIn.astro';
 import StatsBand from '@components/StatsBand.astro';
 import ProgramCards from '@components/ProgramCards.astro';
@@ -25,13 +26,15 @@ import PathsToSuccess from '@components/PathsToSuccess.astro';
     Resources ......... 5598
     Paths To Success .. 6530
 
-  Journey y Featured in estaban invertidos: la banda de logos va
-  JUSTO debajo del hero, no después del acordeón de retratos.
+  El kicker ("You scale your agency…") va aparte, en su propia
+  banda blanca entre el hero y el acordeón: es lo único que sube,
+  la fila de logos se queda debajo del acordeón.
 */}
 <BaseLayout>
   <Hero />
-  <FeaturedIn />
+  <Kicker />
   <Journey />
+  <FeaturedIn />
   <StatsBand />
   <ProgramCards />
   <Testimonials />

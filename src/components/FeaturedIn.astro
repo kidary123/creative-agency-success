@@ -10,8 +10,6 @@
  * tienen pesos ópticos distintos y escalarlos todos igual los
  * desequilibra.
  */
-import { hero } from '@/data/site';
-
 const logos = [
   { src: '/img/press-forbes.png', alt: 'Forbes', w: 149, h: 40 },
   { src: '/img/press-abc.png', alt: 'ABC', w: 74, h: 73 },
@@ -23,21 +21,6 @@ const logos = [
 ---
 
 <section class="press" aria-labelledby="press-heading">
-  {/* PRIMER elemento de la banda blanca: así queda justo debajo del
-      hombre, pegado al borde del hero, sin los logos en medio.
-      Sigue perteneciendo a esta sección, no al bloque arena.
-
-      Se alinea con el gráfico de arriba repitiendo la MISMA rejilla
-      del hero (574fr / 580fr, mismo hueco y mismo ancho de
-      contenedor) y colocando el texto en la segunda columna. Si se
-      alineara al borde derecho del contenedor de los logos, que es
-      21px más ancho, se desplazaría respecto al hombre. */}
-  <div class="press__kickerrow">
-    <p class="press__kicker" data-animate="fade-up">
-      {hero.kickerLead} <strong>{hero.kickerStrong}</strong>
-    </p>
-  </div>
-
   <div class="press__inner">
     <h2 class="press__title" id="press-heading">Featured in</h2>
 
@@ -55,12 +38,9 @@ const logos = [
 </section>
 
 <style>
-  /* El CTA del hero invade esta banda por arriba, así que el
-     relleno superior tiene que dejarle sitio: 19px de saliente más
-     el aire propio de la sección. */
   .press {
     background-color: var(--surface);
-    padding-block: calc(19px + clamp(2rem, 4vw, 3.25rem)) clamp(2.5rem, 5vw, 4rem);
+    padding-block: clamp(2.5rem, 5vw, 4rem);
   }
 
   .press__inner {
@@ -121,53 +101,9 @@ const logos = [
     opacity: 1;
   }
 
-  /* ---------- KICKER ----------
-     Rejilla clonada del hero para que el texto caiga bajo el
-     gráfico. Los valores tienen que coincidir con .hero__inner. */
-  .press__kickerrow {
-    display: grid;
-    grid-template-columns: minmax(0, 574fr) minmax(0, 580fr);
-    gap: clamp(2rem, 5vw, 4.75rem);
-    inline-size: min(100% - 2rem, 1220px);
-    margin-inline: auto;
-    /* Separa el kicker de los logos, no del hero: va pegado arriba
-       (el relleno de la sección ya deja sitio al saliente del CTA)
-       y abre hueco por abajo. */
-    margin-block-end: clamp(2rem, 4vw, 3.25rem);
-  }
-
-  /* Arboria 24/28 azul tinta, caja de 498 centrada en la segunda
-     columna — la del hombre. */
-  .press__kicker {
-    grid-column: 2;
-    justify-self: center;
-    inline-size: min(100%, 498px);
-    font-size: clamp(1.125rem, 1.67vw, 1.5rem); /* 24 */
-    font-weight: 400;
-    line-height: 1.167; /* 28/24 */
-    text-align: center;
-    color: var(--brand-ink);
-  }
-
-  .press__kicker strong {
-    font-weight: 500;
-  }
-
   /* En móvil seis en fila darían ~45px cada uno: ilegible. Se pasa
      a dos filas de tres, que es una decisión de rejilla, no un
      salto accidental. */
-  /* Por debajo de 62rem el hero deja de tener dos columnas, así que
-     esta rejilla tampoco tiene sentido: el texto se centra. */
-  @media (width < 62rem) {
-    .press__kickerrow {
-      grid-template-columns: 1fr;
-    }
-
-    .press__kicker {
-      grid-column: 1;
-    }
-  }
-
   @media (width < 48rem) {
 
     .press__list {

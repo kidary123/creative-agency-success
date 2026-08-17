@@ -1,0 +1,77 @@
+---
+/**
+ * Kicker — "You scale your agency. We simplify your life." (42:65).
+ *
+ * Vive en su propia banda blanca, entre el hero y el acordeón de
+ * retratos. Antes viajaba dentro de "Featured in", pero esa sección
+ * va debajo del acordeón, así que la frase acababa lejos del hero.
+ *
+ * Del archivo: Arboria 24/28 azul tinta, caja de 498 centrada bajo
+ * la columna del gráfico (x=775..1273, centro 1024; el gráfico va
+ * de 747 a 1327, centro 1037).
+ *
+ * Para que quede bajo el hombre a cualquier ancho, esta banda
+ * repite la MISMA rejilla del hero — 574fr / 580fr, mismo hueco y
+ * mismo ancho de contenedor — y coloca el texto en la segunda
+ * columna. Alinearlo al borde derecho de un contenedor más ancho lo
+ * desplazaría respecto al gráfico en cuanto cambiara el viewport.
+ *
+ * IMPORTANTE: es la sección que recibe el saliente del CTA del
+ * hero, que sobresale 19px por debajo de la banda arena. Su relleno
+ * superior tiene que contarlos.
+ */
+import { hero } from '@/data/site';
+---
+
+<section class="kicker">
+  <div class="kicker__row">
+    <p class="kicker__text" data-animate="fade-up">
+      {hero.kickerLead} <strong>{hero.kickerStrong}</strong>
+    </p>
+  </div>
+</section>
+
+<style>
+  /* La sección ocupa todo el ancho para que su fondo blanco cubra
+     la franja entre el hero y el acordeón; la rejilla va dentro. */
+  .kicker {
+    background-color: var(--surface);
+    /* 19px del saliente del botón + el aire propio de la banda */
+    padding-block: calc(19px + clamp(1.5rem, 3vw, 2.25rem)) clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .kicker__row {
+    display: grid;
+    grid-template-columns: minmax(0, 574fr) minmax(0, 580fr);
+    gap: clamp(2rem, 5vw, 4.75rem);
+    inline-size: min(100% - 2rem, 1220px);
+    margin-inline: auto;
+  }
+
+  .kicker__text {
+    grid-column: 2;
+    justify-self: center;
+    inline-size: min(100%, 498px);
+    font-size: clamp(1.125rem, 1.67vw, 1.5rem); /* 24 */
+    font-weight: 400;
+    line-height: 1.167; /* 28/24 */
+    text-align: center;
+    color: var(--brand-ink);
+  }
+
+  .kicker__text strong {
+    font-weight: 500;
+  }
+
+  /* Por debajo de 62rem el hero deja de tener dos columnas, así que
+     esta rejilla tampoco tiene sentido: el texto se centra. */
+  @media (width < 62rem) {
+    .kicker__row {
+      grid-template-columns: 1fr;
+    }
+
+    .kicker__text {
+      grid-column: 1;
+    }
+  }
+</style>
