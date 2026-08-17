@@ -2,36 +2,46 @@
 """
 Optimiza los PNG exportados de Figma.
 
-Figma exporta a resolución de origen: los retratos venían entre 1 y
-8,5 MB cada uno y el conjunto pesaba unos 66 MB. Sin este paso el
-sitio es correcto pero inusable en una conexión normal.
+Figma exporta a resolución de origen: el conjunto llega pesando unos
+80 MB. Sin este paso el sitio es correcto pero inusable en una
+conexión normal.
 
 Qué hace, por cada imagen:
-  1. la reescala al DOBLE del tamaño al que se pinta (suficiente
+  1. la recorta a la proporción de su hueco, si tiene una definida
+  2. la reescala al DOBLE del tamaño al que se pinta (suficiente
      para pantallas retina, nada más)
-  2. escribe un .webp al lado, que es lo que sirve <picture>
-  3. reescribe el .png ya reducido, y ADEMÁS lo cuantiza a 256
-     colores
+  3. escribe un .webp de alta calidad, que es lo que sirve <picture>
+  4. reescribe el .png ya reducido como respaldo, SIN pérdida
 
-El paso 3 necesita explicación: PNG es un formato sin pérdida, así
-que una foto reescalada seguía pesando megas — los respaldos sumaban
-14 MB frente a 1 MB de los WebP. Cuantizar a paleta introduce algo
-de banding en los degradados, pero ese archivo SOLO lo ve un
-navegador sin soporte WebP (por debajo del 3% del tráfico), mientras
-que el peso lo pagaba el despliegue entero.
+--------------------------------------------------------------------
+IDEMPOTENTE — y esto no es un detalle
+--------------------------------------------------------------------
+JPEG y WebP son formatos con pérdida: recomprimir un archivo ya
+comprimido no vuelve a partir del original, parte del resultado
+anterior. Correr este script dos veces seguidas degrada las imágenes;
+correrlo cuatro veces las destroza.
 
-Ejecutar después de get-assets.ps1, que restaura los originales:
+Por eso se guarda un registro en .optimized.json con el tamaño de
+cada archivo ya procesado. Si el PNG del disco coincide con lo
+registrado, se salta. Para rehacer el trabajo hay que volver a bajar
+los originales con GET-ASSETS.bat, que es justo lo que borra el
+registro al reescribir los archivos.
+
+Ejecutar después de get-assets.ps1:
 
     python scripts/optimize-images.py
 
 Requiere Pillow:  pip install Pillow
 """
 
+import json
 from pathlib import Path
 
 from PIL import Image
 
-IMG = Path(__file__).resolve().parent.parent / "public" / "img"
+RAIZ = Path(__file__).resolve().parent.parent
+IMG = RAIZ / "public" / "img"
+REGISTRO = IMG / ".optimized.json"
 
 # Ancho de render × 2. La clave es el prefijo del nombre de archivo.
 ANCHOS = {
@@ -44,68 +54,74 @@ ANCHOS = {
     "press-": 600,
 }
 
-CALIDAD_WEBP = 84
-COLORES_PNG = 256
-
 # Proporción forzada, recortando desde el centro.
 #
 # Las cuatro fotos de Resources salen de Figma con alturas distintas
-# (resource-1 venía 596 × 894 y el resto 596 × 397). Aunque el CSS
-# las recorte con object-fit, dejar el original al doble de alto
-# significa servir el doble de bytes para píxeles que nadie ve, y
-# cualquier fallo de layout se nota al instante. Se recortan aquí,
+# (resource-1 venía 596 × 894 y el resto 596 × 397). Se igualan aquí,
 # una vez, a la proporción de la tarjeta del archivo (298 × 210).
 RECORTES = {
     "resource-": 298 / 210,
 }
 
+# 92 sobre fotografía es visualmente indistinguible del original y
+# sigue pesando una fracción del PNG. Bajar de 85 empieza a verse en
+# los degradados de piel y cielo, que es exactamente lo que hay en
+# estos retratos.
+CALIDAD_WEBP = 92
 
-def recorte_objetivo(nombre: str) -> float | None:
-    for clave, ratio in RECORTES.items():
+
+def _buscar(tabla, nombre):
+    for clave, valor in tabla.items():
         if nombre.startswith(clave):
-            return ratio
+            return valor
     return None
 
 
 def recortar_centrado(im: Image.Image, ratio: float) -> Image.Image:
     """Recorta al ratio pedido conservando el centro de la imagen."""
     actual = im.width / im.height
-    if abs(actual - ratio) < 0.001:
+    if abs(actual - ratio) < 0.005:
         return im
 
     if actual > ratio:  # demasiado ancha: se recorta a los lados
-        nuevo_ancho = round(im.height * ratio)
-        margen = (im.width - nuevo_ancho) // 2
-        return im.crop((margen, 0, margen + nuevo_ancho, im.height))
+        ancho = round(im.height * ratio)
+        margen = (im.width - ancho) // 2
+        return im.crop((margen, 0, margen + ancho, im.height))
 
-    nuevo_alto = round(im.width / ratio)  # demasiado alta: arriba y abajo
-    margen = (im.height - nuevo_alto) // 2
-    return im.crop((0, margen, im.width, margen + nuevo_alto))
-
-
-def ancho_objetivo(nombre: str) -> int | None:
-    for clave, ancho in ANCHOS.items():
-        if nombre.startswith(clave):
-            return ancho
-    return None
+    alto = round(im.width / ratio)  # demasiado alta: arriba y abajo
+    margen = (im.height - alto) // 2
+    return im.crop((0, margen, im.width, margen + alto))
 
 
 def main() -> None:
+    hecho = {}
+    if REGISTRO.exists():
+        hecho = json.loads(REGISTRO.read_text(encoding="utf-8"))
+
+    nuevo = {}
     total_antes = total_despues = 0
+    saltados = 0
 
     for png in sorted(IMG.glob("*.png")):
-        objetivo = ancho_objetivo(png.stem)
+        objetivo = _buscar(ANCHOS, png.stem)
         if objetivo is None:
             print(f"  --  {png.name}: sin regla, se deja igual")
             continue
 
         antes = png.stat().st_size
-        total_antes += antes
+        webp = png.with_suffix(".webp")
+
+        # Ya procesado y sin tocar desde entonces: no se vuelve a
+        # comprimir. Esto es lo que evita la pérdida generacional.
+        if hecho.get(png.name) == antes and webp.exists():
+            nuevo[png.name] = antes
+            saltados += 1
+            continue
 
         with Image.open(png) as im:
             im = im.convert("RGBA" if "A" in im.getbands() else "RGB")
 
-            ratio = recorte_objetivo(png.stem)
+            ratio = _buscar(RECORTES, png.stem)
             if ratio is not None:
                 im = recortar_centrado(im, ratio)
 
@@ -114,22 +130,26 @@ def main() -> None:
                 alto = round(im.height * objetivo / im.width)
                 im = im.resize((objetivo, alto), Image.LANCZOS)
 
-            im.save(png.with_suffix(".webp"), "WEBP", quality=CALIDAD_WEBP, method=6)
+            im.save(webp, "WEBP", quality=CALIDAD_WEBP, method=6)
+            # PNG sin pérdida: es el respaldo para navegadores sin
+            # WebP y no merece la pena degradarlo para ahorrar unos
+            # megas que casi nadie descarga.
+            im.save(png, "PNG", optimize=True)
 
-            # MEDIANCUT no acepta RGBA; FASTOCTREE sí y conserva el
-            # canal alfa, que hace falta en los logos recortados.
-            metodo = Image.FASTOCTREE if im.mode == "RGBA" else Image.MEDIANCUT
-            im.quantize(colors=COLORES_PNG, method=metodo).save(png, "PNG", optimize=True)
-
-        despues = png.stat().st_size + png.with_suffix(".webp").stat().st_size
+        despues = png.stat().st_size + webp.stat().st_size
+        total_antes += antes
         total_despues += despues
+        nuevo[png.name] = png.stat().st_size
         print(f"  OK  {png.name}: {antes / 1024:8.0f} KB -> {despues / 1024:7.0f} KB (png+webp)")
 
+    REGISTRO.write_text(json.dumps(nuevo, indent=2), encoding="utf-8")
+
+    if saltados:
+        print(f"\n  {saltados} ya optimizadas, sin tocar (evita perder calidad)")
     if total_antes:
         print(
-            f"\n  Total: {total_antes / 1024 / 1024:.1f} MB -> "
-            f"{total_despues / 1024 / 1024:.1f} MB "
-            f"({100 - total_despues / total_antes * 100:.0f}% menos)"
+            f"  Total procesado: {total_antes / 1024 / 1024:.1f} MB -> "
+            f"{total_despues / 1024 / 1024:.1f} MB"
         )
 
 
