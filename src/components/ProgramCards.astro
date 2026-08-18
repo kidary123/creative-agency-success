@@ -53,10 +53,14 @@ import { programs } from '@/data/site';
                 recorte porque en el archivo sobresale por abajo. */}
             <span class="card__clip">
               <span class="card__shape card__shape--fill">
-                <img src={p.artFill} alt="" aria-hidden="true" loading="lazy" />
+                <span class="card__shape__inner">
+                  <img src={p.artFill} alt="" aria-hidden="true" loading="lazy" />
+                </span>
               </span>
               <span class="card__shape card__shape--line">
-                <img src={p.artLine} alt="" aria-hidden="true" loading="lazy" />
+                <span class="card__shape__inner">
+                  <img src={p.artLine} alt="" aria-hidden="true" loading="lazy" />
+                </span>
               </span>
             </span>
 
@@ -133,13 +137,52 @@ import { programs } from '@/data/site';
   .card--purple .card__clip { background-color: var(--accent); }
   .card--green  .card__clip { background-color: var(--accent-2); }
 
+  /* ---------- CAJAS DE CADA CAPA ----------
+     CADA capa tiene su propia caja. Antes las dos compartían la caja
+     del componente de arte entero y, como los SVG llevan
+     preserveAspectRatio="none", se estiraban hasta deformarse: las
+     rayas del Accelerator (316×239 natural) se alargaban a 318×374, y
+     las dos figuras del Partnership perdían además el giro de 90° que
+     traen del archivo.
+
+     Los números salen de los insets del propio Figma, pasados a % del
+     bloque de color (612 × 418). Con la caja en su proporción natural
+     el `preserveAspectRatio="none"` de los SVG ya no deforma nada.
+
+     `container-type: size` está para el giro: las capas del
+     Partnership giran 90°, así que su contenido se mide con los ejes
+     cambiados (100cqh de ancho, 100cqw de alto) igual que en el
+     archivo. */
   .card__shape {
     position: absolute;
     display: block;
+    container-type: size;
     /* Cada capa gira desde su propio centro */
     transform-origin: 50% 50%;
     transition: transform var(--dur-slow) var(--ease-out-expo);
     will-change: transform;
+  }
+
+  /* Centrado con `translate`, no con rejilla ni con `margin:auto`:
+     cuando la capa va girada el interior es MÁS ANCHO que su caja, y
+     ninguna de las otras dos técnicas reparte un desbordamiento —
+     `place-items:center` lo empuja al borde y los márgenes
+     automáticos se niegan a hacerse negativos. Con `translate` el
+     centro del interior cae siempre en el centro de la caja, que es
+     el punto sobre el que gira.
+
+     `translate` y `rotate` van como propiedades sueltas a propósito:
+     así el navegador aplica primero el desplazamiento y después el
+     giro, y el `transform` del hover (que vive en la caja de fuera)
+     no se pisa con ninguno de los dos. */
+  .card__shape__inner {
+    position: absolute;
+    inset-block-start: 50%;
+    inset-inline-start: 50%;
+    translate: -50% -50%;
+    display: block;
+    inline-size: 100%;
+    block-size: 100%;
   }
 
   .card__shape img {
@@ -149,23 +192,57 @@ import { programs } from '@/data/site';
     max-inline-size: none;
   }
 
-  /* Insets del componente de arte dentro del bloque de color.
-     Accelerator: 318 × 374 en x=241 y=2880 sobre un bloque
-     612 × 418 en x=99 y=2858 → 23.2% / 5.3%. */
-  .card--purple .card__shape {
-    inline-size: 51.96%;
-    block-size: 89.42%;
-    inset-inline-start: 23.2%;
-    inset-block-start: 5.26%;
+  /* ---------- ACCELERATOR (89:175, 318 × 373.778 en x=241 y=2880) ----
+     Sin giro. Dos capas con insets distintos dentro del componente:
+       rayas    85:783  0      / 76.884 · 316.141 × 238.556
+       contorno 85:816  3.584  / 0      · 314.415 × 373.778 */
+  .card--purple .card__shape--fill {
+    inset-inline-start: 23.2026%; /* (142 + 0)     / 612 */
+    inset-block-start: 23.6565%;  /* (22 + 76.884) / 418 */
+    inline-size: 51.657%;         /* 316.141 / 612 */
+    block-size: 57.0708%;         /* 238.556 / 418 */
   }
 
-  /* Partnership: 386 × 341 en x=840 y=2902 sobre bloque en
-     x=728 y=2858 → 18.3% / 10.5%. */
-  .card--green .card__shape {
-    inline-size: 63.07%;
-    block-size: 81.58%;
-    inset-inline-start: 18.3%;
-    inset-block-start: 10.53%;
+  .card--purple .card__shape--line {
+    inset-inline-start: 23.7883%; /* (142 + 3.584) / 612 */
+    inset-block-start: 5.2632%;   /* (22 + 0)      / 418 */
+    inline-size: 51.375%;         /* 314.415 / 612 */
+    block-size: 89.4206%;         /* 373.778 / 418 */
+  }
+
+  /* ---------- PARTNERSHIP (89:220, 386 × 341 en x=840 y=2902) -------
+     Las DOS capas están giradas 90° en el archivo. Las medidas de
+     abajo son la caja YA girada; el `inner` va con los ejes cambiados
+     y gira sobre sí mismo.
+       masa     89:211  caja 258 × 334 en 56.01 / 6.99   (natural 334 × 258)
+       contorno 89:212  caja 386 × 325 en 0     / 0      (natural 325 × 386) */
+  .card--green .card__shape--fill {
+    inset-inline-start: 27.4526%; /* (112 + 56.01) / 612 */
+    inset-block-start: 12.1986%;  /* (44 + 6.99)   / 418 */
+    inline-size: 42.1569%;        /* 258 / 612 */
+    block-size: 79.9043%;         /* 334 / 418 */
+  }
+
+  .card--green .card__shape--line {
+    inset-inline-start: 18.3007%; /* 112 / 612 */
+    inset-block-start: 10.5263%;  /* 44  / 418 */
+    inline-size: 63.0719%;        /* 386 / 612 */
+    block-size: 77.7512%;         /* 325 / 418 */
+  }
+
+  .card--green .card__shape__inner {
+    inline-size: 100cqh;
+    block-size: 100cqw;
+    rotate: 90deg;
+  }
+
+  /* El SVG del contorno se exporta con el sangrado del trazo
+     (327.211 × 388.21 en vez de 325 × 386), así que su `inner` va
+     inflado en esa misma proporción para que el trazo caiga donde
+     debe y no medio píxel adentro. */
+  .card--green .card__shape--line .card__shape__inner {
+    inline-size: calc(100cqh * 1.00676);
+    block-size: calc(100cqw * 1.0058);
   }
 
   /* Ángulos exactos de la variante 2 del archivo. El contorno gira

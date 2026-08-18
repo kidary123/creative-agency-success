@@ -266,8 +266,15 @@ import { footerColumns, footerMeta, site } from '@/data/site';
   }
 
   @media (width < 34rem) {
+    /* `minmax(0, 1fr)` y no `1fr`: el mínimo automático de una pista
+       de rejilla es el min-content de lo que lleva dentro, y el
+       `<input>` del newsletter trae un ancho preferido propio del
+       navegador (~20 caracteres) que ninguna regla de ancho le quita.
+       En un móvil de 390 eso inflaba la pista a 413 y dejaba la
+       página entera con 39px de scroll horizontal — por eso todo el
+       sitio se veía corrido y pegado al borde, no solo el footer. */
     .ft__inner {
-      grid-template-columns: 1fr;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 </style>

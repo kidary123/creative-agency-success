@@ -87,6 +87,17 @@ const EXPANDIDO = 2.6;
     const panel = slot.querySelector<HTMLDivElement>('.slot__panel');
 
     /**
+     * Por debajo de 62rem —y en cualquier pantalla táctil— esto ya no
+     * es un acordeón: son tarjetas apiladas con el panel siempre
+     * visible. Ahí no hay nada que abrir ni altura que reservar, y
+     * dejarlo suelto hacía daño de verdad: `reservarAlto` escribe un
+     * `min-block-size` EN LÍNEA sobre la banda, y un estilo en línea
+     * le gana a la media query. Un solo toque dejaba la rejilla con
+     * cientos de píxeles de hueco muerto debajo.
+     */
+    const esAcordeon = () => !!strip && getComputedStyle(strip).display === 'flex';
+
+    /**
      * El panel está posicionado en absoluto bajo la foto, así que no
      * suma altura a la banda: se salía por abajo y se montaba encima
      * de "Featured in". Un min-height fijo no vale, porque el panel
@@ -96,26 +107,61 @@ const EXPANDIDO = 2.6;
      * Se mide el panel una vez abierto y se reserva esa altura en la
      * banda. Así la sección de abajo se desplaza justo lo necesario.
      */
+    let observador: ResizeObserver | null = null;
+
     const reservarAlto = (abierto: boolean) => {
       if (!strip || !panel) return;
 
+      observador?.disconnect();
+      observador = null;
+
       if (!abierto) {
-        strip.style.minBlockSize = '';
+        strip.style.removeProperty('min-block-size');
         return;
       }
 
-      // En el siguiente frame el panel ya tiene su altura real.
-      requestAnimationFrame(() => {
-        const fondoPanel = panel.getBoundingClientRect().bottom;
-        const topBanda = strip.getBoundingClientRect().top;
-        strip.style.minBlockSize = `${Math.ceil(fondoPanel - topBanda)}px`;
-      });
+      /**
+       * Se mide de forma continua mientras el slot está abierto, no
+       * una vez en el siguiente frame. Un solo `requestAnimationFrame`
+       * llegaba demasiado pronto: la foto todavía estaba en retrato a
+       * media transición, así que se reservaban ~1275px para un panel
+       * que acaba midiendo ~755 y quedaba medio scroll de hueco muerto
+       * entre el acordeón y "Featured in".
+       */
+      const medir = () => {
+        const alto = Math.ceil(
+          panel.getBoundingClientRect().bottom - strip.getBoundingClientRect().top,
+        );
+        const nuevo = `${alto}px`;
+        // Solo se escribe si cambia: la reserva altera el alto de la
+        // banda y volver a escribir el mismo valor realimentaría al
+        // propio observador.
+        if (strip.style.minBlockSize !== nuevo) strip.style.minBlockSize = nuevo;
+      };
+
+      medir();
+      observador = new ResizeObserver(medir);
+      observador.observe(slot);
+      observador.observe(panel);
     };
 
     const marcar = (abierto: boolean) => {
-      trigger.setAttribute('aria-expanded', String(abierto));
+      // En tarjetas apiladas el panel está SIEMPRE abierto: ni se
+      // anuncia como cerrado ni se le quita el CTA al tabulador.
+      const visible = esAcordeon() ? abierto : true;
+
+      trigger.setAttribute('aria-expanded', String(visible));
       // El CTA solo es alcanzable con Tab cuando el panel está abierto.
-      cta?.setAttribute('tabindex', abierto ? '0' : '-1');
+      cta?.setAttribute('tabindex', visible ? '0' : '-1');
+
+      if (!esAcordeon()) {
+        // Sin esto, un `min-block-size` en línea sobrevive al cambio
+        // de disposición y deja la rejilla con un hueco muerto debajo
+        // (el estilo en línea le gana a la media query).
+        strip?.style.removeProperty('min-block-size');
+        return;
+      }
+
       reservarAlto(abierto);
     };
 
@@ -125,6 +171,11 @@ const EXPANDIDO = 2.6;
     slot.addEventListener('focusout', (event) => {
       if (!slot.contains(event.relatedTarget as Node)) marcar(false);
     });
+
+    // Estado de partida, y otra vez si se cruza el punto de ruptura
+    // (girar el móvil, arrastrar la ventana).
+    marcar(false);
+    window.addEventListener('resize', () => marcar(false));
   });
 </script>
 
@@ -363,10 +414,30 @@ const EXPANDIDO = 2.6;
     .slot:focus-within {
       flex: none;
       margin-block-start: 0;
+      /* El tope del expandido no pinta nada aquí y estrechaba la
+         tarjeta a 460 en tabletas anchas. */
+      max-inline-size: none;
     }
 
     .slot__trigger {
       display: none;
+    }
+
+    /* La foto nace ya en horizontal y NO cambia al tocarla. En táctil
+       el panel está siempre abierto, así que un retrato de 348 de alto
+       solo empujaba el texto fuera de pantalla: cada tarjeta medía más
+       que la propia pantalla. En apaisado el bloque baja a menos de la
+       mitad y la tarjeta se lee de una sola mirada.
+
+       Los `:hover` van repetidos a propósito: en táctil el estado se
+       queda pegado después de tocar, y sin esto la foto se estiraba
+       sola. Misma especificidad y más abajo en el archivo, así que
+       mandan estas. */
+    .slot__media,
+    .slot:hover .slot__media,
+    .slot:focus-within .slot__media {
+      aspect-ratio: 16 / 10;
+      transition: none;
     }
 
     .slot__panel {
@@ -375,7 +446,10 @@ const EXPANDIDO = 2.6;
       visibility: visible;
       translate: none;
       pointer-events: auto;
-      padding-inline: 0;
+      /* Aire a los lados: el texto iba pegado al borde de la banda
+         color arena, que a su vez llega casi al borde de la pantalla. */
+      padding: clamp(1.125rem, 4vw, 1.5rem) clamp(1.125rem, 4.5vw, 1.625rem)
+        clamp(1.375rem, 5vw, 1.75rem);
     }
 
     .slot__title,
